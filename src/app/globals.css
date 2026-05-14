@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f6f3;
+  --foreground: #1c1917;
+  --muted: #57534e;
+  --faint: #a8a29e;
+  --border: rgba(28, 25, 23, 0.08);
+  /* Very subtle paper grain — LoveFrom-adjacent warmth */
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+html {
+  /* Fills the UA canvas (avoids black showing through in dark OS / overscroll / intro fade) */
+  background-color: var(--background);
+  color-scheme: light;
+  min-height: 100%;
 }
 
 @theme inline {
@@ -12,15 +24,50 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.font-display {
+  font-family: var(--font-newsreader), ui-serif, Georgia, "Times New Roman",
+    serif;
+  letter-spacing: -0.02em;
+}
+
+/* Chinese: smaller than English body for hierarchy (per design feedback) */
+.copy-cn {
+  font-family: var(--font-geist-sans), "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  letter-spacing: 0.03em;
+}
+
+@media (min-width: 640px) {
+  .copy-cn {
+    font-size: 0.8125rem;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
 }
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: var(--grain);
+  opacity: 1;
+}
+
+::selection {
+  background: rgba(28, 25, 23, 0.08);
+  color: #0c0a09;
+}
+

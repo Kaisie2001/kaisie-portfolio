@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 854 424"
+  preserveAspectRatio="xMidYMid meet"
+  role="presentation"
+>
+  <!-- Raster silhouette shipped alongside; swap this file for a pure-vector asset if you prefer. -->
+  <!-- Root-relative URL: required when this SVG is loaded via <img>, or nested image resolves to the wrong path. -->
+  <image
+    width="854"
+    height="424"
+    href="/assets/polar-bear-silhouette.png"
+    xlink:href="/assets/polar-bear-silhouette.png"
+    preserveAspectRatio="xMidYMid meet"
+  />
+</svg>
