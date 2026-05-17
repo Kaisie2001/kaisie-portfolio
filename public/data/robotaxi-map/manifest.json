@@ -1,0 +1,11 @@
+{
+  "generated": "2026-05-16T16:53:20.570Z",
+  "osm_source": "/Users/apple/Documents/Robotaxi_Portfolio/data/raw/osm/map.osm",
+  "bbox": {
+    "minLon": 113.923,
+    "maxLon": 113.936,
+    "minLat": 22.517,
+    "maxLat": 22.526
+  },
+  "missing_fallbacks": []
+}

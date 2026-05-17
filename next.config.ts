@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Use `npm run dev` / `npm run build` (--webpack). Turbopack SIGKILLs on globals.css here.
 };
 
 export default nextConfig;

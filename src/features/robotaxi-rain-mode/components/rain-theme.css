@@ -1,0 +1,610 @@
+/**
+ * Figma 00robotaxi — design tokens (Y6oWihCF6iehjwBrfc5BSe)
+ * Phone: 260×563 · screen radius 36px · frame radius 44px
+ */
+
+.rain-prototype {
+  --rain-teal: #00a8b5;
+  --rain-teal-dark: #008f9a;
+  --rain-green: #34a853;
+  --rain-green-light: #e8f6ec;
+  --rain-red: #e53935;
+  --rain-red-light: #fdecea;
+  --rain-orange: #f5a623;
+  --rain-orange-light: #fff4e0;
+  --rain-blue-info: #e8f4fd;
+  --rain-blue-info-text: #1a6fb5;
+  --rain-text-primary: #1c1c1e;
+  --rain-text-secondary: #8e8e93;
+  --rain-text-tertiary: #aeaeb2;
+  --rain-sheet: #ffffff;
+  --rain-map-land: #eef1f4;
+  --rain-field-bg: #f2f2f7;
+  --phone-frame: #1a1a1a;
+  --phone-w: 260px;
+  --phone-h: 563px;
+  --phone-radius: 44px;
+  --phone-screen-radius: 36px;
+  --phone-island-w: 84px;
+  --phone-island-h: 22px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.rain-prototype {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.phone-device {
+  width: var(--phone-w);
+  height: var(--phone-h);
+  max-width: min(var(--phone-w), 100%);
+  margin: 0 auto;
+  flex-shrink: 0;
+  background: var(--phone-frame);
+  border-radius: var(--phone-radius);
+  padding: 10px;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.phone-screen-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--phone-screen-radius);
+  overflow: hidden;
+  background: var(--rain-map-land);
+}
+
+.phone-status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.phone-status-bar .status-time {
+  position: absolute;
+  left: 22px;
+  bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--rain-text-primary);
+}
+
+.phone-status-bar .status-icons {
+  position: absolute;
+  right: 22px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--rain-text-primary);
+}
+
+.phone-dynamic-island {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--phone-island-w);
+  height: var(--phone-island-h);
+  background: #000;
+  border-radius: 20px;
+  z-index: 31;
+}
+
+.phone-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+/* ── Map layer ── */
+.map-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.map-layer.dimmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Top chrome ── */
+.map-chrome {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.rain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--rain-teal);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 168, 181, 0.35);
+  pointer-events: auto;
+}
+
+.map-chrome-actions {
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.circle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+
+/* ── Bottom sheet (Figma ~40% height, large top radius) ── */
+.prototype-layout {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--rain-sheet);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+  padding: 8px 14px 16px;
+  max-height: 42%;
+  overflow-y: auto;
+}
+
+.sheet-handle {
+  width: 32px;
+  height: 4px;
+  background: #d1d1d6;
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+
+.sheet-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--rain-text-primary);
+  margin-bottom: 3px;
+}
+
+.sheet-subtitle {
+  font-size: 11px;
+  color: var(--rain-text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+/* ── Address fields (Figma gray cards) ── */
+.address-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--rain-field-bg);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.address-field-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.address-field-label {
+  font-size: 10px;
+  color: var(--rain-text-secondary);
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.address-field-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rain-text-primary);
+  line-height: 1.25;
+}
+
+.address-field-placeholder {
+  font-size: 13px;
+  color: var(--rain-text-tertiary);
+}
+
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--rain-text-secondary);
+  margin: 4px 0 12px;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  width: 100%;
+  background: var(--rain-teal);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: var(--rain-teal-dark);
+}
+
+.btn-link {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--rain-text-secondary);
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-link:hover {
+  color: var(--rain-teal);
+}
+
+/* ── Banners ── */
+.banner-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  background: var(--rain-blue-info);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 10px;
+  color: var(--rain-blue-info-text);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.banner-valid {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--rain-green-light);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 10px;
+  color: var(--rain-green);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.banner-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--rain-text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* ── Metric grid (screen 2) ── */
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
+.metric-card .metric-text {
+  font-size: 9px;
+  line-height: 1.35;
+  color: var(--rain-text-primary);
+}
+
+.metric-card .metric-text.orange {
+  color: var(--rain-orange);
+  font-weight: 500;
+}
+
+/* ── Pickup cards (screen 3) ── */
+.pickup-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.pickup-card {
+  position: relative;
+  border: 1.5px solid #e5e5ea;
+  border-radius: 12px;
+  padding: 9px 10px;
+  text-align: left;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+  font-family: inherit;
+}
+
+.pickup-card:hover {
+  border-color: #c7c7cc;
+}
+
+.pickup-card.selected-green {
+  border-color: var(--rain-green);
+  background: var(--rain-green-light);
+}
+
+.pickup-card.selected-red {
+  border-color: var(--rain-red);
+  background: var(--rain-red-light);
+}
+
+.pickup-card.selected-orange {
+  border-color: var(--rain-orange);
+  background: var(--rain-orange-light);
+}
+
+.pickup-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--rain-green);
+  color: #fff;
+}
+
+.pickup-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  padding-right: 52px;
+}
+
+.pickup-card-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pickup-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 10px;
+  margin-bottom: 3px;
+}
+
+.pickup-stats .stat-label {
+  color: var(--rain-text-secondary);
+}
+
+.pickup-stats .stat-val {
+  font-weight: 600;
+  color: var(--rain-text-primary);
+}
+
+.pickup-stats .stat-val.highlight {
+  color: var(--rain-teal);
+}
+
+.pickup-note {
+  font-size: 9px;
+  color: var(--rain-text-secondary);
+  line-height: 1.35;
+}
+
+.pickup-note.green {
+  color: var(--rain-green);
+}
+
+/* ── On the way (screen 4) ── */
+.sheet-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.sheet-title-row .sheet-title {
+  margin: 0;
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.status-card {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 7px 5px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.status-card .sc-icon {
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.status-card .sc-text {
+  font-size: 8px;
+  line-height: 1.3;
+  color: var(--rain-text-primary);
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--rain-text-primary);
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  color: var(--rain-text-primary);
+}
+
+.map-legend {
+  position: absolute;
+  top: 48px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 5px 7px;
+  font-size: 7px;
+  z-index: 12;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+  color: var(--rain-text-primary);
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-line {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.legend-line.covered {
+  background: var(--rain-green);
+}
+
+.legend-line.exposed {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rain-green) 0 3px,
+    transparent 3px 6px
+  );
+  opacity: 0.5;
+}
+
+.map-pin-label {
+  position: absolute;
+  z-index: 11;
+  font-size: 7px;
+  font-weight: 600;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.pin-label-box {
+  background: #fff;
+  border-radius: 6px;
+  padding: 2px 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.vehicle-distance-pill {
+  position: absolute;
+  z-index: 12;
+  background: var(--rain-teal);
+  color: #fff;
+  font-size: 7px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 168, 181, 0.4);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}

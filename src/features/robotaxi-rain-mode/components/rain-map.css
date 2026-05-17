@@ -1,0 +1,68 @@
+/**
+ * Editable SVG map layer styles — edit colors here.
+ * Geometry: map/mapGeometry.ts
+ */
+
+.map-rain-editable .map-canvas {
+  fill: var(--rain-map-land, #f3f4f6);
+}
+
+.map-rain-editable .map-land {
+  fill: var(--rain-map-land, #f3f4f6);
+}
+
+.map-rain-editable .map-water {
+  fill: var(--rain-map-water, #d1e9f6);
+}
+
+.map-rain-editable .map-park {
+  fill: var(--rain-map-park, #e2f3e2);
+}
+
+.map-rain-editable .map-road-primary {
+  stroke: var(--rain-map-road-outline, #d1d5db);
+  fill: none;
+}
+
+.map-rain-editable .map-road-secondary {
+  stroke: var(--rain-map-road-outline, #e5e7eb);
+  fill: none;
+}
+
+.map-rain-editable .map-road-surface {
+  fill: var(--rain-map-road, #ffffff);
+  stroke: none;
+}
+
+.map-rain-editable .map-route-covered {
+  stroke: var(--rain-route-covered, #2e7d32);
+}
+
+.map-rain-editable .map-route-exposed {
+  stroke: var(--rain-route-exposed, #66bb6a);
+}
+
+.map-rain-editable .map-route-inactive {
+  stroke: #bdbdbd;
+}
+
+.map-rain-editable .map-user-location {
+  color: #1976d2;
+}
+
+.map-rain-editable .map-label {
+  fill: var(--rain-text-secondary, #666666);
+  font-size: 9px;
+  font-family: system-ui, sans-serif;
+}
+
+.map-rain-editable .map-pin-callout {
+  fill: #ffffff;
+  stroke: #e0e0e0;
+}
+
+.map-rain-editable .map-pin-callout-text {
+  fill: var(--rain-text-primary, #1a1a1a);
+  font-size: 8px;
+  font-family: system-ui, sans-serif;
+}
