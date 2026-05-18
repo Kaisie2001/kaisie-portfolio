@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            113.933433,
+            22.520154
+          ],
+          [
+            113.933552,
+            22.520603
+          ],
+          [
+            113.933799,
+            22.520574
+          ],
+          [
+            113.93385,
+            22.520516
+          ],
+          [
+            113.934208,
+            22.520475
+          ],
+          [
+            113.934502,
+            22.520442
+          ],
+          [
+            113.934571,
+            22.520487
+          ],
+          [
+            113.934925,
+            22.520447
+          ],
+          [
+            113.934913,
+            22.52035
+          ],
+          [
+            113.934893,
+            22.520181
+          ]
+        ]
+      },
+      "properties": {
+        "route_id": "walking_route_soonest",
+        "profile": "foot-walking",
+        "label": "Walking → soonest pickup",
+        "from_lon": 113.93345,
+        "from_lat": 22.52015,
+        "to_lon": 113.9349283,
+        "to_lat": 22.5201772,
+        "distance_m": 227.8,
+        "duration_s": 164,
+        "point_count": 10,
+        "generated_by": "openrouteservice",
+        "generated_at": "2026-05-17T08:09:43.878Z"
+      }
+    }
+  ]
+}

@@ -61,7 +61,7 @@ export function OnTheWayScreen({ onStartWalking, onChangePickup }: OnTheWayScree
           <p className="sc-text">Approaching via Coastal Avenue</p>
         </div>
       </div>
-      <p className="section-title">Pickup guidance</p>
+      <p className="section-title">Pick-up guidance</p>
       <div className="detail-row">
         <WalkIcon />
         <span>Walk 60 m to Mall North Entrance</span>
@@ -78,12 +78,12 @@ export function OnTheWayScreen({ onStartWalking, onChangePickup }: OnTheWayScree
         <TreeIcon color="#34a853" />
         <span>Covered distance 45 m</span>
       </div>
-      <ValidBanner>Valid pickup point confirmed</ValidBanner>
+      <ValidBanner>Valid pick-up point confirmed</ValidBanner>
       <button type="button" className="btn-primary" onClick={onStartWalking}>
         Start walking
       </button>
       <button type="button" className="btn-link" onClick={onChangePickup}>
-        Change pickup
+        Change pick-up
       </button>
     </PrototypeLayout>
   );

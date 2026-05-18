@@ -1,5 +1,6 @@
 import type { FeatureCollection, Geometry } from "geojson";
-import type { PickupZoneId } from "./mapModes";
+import { DEMO_DESTINATION } from "./demoData";
+import type { MapMode, PickupZoneId } from "./mapModes";
 
 export type GeoJsonLayer = FeatureCollection<Geometry> | null;
 
@@ -123,5 +124,112 @@ export function boundsFromManifest(manifest: MapManifest | null): [[number, numb
   return [
     [b.minLat, b.minLon],
     [b.maxLat, b.maxLon],
+  ];
+}
+
+export type MapBounds = [[number, number], [number, number]];
+
+function walkCoordinates(coords: unknown, visit: (lon: number, lat: number) => void): void {
+  if (!Array.isArray(coords)) return;
+  if (typeof coords[0] === "number" && typeof coords[1] === "number") {
+    visit(coords[0], coords[1]);
+    return;
+  }
+  for (const part of coords) walkCoordinates(part, visit);
+}
+
+function expandBoundsToAspect(
+  minLat: number,
+  maxLat: number,
+  minLon: number,
+  maxLon: number,
+  viewportAspect: number,
+): { minLat: number; maxLat: number; minLon: number; maxLon: number } {
+  const centerLat = (minLat + maxLat) / 2;
+  const latSpan = Math.max(maxLat - minLat, 1e-6);
+  const lonSpan = Math.max(maxLon - minLon, 1e-6);
+  const cosLat = Math.cos((centerLat * Math.PI) / 180);
+  const geoAspect = (lonSpan * cosLat) / latSpan;
+
+  if (geoAspect < viewportAspect) {
+    const targetLonSpan = (latSpan * viewportAspect) / cosLat;
+    const extra = (targetLonSpan - lonSpan) / 2;
+    return { minLat, maxLat, minLon: minLon - extra, maxLon: maxLon + extra };
+  }
+
+  const targetLatSpan = (lonSpan * cosLat) / viewportAspect;
+  const extra = (targetLatSpan - latSpan) / 2;
+  return { minLat: minLat - extra, maxLat: maxLat + extra, minLon, maxLon };
+}
+
+/**
+ * Tight bounds around demo story content (user, destination, PUDO, routes).
+ * Avoids fitting the full OSM extract bbox into a tall phone viewport (which causes letterboxing).
+ */
+export function boundsFromDemoContent(
+  layers: MapGeoLayers | null,
+  mode: MapMode,
+  selectedZoneId: PickupZoneId,
+  options?: { viewportAspect?: number; padDegrees?: number },
+): MapBounds {
+  const pad = options?.padDegrees ?? 0.0018;
+  const points: [number, number][] = [
+    DEMO_USER_LOCATION,
+    DEMO_DESTINATION.geometry.coordinates,
+  ];
+
+  const includeAllPudos = mode === "choosePickup";
+  const includeSelectedPudo = mode === "robotaxiOnTheWay";
+
+  if (layers?.pudoZones) {
+    for (const feature of layers.pudoZones.features) {
+      const zoneType = String(feature.properties?.option_type ?? "");
+      if (zoneType === "fallback") continue;
+      if (includeAllPudos || (includeSelectedPudo && zoneType === selectedZoneId)) {
+        walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+      }
+    }
+  }
+
+  if (layers?.walkingRoutes && (mode === "choosePickup" || mode === "robotaxiOnTheWay")) {
+    const pudoId = PUDO_ID_BY_ZONE[selectedZoneId];
+    for (const feature of layers.walkingRoutes.features) {
+      if (String(feature.properties?.pudo_id ?? "") !== pudoId) continue;
+      walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+    }
+  }
+
+  if (layers?.vehicleRoute && mode === "robotaxiOnTheWay") {
+    for (const feature of layers.vehicleRoute.features) {
+      walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+    }
+  }
+
+  let minLon = Infinity;
+  let maxLon = -Infinity;
+  let minLat = Infinity;
+  let maxLat = -Infinity;
+  for (const [lon, lat] of points) {
+    minLon = Math.min(minLon, lon);
+    maxLon = Math.max(maxLon, lon);
+    minLat = Math.min(minLat, lat);
+    maxLat = Math.max(maxLat, lat);
+  }
+
+  if (!Number.isFinite(minLon)) {
+    return boundsFromManifest(layers?.manifest ?? null);
+  }
+
+  minLon -= pad;
+  maxLon += pad;
+  minLat -= pad;
+  maxLat += pad;
+
+  const aspect = options?.viewportAspect ?? 238 / 515;
+  const expanded = expandBoundsToAspect(minLat, maxLat, minLon, maxLon, aspect);
+
+  return [
+    [expanded.minLat, expanded.minLon],
+    [expanded.maxLat, expanded.maxLon],
   ];
 }

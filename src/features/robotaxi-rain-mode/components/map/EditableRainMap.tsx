@@ -106,7 +106,7 @@ export function EditableRainMap({
       className={`map-rain-editable w-full`}
       style={{ height }}
       role="img"
-      aria-label="Editable map with pickup candidates"
+      aria-label="Editable map with pick-up candidates"
     >
       <EditableMapLayer />
       <MapLabels />

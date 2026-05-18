@@ -103,7 +103,7 @@ function normalizePudo(raw: RawPudoCandidate): PudoCandidate {
   return {
     pudo_id: raw.pudo_id ?? "unknown",
     option_type: (raw.option_type ?? "default") as PudoOptionType,
-    label_en: raw.label ?? raw.recommendation_reason_en ?? "Pickup option",
+    label_en: raw.label ?? raw.recommendation_reason_en ?? "Pick-up option",
     label_zh: raw.cn_label ?? raw.recommendation_reason_zh ?? "上车点",
     geometry: toPoint(raw.lat, raw.lon),
     is_valid_pudo: Boolean(isValid),
@@ -152,8 +152,8 @@ function buildTradeoffs(candidates: PudoCandidate[]): PudoCandidate[] {
         ...c,
         tradeoff_summary_en:
           extraWalk < 0
-            ? `Shortest walk (${c.walking_distance_m}m), but more rain exposure than sheltered option.`
-            : `Shortest walk among compared options.`,
+            ? `Shortest walk (${c.walking_distance_m}m) to the roadside zone; more rain exposure than shelter-adjacent option.`
+            : `Shortest walk to a valid roadside boarding zone.`,
         tradeoff_summary_zh: `步行最短（${c.walking_distance_m}米），但雨中暴露可能更多。`,
       };
     }
@@ -164,12 +164,12 @@ function buildTradeoffs(candidates: PudoCandidate[]): PudoCandidate[] {
         ...c,
         tradeoff_summary_en:
           extraWalk > 0
-            ? `Walk ${extraWalk}m more than closest, with less rain exposure.`
-            : `Better shelter with comparable walk distance.`,
+            ? `Walk ${extraWalk}m more than closest; wait under cover, short exposed walk to curb.`
+            : `Shelter-adjacent roadside zone with comparable walk distance.`,
         tradeoff_summary_zh:
           extraWalk > 0
-            ? `比最近选项多走约 ${extraWalk} 米，但更少淋雨。`
-            : `遮蔽更好，步行距离相近。`,
+            ? `比最近选项多走约 ${extraWalk} 米；可在遮蔽处等候，短距离步行至路边上车。`
+            : `靠近遮蔽等候区的路边上车点，步行距离相近。`,
       };
     }
 
@@ -249,7 +249,7 @@ function buildShelterFeatures(candidates: PudoCandidate[]): ShelterFeature[] {
       related_pudo_ids: [c.pudo_id],
       source_type: c.source_type,
       confidence_level: c.confidence_level,
-      notes: "Shelter proxy derived from demo bundle shelter_score.",
+      notes: "Simulated sheltered waiting area near anchor — vehicle boards at roadside zone.",
     }));
 }
 
@@ -264,11 +264,11 @@ function buildScenario(
     scenario_id: String(s.area_id ?? "demo_zone_houhai_001"),
     scenario_name:
       raw.metadata?.demo_name ??
-      "Rainy pickup near Houhai commercial district",
+      "Rainy pick-up near Houhai commercial district",
     city: "Shenzhen",
     area_name: areaName,
     scenario_type: "commercial_office_district",
-    user_goal: "Request a Robotaxi pickup during rain",
+    user_goal: "Request a Robotaxi pick-up during rain",
     weather_context: `Weather: ${weather.replace(/_/g, " ")}`,
     demo_disclaimer:
       raw.metadata?.disclaimer ??

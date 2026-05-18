@@ -26,7 +26,7 @@ export function RainModeEntryScreen({ mode, onContinue }: RainModeEntryScreenPro
         <>
           <AddressField
             icon={<PinTealIcon />}
-            label="Pickup"
+            label="Pick-up"
             value="Current location · Coastal Avenue"
           />
           <AddressField
@@ -34,14 +34,14 @@ export function RainModeEntryScreen({ mode, onContinue }: RainModeEntryScreenPro
             label="Drop-off"
             value="Coastal City Mall"
           />
-          <InfoBanner>Rain Mode will help optimize your pickup</InfoBanner>
+          <InfoBanner>Rain Mode will help optimize your pick-up</InfoBanner>
           <button type="button" className="btn-primary" onClick={onContinue}>
             Continue
           </button>
         </>
       ) : (
         <>
-          <AddressField icon={<PinTealIcon />} label="Pickup" value="Current location" />
+          <AddressField icon={<PinTealIcon />} label="Pick-up" value="Current location" />
           <AddressField
             icon={<SearchGrayIcon />}
             label="Drop-off"

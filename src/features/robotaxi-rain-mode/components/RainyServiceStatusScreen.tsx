@@ -34,7 +34,7 @@ export function RainyServiceStatusScreen({
       sheetTitle={m.title}
       sheetSubtitle={m.subtitle}
       sheetFooter={
-        <PrimaryButton onClick={onContinue}>Choose pickup option</PrimaryButton>
+        <PrimaryButton onClick={onContinue}>Choose pick-up option</PrimaryButton>
       }
       sheetChildren={
         <div className="space-y-3 pb-2">

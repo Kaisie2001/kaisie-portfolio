@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            113.933433,
+            22.520154
+          ],
+          [
+            113.933379,
+            22.519949
+          ],
+          [
+            113.933337,
+            22.519953
+          ],
+          [
+            113.933353,
+            22.520008
+          ],
+          [
+            113.933484,
+            22.520546
+          ],
+          [
+            113.933492,
+            22.520582
+          ],
+          [
+            113.933248,
+            22.52061
+          ]
+        ]
+      },
+      "properties": {
+        "route_id": "walking_route_closest",
+        "profile": "foot-walking",
+        "label": "Walking → closest pickup",
+        "from_lon": 113.93345,
+        "from_lat": 22.52015,
+        "to_lon": 113.9332498,
+        "to_lat": 22.5206235,
+        "distance_m": 124.7,
+        "duration_s": 89.8,
+        "point_count": 7,
+        "generated_by": "openrouteservice",
+        "generated_at": "2026-05-17T08:09:42.452Z"
+      }
+    }
+  ]
+}

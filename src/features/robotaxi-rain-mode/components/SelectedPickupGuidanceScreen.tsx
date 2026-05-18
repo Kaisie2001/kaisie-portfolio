@@ -45,7 +45,7 @@ export function SelectedPickupGuidanceScreen({
           vehicleDistanceLabel="1.2 km"
         />
       }
-      sheetTitle={isWalking ? "Robotaxi is on the way" : "Confirm your pickup"}
+      sheetTitle={isWalking ? "Robotaxi is on the way" : "Confirm your pick-up"}
       sheetFooter={
         <PrimaryButton onClick={onRestart ?? (() => undefined)}>
           {isWalking ? "Start walking" : "Request Robotaxi"}
@@ -54,7 +54,7 @@ export function SelectedPickupGuidanceScreen({
       sheetFooterSecondary={
         onRestart ? (
           <PrimaryButton variant="link" onClick={onRestart}>
-            Change pickup
+            Change pick-up
           </PrimaryButton>
         ) : undefined
       }
@@ -63,13 +63,13 @@ export function SelectedPickupGuidanceScreen({
           {!isWalking ? (
             <div className="space-y-0.5">
               <DetailRow icon={<PinIcon color="#2e7d32" />}>
-                Pickup: {selected.label_en} · {landmark}
+                Pick-up: {selected.label_en} · {landmark}
               </DetailRow>
               <DetailRow icon={<span className="h-2 w-2 rounded-full bg-[#1976d2]" />}>
                 Drop-off: Coastal City Mall
               </DetailRow>
               <DetailRow icon={<WalkIcon />}>
-                Walk to pickup: {selected.walking_distance_m} m · about {walkMin} min
+                Walk to pick-up: {selected.walking_distance_m} m · about {walkMin} min
               </DetailRow>
               <DetailRow icon={<CarIcon />}>
                 Vehicle dispatch ETA: {selected.vehicle_eta_min} min
@@ -83,7 +83,7 @@ export function SelectedPickupGuidanceScreen({
               <StatusCell label="Vehicle assigned" value="✓" />
               <StatusCell label="Approaching" value="Coastal Avenue" />
               <StatusCell label="Distance" value="1.2 km away" />
-              <StatusCell label="Turns" value="2 turns to pickup" />
+              <StatusCell label="Turns" value="2 turns to pick-up" />
               <StatusCell
                 label="Arriving in"
                 value={`${selected.vehicle_eta_min} min`}
@@ -96,7 +96,7 @@ export function SelectedPickupGuidanceScreen({
           {isWalking ? (
             <>
               <p className="text-[13px] font-semibold text-[var(--rain-text-primary,#1a1a1a)]">
-                Pickup guidance
+                Pick-up guidance
               </p>
               <div className="grid grid-cols-2 gap-2 text-[11px] text-[var(--rain-text-secondary,#666)]">
                 <span>Walk {selected.walking_distance_m} m to {landmark}</span>
@@ -112,11 +112,11 @@ export function SelectedPickupGuidanceScreen({
           <ValidationBanner
             message={
               isWalking
-                ? "Valid pickup point confirmed"
-                : "This pickup point is valid for Robotaxi boarding"
+                ? "Valid pick-up point confirmed"
+                : "This pick-up point is valid for Robotaxi boarding"
             }
             submessage={
-              isWalking ? "Please arrive at the pickup point before the vehicle." : undefined
+              isWalking ? "Please arrive at the pick-up point before the vehicle." : undefined
             }
           />
 

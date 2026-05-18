@@ -64,8 +64,8 @@ export function ChoosePickupScreen({ selected, onSelect, onConfirm }: ChoosePick
       }
     >
       <div className="sheet-handle" />
-      <h2 className="sheet-title">Choose your pickup priority</h2>
-      <p className="sheet-subtitle">All options are valid Robotaxi pickup candidates</p>
+      <h2 className="sheet-title">Choose your pick-up priority</h2>
+      <p className="sheet-subtitle">All options are valid Robotaxi pick-up candidates</p>
       <div className="pickup-cards">
         {OPTIONS.map((opt) => {
           const isSelected = selected === opt.id;
@@ -113,7 +113,7 @@ export function ChoosePickupScreen({ selected, onSelect, onConfirm }: ChoosePick
         })}
       </div>
       <button type="button" className="btn-primary" onClick={onConfirm}>
-        Confirm pickup
+        Confirm pick-up
       </button>
     </PrototypeLayout>
   );

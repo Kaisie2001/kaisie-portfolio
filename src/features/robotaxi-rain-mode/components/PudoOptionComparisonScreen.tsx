@@ -36,9 +36,9 @@ export function PudoOptionComparisonScreen({
           showWalkingRoutes
         />
       }
-      sheetTitle="Choose your pickup priority"
-      sheetSubtitle="All options are valid Robotaxi pickup candidates"
-      sheetFooter={<PrimaryButton onClick={onConfirm}>Confirm pickup</PrimaryButton>}
+      sheetTitle="Choose your pick-up priority"
+      sheetSubtitle="All options are valid Robotaxi pick-up candidates"
+      sheetFooter={<PrimaryButton onClick={onConfirm}>Confirm pick-up</PrimaryButton>}
       sheetChildren={
         <div className="space-y-2.5 pb-2">
           {candidates.map((c) => (

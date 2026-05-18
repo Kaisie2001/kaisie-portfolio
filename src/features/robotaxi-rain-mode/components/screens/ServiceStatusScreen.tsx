@@ -51,7 +51,7 @@ export function ServiceStatusScreen({ onContinue }: ServiceStatusScreenProps) {
         Arrival times may change slightly as conditions update.
       </p>
       <button type="button" className="btn-primary" onClick={onContinue}>
-        Choose pickup option
+        Choose pick-up option
       </button>
     </PrototypeLayout>
   );

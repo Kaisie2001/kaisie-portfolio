@@ -20,7 +20,7 @@ export function TripSetupScreen({ onContinue }: TripSetupScreenProps) {
           <div className="field-row">
             <PinIcon color="#00a8b5" />
             <div>
-              <p className="field-label">Pickup</p>
+              <p className="field-label">Pick-up</p>
               <p className="field-value">Current location</p>
             </div>
           </div>

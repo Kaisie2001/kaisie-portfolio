@@ -23,7 +23,7 @@ export function DestinationConfirmScreen({ onContinue, onBack }: DestinationConf
           <div className="field-row">
             <PinIcon color="#00a8b5" />
             <div>
-              <p className="field-label">Pickup</p>
+              <p className="field-label">Pick-up</p>
               <p className="field-value">Current location · Coastal Avenue</p>
             </div>
           </div>
@@ -34,7 +34,7 @@ export function DestinationConfirmScreen({ onContinue, onBack }: DestinationConf
               <p className="field-value">{DEMO_DESTINATION.label}</p>
             </div>
           </div>
-          <InfoBanner>Rain Mode will help optimize your pickup</InfoBanner>
+          <InfoBanner>Rain Mode will help optimize your pick-up</InfoBanner>
         </>
       }
       sheetFooter={<PrimaryButton onClick={onContinue}>Continue</PrimaryButton>}

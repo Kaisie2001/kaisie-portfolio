@@ -41,7 +41,7 @@ export function RainModeTriggerScreen({
       sheetChildren={
         <div className="space-y-3">
           <p className="text-[13px] leading-relaxed text-slate-300">
-            Pickup and waiting time may be affected.
+            Pick-up and waiting time may be affected.
           </p>
           <p className="copy-cn text-[11px] text-slate-500">上车与等待体验可能受到影响。</p>
           <div className="grid grid-cols-2 gap-2 text-[11px]">

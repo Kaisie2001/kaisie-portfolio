@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            113.933433,
+            22.520154
+          ],
+          [
+            113.933552,
+            22.520603
+          ],
+          [
+            113.932885,
+            22.520683
+          ],
+          [
+            113.932315,
+            22.520748
+          ],
+          [
+            113.93203,
+            22.520782
+          ],
+          [
+            113.932002,
+            22.520685
+          ],
+          [
+            113.931965,
+            22.520565
+          ],
+          [
+            113.932012,
+            22.520557
+          ],
+          [
+            113.931948,
+            22.520385
+          ],
+          [
+            113.931889,
+            22.520165
+          ]
+        ]
+      },
+      "properties": {
+        "route_id": "walking_route_sheltered",
+        "profile": "foot-walking",
+        "label": "Walking → sheltered pickup",
+        "from_lon": 113.93345,
+        "from_lat": 22.52015,
+        "to_lon": 113.93187180000001,
+        "to_lat": 22.5201693,
+        "distance_m": 284.5,
+        "duration_s": 204.8,
+        "point_count": 10,
+        "generated_by": "openrouteservice",
+        "generated_at": "2026-05-17T08:09:43.167Z"
+      }
+    }
+  ]
+}

@@ -1,134 +1,175 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import {
+  formatDistanceAway,
+  pickupNearHeaderTitle,
+  searchStartingPlaces,
+  type StartingPlaceResult,
+} from "../../data/pickupAnchorSearch";
+import { isPickupAnchorDifferentFromCurrentLocation } from "../../data/scenarioHelpers";
+import { useScenario } from "../ScenarioContext";
 import type { PickupId } from "../types";
-import { IconBack, IconPin } from "../icons";
+import { PICKUP_OPTIONS } from "../pickup-data";
+import { IconPin, IconPinTeal, IconSearch } from "../icons";
 import { ScreenShell } from "../ScreenShell";
-
-const OPTIONS: {
-  id: PickupId;
-  tag: string;
-  tagBg: string;
-  walk: string;
-  exposure: string;
-  eta: string;
-  note: string;
-  noteGreen?: boolean;
-  selectedClass: string;
-}[] = [
-  {
-    id: "closest",
-    tag: "Closest",
-    tagBg: "#e53935",
-    walk: "45 m",
-    exposure: "40 m",
-    eta: "6 min",
-    note: "Shortest walk",
-    selectedClass: "is-red",
-  },
-  {
-    id: "sheltered",
-    tag: "Sheltered",
-    tagBg: "#34a853",
-    walk: "60 m",
-    exposure: "15 m",
-    eta: "7 min",
-    note: "Less rain exposure",
-    noteGreen: true,
-    selectedClass: "is-green",
-  },
-  {
-    id: "soonest",
-    tag: "Soonest",
-    tagBg: "#f5a623",
-    walk: "65 m",
-    exposure: "30 m",
-    eta: "4 min",
-    note: "Fastest boarding",
-    selectedClass: "is-orange",
-  },
-];
+import { SheetHeader } from "../SheetHeader";
 
 type Props = {
   selected: PickupId;
   onSelect: (id: PickupId) => void;
   onBack: () => void;
-  onRequest: () => void;
+  onConfirm: () => void;
+  onSelectStartingPlace: (place: StartingPlaceResult) => void;
 };
 
-/** Figma screen 3 — Choose your pickup */
-export function Screen3ChoosePickup({ selected, onSelect, onBack, onRequest }: Props) {
-  return (
-    <ScreenShell
-      mapKind="pickup"
-      selectedPickup={selected}
-      mapOverlay={<PickupMapLabels />}
-    >
-      <div className="figma-sheet-handle" />
-      <button type="button" className="figma-back" onClick={onBack} aria-label="Back">
-        <IconBack />
-      </button>
-      <h2 className="figma-sheet-title">Choose your pickup</h2>
-      <p className="figma-sheet-sub">All options are valid Robotaxi pickup candidates</p>
-      <div className="figma-options">
-        {OPTIONS.map((o) => {
-          const active = selected === o.id;
-          return (
-            <button
-              key={o.id}
-              type="button"
-              className={`figma-option${active ? ` ${o.selectedClass}` : ""}`}
-              onClick={() => onSelect(o.id)}
-            >
-              <span className="figma-option-tag" style={{ background: o.tagBg }}>
-                {o.tag}
-              </span>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                <IconPin color={o.tagBg} />
-              </motion>
-              <div className="figma-option-stats">
-                <span>
-                  <span className="lbl">Walk </span>
-                  <span className="val">{o.walk}</span>
-                </span>
-                <span>
-                  <span className="lbl">Exposure </span>
-                  <span className="val">{o.exposure}</span>
-                </span>
-                <span>
-                  <span className="lbl">ETA </span>
-                  <span className={`val${o.id === "soonest" ? " hl" : ""}`}>{o.eta}</span>
-                </span>
-              </motion>
-              <p className={`figma-option-note${o.noteGreen ? " green" : ""}`}>{o.note}</p>
-            </button>
-          );
-        })}
-      </motion>
-      <button type="button" className="figma-btn" onClick={onRequest}>
-        Request Robotaxi
-      </button>
-    </ScreenShell>
-  );
-}
+export function Screen3ChoosePickup({
+  selected,
+  onSelect,
+  onBack,
+  onConfirm,
+  onSelectStartingPlace,
+}: Props) {
+  const { scenario, userCurrentLocation, useCurrentLocationAsPickupAnchor } =
+    useScenario();
+  const [query, setQuery] = useState("");
 
-function PickupMapLabels() {
-  const pins = [
-    { name: "Closest", color: "#e53935", dist: "45 m", left: "48%", top: "42%" },
-    { name: "Sheltered", color: "#34a853", dist: "60 m", left: "56%", top: "46%" },
-    { name: "Soonest", color: "#f5a623", dist: "65 m", left: "64%", top: "40%" },
-  ];
+  const anchorDiffersFromUser = isPickupAnchorDifferentFromCurrentLocation(scenario);
+  const headerTitle = pickupNearHeaderTitle();
+  const showSearchResults = query.trim().length > 0;
+
+  const searchResults = useMemo(
+    () => searchStartingPlaces(query, userCurrentLocation),
+    [query, userCurrentLocation],
+  );
+
   return (
-    <>
-      {pins.map((p) => (
-        <div key={p.name} className="figma-map-pin" style={{ left: p.left, top: p.top }}>
-          <div className="figma-map-pin-box">
-            <div className="figma-map-pin-name" style={{ color: p.color }}>
-              {p.name}
-            </motion>
-            <motion className="figma-map-pin-dist">{p.dist}</motion>
-          </motion>
-        </motion>
-      ))}
-    </>
+    <ScreenShell>
+      <SheetHeader onBack={onBack} title={headerTitle} />
+      <label className="figma-pickup-search-wrap">
+        <IconSearch size={14} />
+        <span className="sr-only">Enter a location</span>
+        <input
+          type="search"
+          className="figma-pickup-search"
+          placeholder="Enter a location"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </label>
+
+      {showSearchResults ? (
+        <div className="figma-search-options">
+          {searchResults.length === 0 ? (
+            <p className="figma-pickup-search-empty">No places found</p>
+          ) : (
+            searchResults.map((place) => (
+              <button
+                key={place.name}
+                type="button"
+                className="figma-address figma-address--input"
+                onClick={() => {
+                  onSelectStartingPlace(place);
+                  setQuery("");
+                }}
+              >
+                <div className="figma-address-text">
+                  <p className="figma-address-value">
+                    {place.name} · {formatDistanceAway(place.distanceM)}
+                  </p>
+                  {place.hint ? (
+                    <p className="figma-address-label">{place.hint}</p>
+                  ) : null}
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+      ) : (
+        <>
+          {anchorDiffersFromUser ? (
+            <button
+              type="button"
+              className="figma-address figma-address--input figma-pickup-use-current"
+              onClick={useCurrentLocationAsPickupAnchor}
+            >
+              <IconPinTeal />
+              <div className="figma-address-text">
+                <p className="figma-address-value">Use current location</p>
+              </div>
+            </button>
+          ) : null}
+          <div className="figma-pickup-grid">
+            {PICKUP_OPTIONS.map((o) => {
+              const isSelected = selected === o.id;
+              const zone = scenario.pickupZoneCandidates.find((z) => z.id === o.id);
+              const walkLabel = zone ? `${zone.walkM} m` : o.walk;
+              const exposureLabel = zone ? `${zone.exposureM} m` : o.exposureVal;
+              return (
+                <button
+                  key={o.id}
+                  type="button"
+                  className={`figma-pickup-row${isSelected ? ` is-selected ${o.selectedClass}` : ""}`}
+                  onClick={() => onSelect(o.id)}
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <div className="figma-pickup-col figma-pickup-col--label">
+                    <div className="pin" aria-hidden>
+                      <IconPin color={o.color} size={20} />
+                    </div>
+                    <p className="name" style={{ color: o.color }}>
+                      {o.name}
+                    </p>
+                    {isSelected ? (
+                      <p className="sub" style={{ color: o.color }}>
+                        {o.selectedSub}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="figma-pickup-col figma-pickup-col--stat">
+                    <p className="lbl">Walk</p>
+                    <p className={`val${isSelected ? " bold" : ""}`}>{walkLabel}</p>
+                  </div>
+                  <div className="figma-pickup-col figma-pickup-col--stat">
+                    <p
+                      className="lbl"
+                      style={{ color: isSelected ? o.exposureColor : undefined }}
+                    >
+                      Exposure
+                    </p>
+                    <p
+                      className={`val${isSelected ? " bold" : ""}`}
+                      style={{ color: isSelected ? o.exposureColor : undefined }}
+                    >
+                      {exposureLabel}
+                    </p>
+                  </div>
+                  <div className="figma-pickup-col figma-pickup-col--stat">
+                    <p
+                      className="lbl"
+                      style={{ color: isSelected ? o.etaLabelColor : undefined }}
+                    >
+                      ETA
+                    </p>
+                    <p
+                      className={`val${isSelected ? " bold" : ""}`}
+                      style={{ color: isSelected ? o.etaLabelColor : undefined }}
+                    >
+                      {o.etaVal}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {!showSearchResults ? (
+        <button type="button" className="figma-btn" onClick={onConfirm}>
+          Confirm
+        </button>
+      ) : null}
+    </ScreenShell>
   );
 }

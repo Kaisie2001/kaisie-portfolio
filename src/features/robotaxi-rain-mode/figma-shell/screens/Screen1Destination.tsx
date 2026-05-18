@@ -17,23 +17,23 @@ export function Screen1Destination({ onContinue }: Props) {
       <div className="figma-address">
         <IconPinTeal />
         <div>
-          <p className="figma-address-label">Pickup</p>
+          <p className="figma-address-label">Pick-up</p>
           <p className="figma-address-value">Current location · Coastal Avenue</p>
-        </motion>
-      </motion>
+        <div>
+      <div>
       <div className="figma-address">
         <IconTargetBlue />
         <div>
           <p className="figma-address-label">Drop-off</p>
           <p className="figma-address-value">Coastal City Mall</p>
-        </motion>
-      </motion>
+        <div>
+      <div>
       <div className="figma-banner-info">
         <IconInfoBlue />
-        <span>Rain Mode will help optimize your pickup</span>
-      </motion>
+        <span>Rain Mode will help optimize your pick-up</span>
+      <div>
       <button type="button" className="figma-btn" onClick={onContinue}>
-        Continue
+        Confirm
       </button>
     </ScreenShell>
   );

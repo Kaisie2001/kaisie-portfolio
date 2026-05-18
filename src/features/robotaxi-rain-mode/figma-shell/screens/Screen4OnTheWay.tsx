@@ -1,86 +1,74 @@
 "use client";
 
+import type { PickupId } from "../types";
+import { getPickupOption } from "../pickup-data";
 import {
-  IconBack,
   IconCar,
-  IconCarTeal,
-  IconCheck,
+  IconCheckBadge,
   IconClock,
   IconRoad,
   IconUmbrella,
   IconWalk,
 } from "../icons";
 import { ScreenShell } from "../ScreenShell";
+import { SheetHeader } from "../SheetHeader";
 
-type Props = { onBack: () => void; onStartWalking: () => void };
+type Props = {
+  pickup: PickupId;
+  onBack: () => void;
+  onStartWalking: () => void;
+};
 
-/** Figma screen 4 — Robotaxi is on the way */
-export function Screen4OnTheWay({ onBack, onStartWalking }: Props) {
+export function Screen4OnTheWay({ pickup, onBack, onStartWalking }: Props) {
+  const p = getPickupOption(pickup);
+
   return (
-    <ScreenShell
-      mapKind="enroute"
-      mapOverlay={
-        <>
-          <div className="figma-map-pin" style={{ left: "52%", top: "46%" }}>
-            <div className="figma-map-pin-box">
-              <div className="figma-map-pin-name" style={{ color: "#34a853" }}>
-                Sheltered
-              </motion>
-              <div className="figma-map-pin-dist">60 m</motion>
-            </motion>
-          </motion>
-          <div className="figma-map-pill" style={{ left: "42%", top: "28%" }}>
-            1.2 km
-          </motion>
-        </>
-      }
-    >
-      <div className="figma-sheet-handle" />
-      <button type="button" className="figma-back" onClick={onBack} aria-label="Back">
-        <IconBack />
-      </button>
-      <div className="figma-title-row">
-        <IconCarTeal />
-        <h2 className="figma-sheet-title">Robotaxi is on the way</h2>
-      </motion>
+    <ScreenShell>
+      <SheetHeader onBack={onBack} title="Robotaxi is on the way" />
       <div className="figma-stat-row">
         <div className="figma-stat-cell">
           <div className="ico">
             <IconCar />
-          </motion>
-          <p>1.2 km away</p>
-        </motion>
+          </div>
+          <p>1.2 km</p>
+        </div>
         <div className="figma-stat-cell">
           <div className="ico">
             <IconClock />
-          </motion>
-          <p>Arriving in 7 min</p>
-        </motion>
+          </div>
+          <p>In {p.etaVal}</p>
+        </div>
         <div className="figma-stat-cell">
           <div className="ico">
             <IconRoad />
-          </motion>
-          <p>Approaching via Coastal Avenue</p>
-        </motion>
-      </motion>
-      <motion className="figma-detail">
+          </div>
+          <p>Coastal Ave</p>
+        </div>
+      </div>
+      <div className="figma-detail">
         <IconWalk />
-        <span>Walk 60 m · about 2 min</span>
-      </motion>
+        <span>
+          Walk {p.walk} · about <strong>{p.walkMin}</strong>
+        </span>
+      </div>
       <div className="figma-detail">
         <IconUmbrella />
-        <span>Only 15 m is exposed to rain</span>
-      </motion>
+        <span>
+          Only <strong>{p.exposureVal}</strong> is exposed to rain
+        </span>
+      </div>
       <div className="figma-detail">
         <IconCar />
-        <span>Vehicle arrives in 7 min</span>
-      </motion>
+        <span>
+          Vehicle arrives in <strong>{p.etaVal}</strong>
+        </span>
+      </div>
       <div className="figma-banner-ok">
-        <IconCheck />
-        <span>Valid Robotaxi pickup candidate</span>
-      </motion>
+        <IconCheckBadge />
+        <span>Valid Robotaxi pick-up candidate</span>
+      </div>
       <button type="button" className="figma-btn" onClick={onStartWalking}>
-        Start Walking
+        Confirm
       </button>
     </ScreenShell>
   );

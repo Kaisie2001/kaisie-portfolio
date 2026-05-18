@@ -46,11 +46,11 @@ export function ConfirmPickupScreen({
           subtitle={`${selected.label_en} · ${landmark}`}
         />
       }
-      sheetTitle="Confirm your pickup"
+      sheetTitle="Confirm your pick-up"
       sheetFooter={<PrimaryButton onClick={onConfirm}>Request Robotaxi</PrimaryButton>}
       sheetFooterSecondary={
         <PrimaryButton variant="link" onClick={onChangePickup}>
-          Change pickup
+          Change pick-up
         </PrimaryButton>
       }
       sheetChildren={
@@ -58,7 +58,7 @@ export function ConfirmPickupScreen({
           <div className="detail-row">
             <PinIcon color="#34a853" />
             <span>
-              <strong>Pickup:</strong> {selected.label_en} · {landmark}
+              <strong>Pick-up:</strong> {selected.label_en} · {landmark}
             </span>
           </div>
           <div className="detail-row">
@@ -93,7 +93,7 @@ export function ConfirmPickupScreen({
             <span>Boarding ETA {boarding} min</span>
           </div>
           <InfoBanner>{selected.recommendation_reason_en}</InfoBanner>
-          <ValidationBanner message="Valid Robotaxi pickup candidate" />
+          <ValidationBanner message="Valid Robotaxi pick-up candidate" />
         </div>
       }
     />

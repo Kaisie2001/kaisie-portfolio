@@ -28,7 +28,7 @@ export function RainModeTriggerScreen({ bundle, onContinue }: RainModeTriggerScr
       }
       topOverlay={<RainModeBanner />}
       sheetTitle="Rain detected"
-      sheetSubtitle="Pickup and waiting time may be affected."
+      sheetSubtitle="Pick-up and waiting time may be affected."
       sheetFooter={<PrimaryButton onClick={onContinue}>Check service status</PrimaryButton>}
       sheetChildren={
         <div className="space-y-2 pb-2 text-[13px] text-[var(--rain-text-secondary,#666)]">

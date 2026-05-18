@@ -17,7 +17,7 @@
     "queue_status": "longer_than_usual",
     "operation_notice_en": "Rain may reduce vehicle availability. Waiting time may be longer than usual.",
     "operation_notice_zh": "受降雨影响，车辆供给可能减少，等待时间可能延长。",
-    "fallback_suggestion_en": "You may continue waiting, choose another valid pickup option, or switch to another transport mode.",
+    "fallback_suggestion_en": "You may continue waiting, choose another valid pick-up option, or switch to another transport mode.",
     "fallback_suggestion_zh": "你可以继续等待、选择其他合法上车点，或切换其他出行方式。",
     "source_type": "simulated_for_portfolio_demo",
     "disclaimer": "Not real-time Robotaxi operations data."
@@ -34,7 +34,7 @@
     {
       "pudo_id": "P1",
       "option_type": "closest",
-      "label": "Closest Pickup",
+      "label": "Closest Pick-up",
       "cn_label": "步行最近",
       "osm_node_id": "13051155673",
       "osm_name": "保利文化广场",
@@ -57,8 +57,8 @@
       "shelter_score_simulated": 0.2,
       "normal_convenience_score_simulated": 0.72,
       "rain_comfort_score_simulated": 0.47,
-      "recommendation_reason": "Shortest walking distance, but limited shelter.",
-      "cn_recommendation_reason": "步行距离最短，但遮蔽有限。",
+      "recommendation_reason": "Shortest walk to the nearest valid roadside boarding zone; higher rain exposure.",
+      "cn_recommendation_reason": "步行至最近合法路边上车点最短；雨中暴露较多。",
       "important_disclaimer": "Simulated demo PUDO. Not official Robotaxi operational data.",
       "lat": 22.5206235,
       "lon": 113.9332498
@@ -66,8 +66,8 @@
     {
       "pudo_id": "P2",
       "option_type": "sheltered",
-      "label": "Sheltered Pickup",
-      "cn_label": "少淋雨",
+      "label": "Shelter-adjacent Pick-up",
+      "cn_label": "少淋雨（路边上车）",
       "osm_node_id": "2613095870",
       "osm_name": "海岸城",
       "osm_name_en": "Coastal City",
@@ -89,8 +89,8 @@
       "shelter_score_simulated": 0.85,
       "normal_convenience_score_simulated": 0.5,
       "rain_comfort_score_simulated": 0.84,
-      "recommendation_reason": "More sheltered waiting area near commercial entrance / bus shelter; slightly longer walk.",
-      "cn_recommendation_reason": "靠近海岸城与有遮蔽公交站，步行略远但少淋雨。",
+      "recommendation_reason": "Valid roadside boarding zone near a covered waiting area (mall entrance / canopy); short exposed walk to curb.",
+      "cn_recommendation_reason": "合法路边上车点，靠近有遮蔽等候区（商场入口/雨棚），短距离暴露步行至路边。",
       "important_disclaimer": "Simulated demo PUDO. Not official Robotaxi operational data.",
       "lat": 22.5201693,
       "lon": 113.9318718
@@ -98,7 +98,7 @@
     {
       "pudo_id": "P3",
       "option_type": "soonest",
-      "label": "Soonest Pickup",
+      "label": "Soonest Pick-up",
       "cn_label": "最快上车",
       "osm_node_id": "11090778457",
       "osm_name": null,
@@ -121,8 +121,8 @@
       "shelter_score_simulated": 0.25,
       "normal_convenience_score_simulated": 0.62,
       "rain_comfort_score_simulated": 0.35,
-      "recommendation_reason": "Earliest estimated boarding due to easier vehicle approach; more rain exposure.",
-      "cn_recommendation_reason": "车辆接近更快，预计更早上车，但雨中暴露更多。",
+      "recommendation_reason": "Valid roadside zone with fastest vehicle approach; not necessarily closest or most sheltered.",
+      "cn_recommendation_reason": "合法路边上车点，车辆到达最快；不一定最近或遮蔽最好。",
       "important_disclaimer": "Simulated demo PUDO. Not official Robotaxi operational data.",
       "lat": 22.5201772,
       "lon": 113.9349283

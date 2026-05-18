@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            113.931956,
+            22.520149
+          ],
+          [
+            113.931588,
+            22.518847
+          ],
+          [
+            113.930792,
+            22.519027
+          ],
+          [
+            113.930784,
+            22.51896
+          ],
+          [
+            113.931216,
+            22.518862
+          ]
+        ]
+      },
+      "properties": {
+        "route_id": "trip_overview_route",
+        "profile": "driving-car",
+        "label": "Trip overview (sheltered pickup → drop-off)",
+        "from_lon": 113.93187180000001,
+        "from_lat": 22.5201693,
+        "to_lon": 113.9312,
+        "to_lat": 22.5188,
+        "distance_m": 287.2,
+        "duration_s": 23.5,
+        "point_count": 5,
+        "generated_by": "openrouteservice",
+        "generated_at": "2026-05-17T08:09:45.394Z"
+      }
+    }
+  ]
+}
