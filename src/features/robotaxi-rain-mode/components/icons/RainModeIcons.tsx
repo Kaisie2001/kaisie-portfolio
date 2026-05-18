@@ -224,3 +224,6 @@ export function RainSmallIcon({ className = "h-2.5 w-2.5" }: IconProps) {
     </svg>
   );
 }
+
+/** @alias SearchGrayIcon — legacy screen imports */
+export { SearchGrayIcon as SearchIcon };

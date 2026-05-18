@@ -5,13 +5,16 @@ export type MapPlaceholderVariant =
   | "entry"
   | "service-zone"
   | "pickup-options"
-  | "walk";
+  | "walk"
+  | "route";
 
 /** Leaflet map modes — aligned with Figma 00robotaxi (4 screens) */
 export type MapMode =
   | "tripSetup"
+  | "destinationConfirm"
   | "serviceStatus"
   | "choosePickup"
+  | "confirmPickup"
   | "robotaxiOnTheWay";
 
 export type PickupZoneId = "closest" | "sheltered" | "soonest";

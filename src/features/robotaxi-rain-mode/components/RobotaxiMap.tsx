@@ -1,6 +1,11 @@
 "use client";
 
-import type { FeatureCollection, LineString, Polygon } from "geojson";
+import type {
+  FeatureCollection,
+  GeoJsonObject,
+  LineString,
+  Polygon,
+} from "geojson";
 import L from "leaflet";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import {
@@ -221,7 +226,7 @@ function UserLocationMarker({ position }: { position: [number, number] }) {
         center={position}
         radius={12}
         pathOptions={{ stroke: false, fillColor: "#007AFF", fillOpacity: 0.2 }}
-        zIndexOffset={900}
+        {...({ zIndexOffset: 900 } as Record<string, unknown>)}
       />
       <CircleMarker
         center={position}
@@ -232,7 +237,7 @@ function UserLocationMarker({ position }: { position: [number, number] }) {
           fillColor: "#007AFF",
           fillOpacity: 1,
         }}
-        zIndexOffset={901}
+        {...({ zIndexOffset: 901 } as Record<string, unknown>)}
       />
     </>
   );
@@ -343,16 +348,18 @@ function WalkingRouteSegments({
         return (
           <GeoJSON
             key={seg.segmentId}
-            data={{
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  geometry: seg.geometry,
-                  properties: { segmentType: seg.segmentType },
-                },
-              ],
-            }}
+            data={
+              {
+                type: "FeatureCollection",
+                features: [
+                  {
+                    type: "Feature",
+                    geometry: seg.geometry,
+                    properties: { segmentType: seg.segmentType },
+                  },
+                ],
+              } as GeoJsonObject
+            }
             style={() => ({
               color: covered ? WALK_COVERED : WALK_EXPOSED,
               weight: emphasized ? (covered ? 4.5 : 3.5) : covered ? 3.5 : 2.5,
@@ -677,7 +684,9 @@ export function RobotaxiMap({
 
   const showRoutesNotice =
     (scenario.pudoRoadDataMissing || scenario.pudoMessage || scenario.routesMissing) &&
-    (showTripRoute || showPickupZones || mode === "robotaxiOnTheWay");
+    (showTripRoute ||
+      showPickupZones ||
+      (mode as MapMode) === "robotaxiOnTheWay");
 
   const initialCenter = userPos;
 
@@ -722,7 +731,7 @@ export function RobotaxiMap({
         {showTripRoute && tripRoute ? (
           <RouteGeoJson
             data={tripRoute}
-            color={mode === "serviceStatus" ? VEHICLE_CYAN : TRIP_CYAN}
+            color={TRIP_CYAN}
             weight={3}
             opacity={0.82}
           />

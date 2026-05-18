@@ -211,7 +211,12 @@ export function RobotaxiMap({
         )}
 
         {showVehicleRoute && mapLayers.vehicleRoute?.features[0]?.geometry?.type === "LineString" ? (
-          <VehicleMarker coords={mapLayers.vehicleRoute.features[0].geometry.coordinates} />
+          <VehicleMarker
+            coords={
+              mapLayers.vehicleRoute.features[0].geometry
+                .coordinates as [number, number][]
+            }
+          />
         ) : null}
       </MapContainer>
     </div>

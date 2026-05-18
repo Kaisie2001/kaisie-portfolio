@@ -186,7 +186,10 @@ export function boundsFromDemoContent(
       const zoneType = String(feature.properties?.option_type ?? "");
       if (zoneType === "fallback") continue;
       if (includeAllPudos || (includeSelectedPudo && zoneType === selectedZoneId)) {
-        walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+        const geom = feature.geometry;
+        if (geom && "coordinates" in geom) {
+          walkCoordinates(geom.coordinates, (lon, lat) => points.push([lon, lat]));
+        }
       }
     }
   }
@@ -195,13 +198,19 @@ export function boundsFromDemoContent(
     const pudoId = PUDO_ID_BY_ZONE[selectedZoneId];
     for (const feature of layers.walkingRoutes.features) {
       if (String(feature.properties?.pudo_id ?? "") !== pudoId) continue;
-      walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+      const geom = feature.geometry;
+      if (geom && "coordinates" in geom) {
+        walkCoordinates(geom.coordinates, (lon, lat) => points.push([lon, lat]));
+      }
     }
   }
 
   if (layers?.vehicleRoute && mode === "robotaxiOnTheWay") {
     for (const feature of layers.vehicleRoute.features) {
-      walkCoordinates(feature.geometry?.coordinates, (lon, lat) => points.push([lon, lat]));
+      const geom = feature.geometry;
+      if (geom && "coordinates" in geom) {
+        walkCoordinates(geom.coordinates, (lon, lat) => points.push([lon, lat]));
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { createDefaultScenario } from "../data/scenarioDefaults";
 import type { MapMode, PickupZoneId } from "../data/mapModes";
 import type { PudoOptionType } from "../data/types";
 import { MapChrome } from "./MapChrome";
@@ -83,6 +84,7 @@ export function PrototypeScreen({
           <RobotaxiMapLazy
             key={`${mapVariant}-${zoneId}`}
             mode={mapVariant}
+            scenario={createDefaultScenario()}
             selectedZoneId={zoneId}
             {...flags}
           />

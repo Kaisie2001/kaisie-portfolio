@@ -12,7 +12,7 @@ type Props = { onContinue: () => void };
 /** Figma screen 1 — Destination entry */
 export function Screen1Destination({ onContinue }: Props) {
   return (
-    <ScreenShell mapKind="entry" showRainHeader>
+    <ScreenShell>
       <div className="figma-sheet-handle" />
       <div className="figma-address">
         <IconPinTeal />

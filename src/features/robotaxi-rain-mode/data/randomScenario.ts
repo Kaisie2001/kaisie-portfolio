@@ -147,7 +147,7 @@ const ZONE_META: Record<
 export function generatePickupZonesNear(current: ScenarioLocation): PudoZoneState[] {
   const ids: PickupZoneId[] = ["closest", "sheltered", "soonest"];
   const bearings: number[] = [];
-  return ids.map((id) => {
+  return ids.map((id): PudoZoneState => {
     const meta = ZONE_META[id];
     let bearing = randomBearing();
     let guard = 0;
@@ -167,7 +167,7 @@ export function generatePickupZonesNear(current: ScenarioLocation): PudoZoneStat
       exposureM: meta.exposureM,
       coveredM: meta.coveredM,
       vehicleEtaMin: meta.eta,
-    };
+    } as PudoZoneState;
   });
 }
 

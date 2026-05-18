@@ -125,10 +125,10 @@ function distanceAlongPolylineToPoint(coords: LonLat[], point: { lng: number; la
     const a = coords[i - 1]!;
     const b = coords[i]!;
     const seg = distanceMeters(
-      { lng: a[0], lat: a[1], label: "" },
-      { lng: b[0], lat: b[1], label: "" },
+      { lng: a[0], lat: a[1] },
+      { lng: b[0], lat: b[1] },
     );
-    const mid = { lng: (a[0] + b[0]) / 2, lat: (a[1] + b[1]) / 2, label: "" };
+    const mid = { lng: (a[0] + b[0]) / 2, lat: (a[1] + b[1]) / 2 };
     const d = distanceMeters(mid, point);
     if (d < bestDist) {
       bestDist = d;

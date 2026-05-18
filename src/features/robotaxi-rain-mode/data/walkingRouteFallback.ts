@@ -1,4 +1,10 @@
-import { nearestPointOnLine, lineString, length, lineSliceAlong } from "@turf/turf";
+import {
+  length,
+  lineSliceAlong,
+  lineString,
+  nearestPointOnLine,
+  point,
+} from "@turf/turf";
 import type { Feature, FeatureCollection, LineString } from "geojson";
 import { loadRoadLayers } from "./pudoZoneService";
 import type { ScenarioLocation } from "./scenarioTypes";
@@ -47,8 +53,8 @@ export async function buildRoadSnappedWalkingFallback(
   const { roads } = await loadRoadLayers();
   if (!roads?.features?.length) return null;
 
-  const fromPt = lineString([[from.lng, from.lat]]);
-  const toPt = lineString([[to.lng, to.lat]]);
+  const fromPt = point([from.lng, from.lat]);
+  const toPt = point([to.lng, to.lat]);
 
   let bestFrom: { road: RoadFeature; dist: number; along: number } | null = null;
   let bestTo: { road: RoadFeature; dist: number; along: number } | null = null;
