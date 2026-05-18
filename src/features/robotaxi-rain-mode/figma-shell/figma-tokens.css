@@ -143,6 +143,51 @@
   padding: 4px 2px;
 }
 
+.figma-guided-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.figma-guided-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.figma-guided-step__num {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  color: #8e8e93;
+}
+
+.figma-guided-step__body {
+  min-width: 0;
+}
+
+.figma-guided-step__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: #1c1c1e;
+}
+
+.figma-guided-step__copy {
+  margin: 4px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #636366;
+}
+
 .figma-demo-center {
   display: flex;
   flex: 1 1 auto;

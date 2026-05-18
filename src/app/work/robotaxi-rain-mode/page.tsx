@@ -22,10 +22,7 @@ export default function RobotaxiRainModePage() {
 
         <RobotaxiRainModeCaseStudy />
 
-        <section className="mt-14">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-stone-500">
-            Prototype
-          </h2>
+        <section className="mt-14" aria-labelledby="robotaxi-guided-demo">
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-stone-700">
             Interactive UI shell aligned with Figma 00robotaxi. Five-screen
             passenger flow with map-based pickup zones, rainy-day tradeoffs, and
