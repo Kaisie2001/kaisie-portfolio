@@ -156,7 +156,7 @@ export function RobotaxiRainModeCaseOverview() {
             ) : null}
 
             {active.flowCards ? (
-              <div className="mt-6 grid w-full max-w-[31rem] grid-cols-2 gap-1.5 md:grid-cols-4">
+              <div className="mt-6 flex w-full max-w-[26rem] justify-center gap-1 sm:max-w-[30rem] sm:gap-1.5">
                 {active.flowCards.map((card, index) => {
                   const selected = activeFlowCard === index;
                   return (
@@ -169,7 +169,7 @@ export function RobotaxiRainModeCaseOverview() {
                         )
                       }
                       className={[
-                        "group relative h-[3.75rem] overflow-hidden rounded-[7px] border text-left transition-all duration-300 ease-out",
+                        "group relative h-[3.25rem] min-w-0 flex-1 basis-0 overflow-hidden rounded-[7px] border text-left transition-all duration-300 ease-out",
                         "hover:-translate-y-0.5 hover:border-stone-400 hover:bg-white hover:shadow-[0_7px_20px_rgba(28,25,23,0.06)]",
                         selected
                           ? "border-stone-400 bg-white shadow-[0_7px_20px_rgba(28,25,23,0.06)]"
@@ -181,22 +181,22 @@ export function RobotaxiRainModeCaseOverview() {
                     >
                       <span
                         className={[
-                          "absolute inset-0 flex flex-col justify-center px-2.5 transition-all duration-[250ms] ease-out",
+                          "absolute inset-0 flex flex-col justify-center px-1.5 transition-all duration-[250ms] ease-out sm:px-2",
                           selected
                             ? "-translate-y-1 opacity-0"
                             : "translate-y-0 opacity-100 group-hover:-translate-y-1 group-hover:opacity-0",
                         ].join(" ")}
                       >
-                        <span className="block h-3 font-mono text-[9px] font-normal uppercase leading-3 tracking-[0.14em] text-stone-400">
+                        <span className="block font-mono text-[8px] font-normal uppercase leading-none tracking-[0.12em] text-stone-400">
                           {String(index + 1).padStart(2, "0")}
                         </span>
-                        <span className="mt-1.5 flex h-7 items-start font-mono text-[9px] font-normal uppercase leading-[1.15] tracking-[0.08em] text-stone-900">
+                        <span className="mt-1 line-clamp-2 font-mono text-[8px] font-normal uppercase leading-[1.1] tracking-[0.06em] text-stone-900 sm:text-[9px]">
                           {card.title}
                         </span>
                       </span>
                       <span
                         className={[
-                          "absolute inset-0 flex flex-col justify-center px-2.5 font-mono text-[9px] font-normal uppercase leading-[1.15] tracking-[0.06em] text-stone-600 transition-all duration-[250ms] ease-out",
+                          "absolute inset-0 flex flex-col justify-center px-1.5 font-mono text-[8px] font-normal uppercase leading-[1.1] tracking-[0.05em] text-stone-600 line-clamp-3 transition-all duration-[250ms] ease-out sm:px-2 sm:text-[9px]",
                           selected
                             ? "translate-y-0 opacity-100"
                             : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100",
