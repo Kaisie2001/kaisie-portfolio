@@ -1,5 +1,19 @@
 type IconProps = { className?: string; color?: string };
 
+export function BackIcon({ className = "h-4 w-4", color = "#1c1c1e" }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M10 3 5 8l5 5"
+        stroke={color}
+        strokeWidth={1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function RainCloudIcon({ className = "h-3 w-3" }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 16 12" fill="none" aria-hidden>
@@ -50,6 +64,10 @@ export function TargetTealIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
       <circle cx={9} cy={9} r={2.2} fill="#00a8b5" />
     </svg>
   );
+}
+
+export function TargetIcon({ className = "h-[18px] w-[18px]" }: IconProps) {
+  return <TargetTealIcon className={className} />;
 }
 
 export function SearchGrayIcon({ className = "h-[18px] w-[18px]" }: IconProps) {

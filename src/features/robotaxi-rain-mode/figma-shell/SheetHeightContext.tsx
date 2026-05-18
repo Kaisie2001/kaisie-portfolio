@@ -52,27 +52,33 @@ export function SheetHeightProvider({
   const snaps = useMemo(() => getSheetSnaps(screenKey), [screenKey]);
   const [heightPct, setHeightPct] = useState(snaps.collapsed);
   const heightRef = useRef(snaps.collapsed);
-  heightRef.current = heightPct;
+
+  useEffect(() => {
+    heightRef.current = heightPct;
+  }, [heightPct]);
+
+  const setSheetHeightPct = useCallback((pct: number) => {
+    heightRef.current = pct;
+    setHeightPct(pct);
+  }, []);
 
   const snapTo = useCallback(
     (target: "collapsed" | "expanded") => {
       const pct = target === "expanded" ? snaps.expanded : snaps.collapsed;
-      heightRef.current = pct;
-      setHeightPct(pct);
+      setSheetHeightPct(pct);
     },
-    [snaps.collapsed, snaps.expanded],
+    [setSheetHeightPct, snaps.collapsed, snaps.expanded],
   );
 
   useEffect(() => {
-    heightRef.current = snaps.collapsed;
-    setHeightPct(snaps.collapsed);
-  }, [screenKey, snaps.collapsed]);
+    setSheetHeightPct(snaps.collapsed);
+  }, [screenKey, setSheetHeightPct, snaps.collapsed]);
 
   return (
     <SheetHeightContext.Provider
       value={{
         heightPct,
-        setHeightPct,
+        setHeightPct: setSheetHeightPct,
         heightRef,
         snaps,
         snapTo,

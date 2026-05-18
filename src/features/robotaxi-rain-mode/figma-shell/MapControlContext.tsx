@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   type ReactNode,
@@ -27,7 +28,10 @@ export function MapControlProvider({
 }) {
   const recenterRef = useRef<(() => void) | null>(null);
   const sheetCoverRef = useRef(sheetCoverPct);
-  sheetCoverRef.current = sheetCoverPct;
+
+  useEffect(() => {
+    sheetCoverRef.current = sheetCoverPct;
+  }, [sheetCoverPct]);
 
   const registerRecenter = useCallback((fn: (() => void) | null) => {
     recenterRef.current = fn;

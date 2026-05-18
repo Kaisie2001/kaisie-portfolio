@@ -1,6 +1,5 @@
 "use client";
 
-import PixelBlast from "@/components/PixelBlast";
 import { motion, useReducedMotion } from "motion/react";
 import {
   useEffect,
@@ -76,7 +75,6 @@ function FigmaRainModeDemoInner({
   onUserInteraction,
 }: FigmaRainModeDemoProps) {
   const reduceMotion = useReducedMotion();
-  const showGuidedPixelBlast = Boolean(guidedPanel);
   const [internalScreen, setInternalScreen] = useState<FigmaScreen>(1);
   const isControlled = controlledScreen !== undefined;
   const screen = isControlled ? controlledScreen : internalScreen;
@@ -109,29 +107,6 @@ function FigmaRainModeDemoInner({
         }
         onPointerDownCapture={() => onUserInteraction?.()}
       >
-        {showGuidedPixelBlast ? (
-          <div className="figma-demo-stage__pixel-blast" aria-hidden>
-            <PixelBlast
-              variant="circle"
-              pixelSize={6}
-              color="#B497CF"
-              patternScale={3}
-              patternDensity={1.2}
-              pixelSizeJitter={0.5}
-              enableRipples={!reduceMotion}
-              rippleSpeed={0.4}
-              rippleThickness={0.12}
-              rippleIntensityScale={1.5}
-              liquid={!reduceMotion}
-              liquidStrength={0.12}
-              liquidRadius={1.2}
-              liquidWobbleSpeed={5}
-              speed={reduceMotion ? 0.25 : 0.6}
-              edgeFade={0.2}
-              transparent
-            />
-          </div>
-        ) : null}
         {guidedPanel ? (
           <div className="figma-demo-guided-panel">{guidedPanel}</div>
         ) : null}

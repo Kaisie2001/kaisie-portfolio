@@ -157,7 +157,7 @@ async function main(): Promise<void> {
   }
 
   const { DEMO_SCENARIO, getPickupZone, segmentCenter } = await import(
-    "../src/features/robotaxi-rain-mode/data/demoScenario.ts"
+    "../src/features/robotaxi-rain-mode/data/demoScenario"
   );
 
   const user = DEMO_SCENARIO.userLocation;
