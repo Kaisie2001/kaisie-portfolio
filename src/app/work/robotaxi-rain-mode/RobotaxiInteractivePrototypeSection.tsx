@@ -6,6 +6,7 @@ import {
   type RobotaxiDemoStageId,
   type RobotaxiInteractionEvent,
 } from "@/features/robotaxi-rain-mode/figma-shell";
+import { DemoRemoteOverlay } from "@/features/robotaxi-rain-mode/components/DemoRemoteOverlay";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { FigmaScreen } from "@/features/robotaxi-rain-mode/figma-shell/types";
 import type { PickupId } from "@/features/robotaxi-rain-mode/figma-shell/types";
@@ -64,7 +65,7 @@ function stageFromScreen(screen: FigmaScreen): RobotaxiDemoStageId {
   }
 }
 
-/** Live coded prototype — unchanged FigmaRainModeDemo, no guided wiring */
+/** Live coded prototype — phone is primary; stage remote is secondary overlay */
 export function RobotaxiInteractivePrototypeSection() {
   const { lang } = useLanguage();
   const [activeStage, setActiveStage] =
@@ -120,64 +121,15 @@ export function RobotaxiInteractivePrototypeSection() {
       <p className="mt-4 max-w-2xl rounded-lg border border-stone-200/80 bg-stone-100/50 px-3 py-2 text-[12px] leading-relaxed text-stone-600">
         {PROTOTYPE_SECTION_DISCLAIMER[lang]}
       </p>
-      <div className="robotaxi-shared-demo-shell mt-6">
-        <div
-          className="robotaxi-demo-guide-rail"
-          aria-label={lang === "zh" ? "阶段导览" : "Stage guide"}
-        >
-          <div
-            className="robotaxi-demo-stage-controls"
-            role="toolbar"
-            aria-label={
-              lang === "zh" ? "原型阶段导航" : "Prototype stage navigation"
-            }
-          >
-          <div className="robotaxi-demo-stage-controls__inner flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={previousStage}
-                className="rounded-full border border-stone-200 bg-white/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-600 transition hover:border-stone-300 hover:text-stone-950"
-              >
-                {lang === "zh" ? "上一步" : "Previous"}
-              </button>
-              <button
-                type="button"
-                onClick={nextStage}
-                className="rounded-full bg-stone-950 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-50 shadow-[0_10px_24px_rgba(28,25,23,0.12)] transition hover:bg-stone-800"
-              >
-                {lang === "zh" ? "下一步" : "Next"}
-              </button>
-            </div>
-            <div
-              className="flex flex-wrap items-center gap-1.5"
-              role="tablist"
-              aria-label={lang === "zh" ? "原型阶段" : "Prototype stages"}
-            >
-              {DEMO_STAGES.map((stage, index) => {
-                const selected = stage.id === activeStage;
-                return (
-                  <button
-                    key={stage.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    onClick={() => setStageFromSecondaryControl(stage.id)}
-                    className={[
-                      "rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] transition-colors",
-                      selected
-                        ? "bg-stone-950 text-stone-50"
-                        : "bg-white/65 text-stone-500 hover:text-stone-950",
-                    ].join(" ")}
-                  >
-                    {String(index + 1).padStart(2, "0")} {stage.label[lang]}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        </div>
+      <div className="robotaxi-demo-section-wrap mt-6">
+        <DemoRemoteOverlay
+          lang={lang}
+          activeStage={activeStage}
+          stages={DEMO_STAGES}
+          onPrevious={previousStage}
+          onNext={nextStage}
+          onStageSelect={setStageFromSecondaryControl}
+        />
         <FigmaRainModeDemo
           lang={lang}
           activeStage={active.id}
