@@ -7,7 +7,7 @@ import {
   GUIDED_DEMO_SECTION_TITLE,
 } from "./guidedDemoCopy";
 
-/** Static visual walkthrough — screenshots only, no live demo */
+/** Static visual walkthrough — frozen scenario only, no live demo */
 export function RobotaxiGuidedDemoSection() {
   const { lang } = useLanguage();
 
@@ -19,10 +19,10 @@ export function RobotaxiGuidedDemoSection() {
       >
         {GUIDED_DEMO_SECTION_TITLE[lang]}
       </h2>
-      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-stone-600">
+      <p className="mt-2 max-w-xl text-[13px] leading-relaxed text-stone-600">
         {GUIDED_DEMO_SECTION_SUBTITLE[lang]}
       </p>
-      <div className="mt-8">
+      <div className="mt-10">
         <GuidedDemoWalkthrough />
       </div>
     </section>
