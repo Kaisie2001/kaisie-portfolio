@@ -22,6 +22,7 @@ type Props = {
   pickupLabel: string;
   onBack: () => void;
   onCancel: () => void;
+  onContinue?: () => void;
 };
 
 /** Runs inside BottomSheet so useSheet is valid */
@@ -30,6 +31,7 @@ function Screen2SheetBody({
   pickupLabel,
   onBack,
   onCancel,
+  onContinue,
 }: Props) {
   const assigned = phase === "assigned";
   const { fitToContent } = useSheet();
@@ -130,6 +132,11 @@ function Screen2SheetBody({
         >
           Cancel request
         </button>
+        {onContinue ? (
+          <button type="button" className="figma-btn" onClick={onContinue}>
+            Continue
+          </button>
+        ) : null}
       </div>
     </>
   );

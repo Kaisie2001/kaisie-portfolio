@@ -44,11 +44,21 @@ export type RobotaxiDemoStageId =
   | "pudo-selection"
   | "pickup-coordination";
 
+export type RobotaxiInteractionEvent =
+  | "trip_setup_confirmed"
+  | "service_status_confirmed"
+  | "pickup_option_selected"
+  | "pickup_confirmed"
+  | "walking_guidance_started";
+
 export type FigmaRainModeDemoProps = {
   /** Existing site-level language passed by the page. */
   lang?: Lang;
   /** Slideshow stage controlled by the case-study section. */
   activeStage?: RobotaxiDemoStageId;
+  activeTechStage?: RobotaxiDemoStageId;
+  selectedPickupOption?: PickupId;
+  lastInteractionEvent?: RobotaxiInteractionEvent | null;
   /** Keeps phone primary actions aligned with stage navigation. */
   slideshowMode?: boolean;
   /** When set, screen is controlled by the parent (e.g. guided step navigator). */
@@ -64,6 +74,11 @@ export type FigmaRainModeDemoProps = {
   guidedPreviewOption?: PickupId | null;
   /** Called when the user interacts with the demo (pauses guided autoplay). */
   onUserInteraction?: () => void;
+  onTripSetupConfirmed?: () => void;
+  onServiceStatusConfirmed?: () => void;
+  onPickupOptionSelected?: (option: PickupId) => void;
+  onPickupConfirmed?: () => void;
+  onWalkingGuidanceStarted?: () => void;
 };
 
 /**
@@ -82,6 +97,9 @@ export function FigmaRainModeDemo(props: FigmaRainModeDemoProps = {}) {
 function FigmaRainModeDemoInner({
   lang = "en",
   activeStage,
+  activeTechStage,
+  selectedPickupOption,
+  lastInteractionEvent,
   slideshowMode = false,
   screen: controlledScreen,
   onScreenChange,
@@ -90,6 +108,11 @@ function FigmaRainModeDemoInner({
   guidedStep,
   guidedPreviewOption = null,
   onUserInteraction,
+  onTripSetupConfirmed,
+  onServiceStatusConfirmed,
+  onPickupOptionSelected,
+  onPickupConfirmed,
+  onWalkingGuidanceStarted,
 }: FigmaRainModeDemoProps) {
   const reduceMotion = useReducedMotion();
   const [internalScreen, setInternalScreen] = useState<FigmaScreen>(1);
@@ -130,7 +153,6 @@ function FigmaRainModeDemoInner({
         ) : null}
         <div className="figma-demo-center">
           <motion.div
-            key={guidedStep ?? screen}
             className="figma-demo-center__phone"
             initial={
               guidedPanel && !reduceMotion ? { opacity: 0, y: 6 } : false
@@ -149,10 +171,16 @@ function FigmaRainModeDemoInner({
                   pauseDispatchAuto={pauseDispatchAuto}
                   guidedStep={guidedStep}
                   guidedPreviewOption={guidedPreviewOption}
+                  selectedPickupOption={selectedPickupOption}
                   slideshowMode={slideshowMode}
                   onUserInteraction={onUserInteraction}
+                  onTripSetupConfirmed={onTripSetupConfirmed}
+                  onServiceStatusConfirmed={onServiceStatusConfirmed}
+                  onPickupOptionSelected={onPickupOptionSelected}
+                  onPickupConfirmed={onPickupConfirmed}
                   onStartWalking={() => {
                     onUserInteraction?.();
+                    onWalkingGuidanceStarted?.();
                     setToast("Navigation started.");
                     window.setTimeout(() => setToast(null), 2500);
                   }}
@@ -161,13 +189,18 @@ function FigmaRainModeDemoInner({
             </PhoneFrame>
           </motion.div>
         </div>
-        <div className="figma-demo-right-rail">
+        <div className="figma-demo-technical">
           <TechnicalEnginePanel
             screen={screen}
             lang={lang}
-            activeStage={activeStage}
-            selectedPickupOption={guidedPreviewOption ?? scenario.selectedZoneId}
+            activeStage={activeTechStage ?? activeStage}
+            selectedPickupOption={
+              selectedPickupOption ?? guidedPreviewOption ?? scenario.selectedZoneId
+            }
+            lastInteractionEvent={lastInteractionEvent}
           />
+        </div>
+        <div className="figma-demo-board-controls">
           <DemoControlsPanel onRandomPickup={handleRandomPickup} />
         </div>
       </div>
@@ -186,8 +219,13 @@ type FigmaDemoStageProps = {
   pauseDispatchAuto?: boolean;
   guidedStep?: 1 | 2 | 3 | 4;
   guidedPreviewOption?: PickupId | null;
+  selectedPickupOption?: PickupId;
   slideshowMode?: boolean;
   onUserInteraction?: () => void;
+  onTripSetupConfirmed?: () => void;
+  onServiceStatusConfirmed?: () => void;
+  onPickupOptionSelected?: (option: PickupId) => void;
+  onPickupConfirmed?: () => void;
   onStartWalking: () => void;
 };
 
@@ -197,8 +235,13 @@ function FigmaDemoStage({
   pauseDispatchAuto = false,
   guidedStep,
   guidedPreviewOption = null,
+  selectedPickupOption,
   slideshowMode = false,
   onUserInteraction,
+  onTripSetupConfirmed,
+  onServiceStatusConfirmed,
+  onPickupOptionSelected,
+  onPickupConfirmed,
   onStartWalking,
 }: FigmaDemoStageProps) {
   const {
@@ -219,13 +262,15 @@ function FigmaDemoStage({
   const dispatchAutoRef = useRef(true);
   const pickup = scenario.selectedZoneId;
   const displayPickup =
-    guidedStep === 2 && guidedPreviewOption
+    selectedPickupOption ??
+    (guidedStep === 2 && guidedPreviewOption
       ? guidedPreviewOption
-      : pickup;
+      : pickup);
 
   const handlePickupSelect = (id: PickupId) => {
     onUserInteraction?.();
     setSelectedZoneId(id);
+    onPickupOptionSelected?.(id);
   };
   const { heightPct } = useSheetHeight();
   const stageStyle = {
@@ -245,6 +290,7 @@ function FigmaDemoStage({
 
   const confirmZoneAndReturn = () => {
     confirmPickupZone(scenario.selectedZoneId);
+    onPickupConfirmed?.();
     onScreenChange(slideshowMode ? 4 : 1);
   };
 
@@ -255,7 +301,13 @@ function FigmaDemoStage({
 
   const handleRequestRobotaxi = () => {
     requestRobotaxi();
+    onTripSetupConfirmed?.();
     onScreenChange(2);
+  };
+
+  const handleServiceStatusContinue = () => {
+    onServiceStatusConfirmed?.();
+    onScreenChange(3);
   };
 
   useEffect(() => {
@@ -373,12 +425,6 @@ function FigmaDemoStage({
     onScreenChange(1);
   };
 
-  const handleContinueToVehicle = () => {
-    dispatchAutoRef.current = false;
-    continueToAssignedVehicle();
-    onScreenChange(4);
-  };
-
   const dispatchPickupLabel = getDispatchPickupLabelForScenario(scenario);
 
   return (
@@ -418,6 +464,7 @@ function FigmaDemoStage({
               pickupLabel={dispatchPickupLabel}
               onBack={handleCancelDispatch}
               onCancel={handleCancelDispatch}
+              onContinue={slideshowMode ? handleServiceStatusContinue : undefined}
             />
           ) : null}
           {screen === 3 ? (

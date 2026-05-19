@@ -1,13 +1,14 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import {
   FigmaRainModeDemo,
   type RobotaxiDemoStageId,
+  type RobotaxiInteractionEvent,
 } from "@/features/robotaxi-rain-mode/figma-shell";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { FigmaScreen } from "@/features/robotaxi-rain-mode/figma-shell/types";
+import type { PickupId } from "@/features/robotaxi-rain-mode/figma-shell/types";
 import {
   PROTOTYPE_SECTION_COPY,
   PROTOTYPE_SECTION_DISCLAIMER,
@@ -66,22 +67,40 @@ function stageFromScreen(screen: FigmaScreen): RobotaxiDemoStageId {
 /** Live coded prototype — unchanged FigmaRainModeDemo, no guided wiring */
 export function RobotaxiInteractivePrototypeSection() {
   const { lang } = useLanguage();
-  const reduceMotion = useReducedMotion();
   const [activeStage, setActiveStage] =
     useState<RobotaxiDemoStageId>("context-trigger");
+  const [activeTechStage, setActiveTechStage] =
+    useState<RobotaxiDemoStageId>("context-trigger");
+  const [selectedPickupOption, setSelectedPickupOption] =
+    useState<PickupId>("sheltered");
+  const [lastInteractionEvent, setLastInteractionEvent] =
+    useState<RobotaxiInteractionEvent | null>(null);
   const activeIndex = Math.max(
     0,
     DEMO_STAGES.findIndex((stage) => stage.id === activeStage),
   );
   const active = DEMO_STAGES[activeIndex] ?? DEMO_STAGES[0];
+  const setStageFromEvent = (
+    stage: RobotaxiDemoStageId,
+    event: RobotaxiInteractionEvent,
+  ) => {
+    setActiveStage(stage);
+    setActiveTechStage(stage);
+    setLastInteractionEvent(event);
+  };
+  const setStageFromSecondaryControl = (stage: RobotaxiDemoStageId) => {
+    setActiveStage(stage);
+    setActiveTechStage(stage);
+  };
   const previousStage = () => {
-    setActiveStage(
-      DEMO_STAGES[(activeIndex - 1 + DEMO_STAGES.length) % DEMO_STAGES.length]
-        .id,
+    setStageFromSecondaryControl(
+      DEMO_STAGES[(activeIndex - 1 + DEMO_STAGES.length) % DEMO_STAGES.length].id,
     );
   };
   const nextStage = () => {
-    setActiveStage(DEMO_STAGES[(activeIndex + 1) % DEMO_STAGES.length].id);
+    setStageFromSecondaryControl(
+      DEMO_STAGES[(activeIndex + 1) % DEMO_STAGES.length].id,
+    );
   };
 
   return (
@@ -131,7 +150,7 @@ export function RobotaxiInteractivePrototypeSection() {
                 type="button"
                 role="tab"
                 aria-selected={selected}
-                onClick={() => setActiveStage(stage.id)}
+                onClick={() => setStageFromSecondaryControl(stage.id)}
                 className={[
                   "rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] transition-colors",
                   selected
@@ -145,31 +164,42 @@ export function RobotaxiInteractivePrototypeSection() {
           })}
         </div>
       </div>
-      <div className="mt-6 overflow-hidden rounded-[28px] border border-black/[0.05] bg-stone-50 shadow-[0_20px_56px_rgb(28_25_23_/_0.08)]">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active.id}
-            initial={
-              reduceMotion ? { opacity: 0 } : { opacity: 0, x: 18 }
-            }
-            animate={{ opacity: 1, x: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
-            transition={{
-              duration: reduceMotion ? 0.16 : 0.28,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            <FigmaRainModeDemo
-              lang={lang}
-              activeStage={active.id}
-              screen={active.screen}
-              guidedStep={active.guidedStep}
-              pauseDispatchAuto
-              slideshowMode
-              onScreenChange={(screen) => setActiveStage(stageFromScreen(screen))}
-            />
-          </motion.div>
-        </AnimatePresence>
+      <div className="mt-6">
+        <FigmaRainModeDemo
+          lang={lang}
+          activeStage={active.id}
+          activeTechStage={activeTechStage}
+          selectedPickupOption={selectedPickupOption}
+          lastInteractionEvent={lastInteractionEvent}
+          screen={active.screen}
+          guidedStep={active.guidedStep}
+          pauseDispatchAuto
+          slideshowMode
+          onTripSetupConfirmed={() =>
+            setStageFromEvent("service-gate", "trip_setup_confirmed")
+          }
+          onServiceStatusConfirmed={() =>
+            setStageFromEvent("pudo-selection", "service_status_confirmed")
+          }
+          onPickupOptionSelected={(option) => {
+            setSelectedPickupOption(option);
+            setActiveStage("pudo-selection");
+            setActiveTechStage("pudo-selection");
+            setLastInteractionEvent("pickup_option_selected");
+          }}
+          onPickupConfirmed={() =>
+            setStageFromEvent("pickup-coordination", "pickup_confirmed")
+          }
+          onWalkingGuidanceStarted={() =>
+            setStageFromEvent(
+              "pickup-coordination",
+              "walking_guidance_started",
+            )
+          }
+          onScreenChange={(screen) =>
+            setStageFromSecondaryControl(stageFromScreen(screen))
+          }
+        />
       </div>
     </section>
   );

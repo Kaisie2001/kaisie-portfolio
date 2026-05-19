@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import type { Lang } from "@/lib/portfolioCopy";
 import type { FigmaScreen, PickupId } from "../figma-shell/types";
-import type { RobotaxiDemoStageId } from "../figma-shell/FigmaRainModeDemo";
+import type {
+  RobotaxiDemoStageId,
+  RobotaxiInteractionEvent,
+} from "../figma-shell/FigmaRainModeDemo";
 import { rainModeDemoData } from "../data/rainModeDemoData";
 import type { TechnicalStage } from "../data/types";
 import { buildRainModeContext } from "../engine/contextTrigger";
@@ -17,6 +20,7 @@ type Props = {
   lang: Lang;
   activeStage?: RobotaxiDemoStageId;
   selectedPickupOption?: PickupId;
+  lastInteractionEvent?: RobotaxiInteractionEvent | null;
 };
 
 const TECHNICAL_STAGE_BY_ACTIVE_STAGE: Record<RobotaxiDemoStageId, TechnicalStage> = {
@@ -270,7 +274,7 @@ function Metric({
   value: string | number;
 }) {
   return (
-    <div className="rounded-xl border border-stone-200/70 bg-white/55 px-3 py-2">
+    <div className="robotaxi-tech-metric rounded-xl border border-stone-200/70 bg-white/55 px-3 py-2">
       <p className="m-0 font-mono text-[9px] uppercase tracking-[0.12em] text-stone-400">
         {label}
       </p>
@@ -289,7 +293,7 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="border-t border-stone-200/70 pt-3 first:border-t-0 first:pt-0">
+    <section className="robotaxi-tech-section border-t border-stone-200/70 pt-3 first:border-t-0 first:pt-0">
       <h4 className="m-0 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-500">
         {title}
       </h4>
@@ -305,6 +309,7 @@ export function TechnicalEnginePanel({
   lang,
   activeStage,
   selectedPickupOption = "sheltered",
+  lastInteractionEvent,
 }: Props) {
   const copy = PANEL_COPY[lang];
   const contextInput = {
@@ -426,8 +431,16 @@ export function TechnicalEnginePanel({
       <h3 className="m-0 mt-2 text-[15px] font-semibold leading-snug text-stone-950">
         {copy.stageTitle[stage]}
       </h3>
+      {lastInteractionEvent ? (
+        <p className="m-0 mt-2 font-mono text-[10px] tracking-[0.12em] text-stone-500">
+          event: {lastInteractionEvent}
+        </p>
+      ) : null}
 
-      <div className="mt-4 grid gap-3">
+      <div
+        key={`${stage}-${selectedPickupOption}-${lastInteractionEvent ?? "idle"}`}
+        className="robotaxi-technical-panel__sections mt-4 grid gap-3"
+      >
         {stage === "contextTrigger" ? (
           <>
             <Section title={copy.sections.input}>
