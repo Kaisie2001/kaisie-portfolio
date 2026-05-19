@@ -94,6 +94,9 @@
 
 /* Interactive prototype — fixed SharedDemoBoard (phone + technical slots) */
 .figma-demo-stage--shared-board {
+  --f-demo-phone-top: 48px;
+  --f-demo-phone-left: 56px;
+  --f-demo-phone-width: 310px;
   display: block;
   width: 100%;
   max-width: 1120px;
@@ -546,12 +549,12 @@
 
 .figma-demo-stage--shared-board .figma-demo-phone-slot {
   position: absolute;
-  top: 48px;
-  left: 56px;
+  top: var(--f-demo-phone-top);
+  left: var(--f-demo-phone-left);
   z-index: 3;
   display: flex;
   justify-content: center;
-  width: 310px;
+  width: var(--f-demo-phone-width);
   margin: 0;
   pointer-events: auto;
 }
@@ -630,13 +633,16 @@
   width: min(100%, 420px);
 }
 
+/* Demo seed control — outside phone, upper-right of PhoneSlot (overlay, no layout push) */
 .figma-demo-stage--shared-board .figma-demo-board-controls {
   position: absolute;
-  bottom: 28px;
-  left: 56px;
-  z-index: 2;
-  width: 310px;
-  max-width: calc(100% - 112px);
+  top: calc(var(--f-demo-phone-top) + 16px);
+  left: calc(var(--f-demo-phone-left) + var(--f-demo-phone-width) + 8px);
+  bottom: auto;
+  z-index: 30;
+  width: auto;
+  max-width: none;
+  pointer-events: none;
 }
 
 .robotaxi-technical-panel {
@@ -911,15 +917,69 @@
 }
 
 .figma-demo-board-controls .robotaxi-demo-controls {
+  position: relative;
   flex: none;
-  width: 100%;
+  width: auto;
+  max-width: none;
   max-height: none;
+  pointer-events: auto;
 }
 
-.figma-demo-board-controls .robotaxi-demo-controls__glass {
-  background: rgb(255 255 255 / 0.48);
-  border-color: rgb(28 25 23 / 0.06);
-  box-shadow: 0 8px 22px rgb(28 25 23 / 0.05);
+/* Collapsed trigger + popover opens toward technical panel (not over phone) */
+.robotaxi-demo-controls__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: 999px;
+  background: #fff;
+  color: #44403c;
+  box-shadow: 0 8px 22px rgb(28 25 23 / 0.1);
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+.robotaxi-demo-controls__toggle:hover {
+  border-color: rgb(28 25 23 / 0.16);
+  background: #fff;
+}
+
+.robotaxi-demo-controls__toggle:active {
+  transform: scale(0.97);
+}
+
+.robotaxi-demo-controls.is-open .robotaxi-demo-controls__toggle {
+  border-color: rgb(28 25 23 / 0.18);
+  background: rgb(28 25 23 / 0.92);
+  color: #fafaf9;
+}
+
+.robotaxi-demo-controls__popover {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 10px);
+  z-index: 40;
+  width: 196px;
+  max-height: min(var(--f-screen-h), calc(100vh - 200px));
+  pointer-events: auto;
+}
+
+/* SharedDemoBoard — expanded panel fully opaque over technical text */
+.figma-demo-stage--shared-board .figma-demo-board-controls .robotaxi-demo-controls__glass {
+  background: #fff;
+  opacity: 1;
+  border: 1px solid rgb(0 0 0 / 0.08);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 0.14);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .figma-demo-stage--guided .robotaxi-demo-controls {
@@ -973,11 +1033,19 @@
 
   .figma-demo-stage--shared-board .figma-demo-board-controls {
     position: relative;
-    bottom: auto;
+    top: auto;
     left: auto;
+    bottom: auto;
     width: 100%;
     max-width: 360px;
-    margin: 0 auto;
+    margin: 12px auto 0;
+    pointer-events: auto;
+  }
+
+  .figma-demo-stage--shared-board .figma-demo-board-controls .robotaxi-demo-controls__popover {
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .robotaxi-demo-remote-overlay {
@@ -1026,9 +1094,10 @@
 
 /* External prototype panel — compact, ≤ phone height */
 .robotaxi-demo-controls {
-  flex: 0 0 196px;
-  width: 196px;
-  max-height: var(--f-screen-h);
+  position: relative;
+  flex: 0 0 auto;
+  width: auto;
+  max-height: none;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
     sans-serif;
   box-sizing: border-box;
