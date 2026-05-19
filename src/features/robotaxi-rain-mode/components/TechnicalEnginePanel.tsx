@@ -48,11 +48,14 @@ const PANEL_COPY: Record<
       parameters: string;
       parametersThresholds: string;
       computed: string;
+      pipeline: string;
+      formulas: string;
+      selectedDebug: string;
       hardConstraints: string;
       walkingExposure: string;
       etaBoarding: string;
-      weights: string;
       comfortScore: string;
+      weights: string;
     };
     screen1Method: string[];
     labels: Record<string, string>;
@@ -74,11 +77,14 @@ const PANEL_COPY: Record<
       parameters: "Parameters",
       parametersThresholds: "Parameters / Thresholds",
       computed: "Computed Output",
+      pipeline: "Computation Pipeline",
+      formulas: "Formulas",
+      selectedDebug: "Selected Option Debug",
       hardConstraints: "Hard Constraints",
-      walkingExposure: "Walking Exposure Calculation",
+      walkingExposure: "Walking Exposure",
       etaBoarding: "ETA / Boarding Time",
-      weights: "Parameters / Weights",
       comfortScore: "Rain Comfort Score",
+      weights: "Parameters / Weights",
     },
     screen1Method: [
       "Match request to service area",
@@ -105,10 +111,6 @@ const PANEL_COPY: Record<
       supply: "Supply",
       etaReliability: "ETA Reliability",
       queue: "Queue",
-      rawCandidates: "Raw Candidates",
-      afterHardFilter: "After Hard Filter",
-      selectedPudo: "Selected PUDO",
-      vehicle: "Vehicle",
     },
     values: {
       inside: "inside",
@@ -120,46 +122,27 @@ const PANEL_COPY: Record<
       serviceAvailabilityCheck: "service availability check",
       pass: "pass",
       blocked: "blocked",
-      noneRejected: "No rejected candidates.",
-      rejected: "rejected",
-      walk: "walk",
-      exposed: "exposed",
-      exposure: "exposure",
-      eta: "ETA",
-      boarding: "boarding",
-      comfort: "comfort",
-      weighted: "weighted",
-      closest: "Closest",
-      sheltered: "Sheltered",
-      soonest: "Soonest",
-      recommended: "Recommended",
-      notice: "Notice",
-      routePoints: "route points",
       moderateRain: "moderate_rain",
       medium: "medium",
       originName: "Shenzhen Bay Sports Center",
       destinationName: "Talent Park",
       serviceAreaName: "sz-bay-sports-center",
+      noneRejected: "No rejected candidates.",
+      rejected: "rejected",
     },
     sentences: {
       serviceGateMethod:
-        "Gate service availability, vehicle supply, and ETA reliability before soft pickup ranking runs.",
-      maxEtaRisk: "Max accepted ETA reliability risk:",
-      gateResult: "Gate result:",
-      serviceGatePassed:
-        "Service remains available; ETA reliability is acceptable for Rain Mode ranking.",
-      serviceGateBlocked:
-        "Service gate blocks pickup ranking because availability or ETA reliability is below threshold.",
-      hardRejectedPrefix: "rejected:",
-      weights:
-        "Rain exposure {rainExposure}, shelter {shelter}, covered walk {coveredWalk}, ETA {eta}",
+        "Gate service availability, supply, and ETA reliability before soft ranking.",
+      weightsSummary:
+        "rain {rainExposure} · shelter {shelter} · covered {coveredWalk} · ETA {eta}",
+      maxEtaRisk: "Max ETA risk",
+      gateResult: "Gate result",
+      serviceGatePassed: "Service available; ETA reliability acceptable.",
+      serviceGateBlocked: "Gate blocks ranking — availability or ETA below threshold.",
       coordinationMethod:
-        "Bind the dispatched vehicle route to the selected legal PUDO, then keep the passenger under cover until curbside arrival.",
-      boardingBuffer: "Boarding rain buffer:",
-      approachRoute: "Approach route:",
-      across: "across",
-      passengerInstruction:
-        "Hold passenger at covered waiting point until the vehicle reaches the legal curbside PUDO.",
+        "Bind vehicle route to legal PUDO; keep passenger under cover until curbside arrival.",
+      coordinationNote:
+        "The selected PUDO becomes the executable pickup target aligning passenger walking and vehicle approach.",
     },
   },
   zh: {
@@ -176,11 +159,14 @@ const PANEL_COPY: Record<
       parameters: "参数",
       parametersThresholds: "参数 / 阈值",
       computed: "计算输出",
+      pipeline: "计算管线",
+      formulas: "公式",
+      selectedDebug: "当前选项调试",
       hardConstraints: "硬约束",
-      walkingExposure: "步行暴露计算",
+      walkingExposure: "步行暴露",
       etaBoarding: "ETA / 上车时间",
-      weights: "参数 / 权重",
       comfortScore: "雨天舒适度得分",
+      weights: "参数 / 权重",
     },
     screen1Method: [
       "将用户请求匹配到服务区域",
@@ -207,10 +193,6 @@ const PANEL_COPY: Record<
       supply: "车辆供给",
       etaReliability: "ETA 可靠性",
       queue: "排队状态",
-      rawCandidates: "原始候选点",
-      afterHardFilter: "硬过滤后",
-      selectedPudo: "选中 PUDO",
-      vehicle: "车辆",
     },
     values: {
       inside: "范围内",
@@ -224,19 +206,6 @@ const PANEL_COPY: Record<
       blocked: "阻断",
       noneRejected: "没有被拒绝的候选点。",
       rejected: "被拒绝",
-      walk: "步行",
-      exposed: "暴露",
-      exposure: "暴露占比",
-      eta: "ETA",
-      boarding: "上车",
-      comfort: "舒适度",
-      weighted: "加权分",
-      closest: "最近",
-      sheltered: "遮蔽",
-      soonest: "最快",
-      recommended: "推荐",
-      notice: "提示",
-      routePoints: "路线点",
       moderateRain: "中雨",
       medium: "中等",
       originName: "深圳湾体育中心",
@@ -245,62 +214,125 @@ const PANEL_COPY: Record<
     },
     sentences: {
       serviceGateMethod:
-        "在进入软排序前，先检查服务可用性、车辆供给和 ETA 可靠性。",
-      maxEtaRisk: "可接受的最高 ETA 风险：",
-      gateResult: "门控结果：",
-      serviceGatePassed:
-        "服务仍可用，ETA 可靠性满足 Rain Mode 排序要求。",
-      serviceGateBlocked:
-        "服务可用性或 ETA 可靠性低于阈值，门控阻断后续排序。",
-      hardRejectedPrefix: "被拒绝：",
-      weights:
-        "雨中暴露 {rainExposure}，遮蔽 {shelter}，有遮蔽步行 {coveredWalk}，ETA {eta}",
+        "在进入软排序前，先检查服务可用性、供给和 ETA 可靠性。",
+      maxEtaRisk: "最高 ETA 风险",
+      gateResult: "门控结果",
+      serviceGatePassed: "服务可用，ETA 可靠性满足要求。",
+      serviceGateBlocked: "可用性或 ETA 低于阈值，门控阻断排序。",
       coordinationMethod:
-        "将派发车辆路线绑定到选中的合法 PUDO，并让乘客在遮蔽点等待车辆到达路侧上车点。",
-      boardingBuffer: "雨天上车缓冲：",
-      approachRoute: "接近路线：",
-      across: "经过",
-      passengerInstruction:
-        "乘客先在遮蔽等待点等候，直到车辆到达合法路侧 PUDO。",
+        "将车辆路线绑定到合法 PUDO，乘客在遮蔽点等待路侧到达。",
+      weightsSummary:
+        "暴露 {rainExposure} · 遮蔽 {shelter} · 有遮蔽步行 {coveredWalk} · ETA {eta}",
+      coordinationNote:
+        "选中的 PUDO 成为可执行上车目标，同时约束乘客步行引导与车辆接近路线。",
     },
   },
 };
 
-function Metric({
+function TechnicalMetricCard({
   label,
   value,
+  multiline = false,
 }: {
   label: string;
   value: string | number;
+  multiline?: boolean;
 }) {
   return (
-    <div className="robotaxi-tech-metric rounded-xl border border-stone-200/70 bg-white/55 px-3 py-2">
-      <p className="m-0 font-mono text-[9px] uppercase tracking-[0.12em] text-stone-400">
-        {label}
-      </p>
-      <p className="m-0 mt-1 text-sm font-semibold leading-tight text-stone-950">
-        {value}
-      </p>
+    <div
+      className={
+        multiline
+          ? "robotaxi-tech-metric-card robotaxi-tech-metric-card--multiline"
+          : "robotaxi-tech-metric-card"
+      }
+    >
+      <span className="robotaxi-tech-metric-card__label">{label}</span>
+      <span className="robotaxi-tech-metric-card__value">{value}</span>
     </div>
   );
 }
 
-function Section({
-  title,
-  children,
+function Chip({
+  label,
+  value,
+  variant = "metric",
 }: {
-  title: string;
-  children: ReactNode;
+  label: string;
+  value: string | number;
+  variant?: "metric" | "text";
 }) {
   return (
-    <section className="robotaxi-tech-section border-t border-stone-200/70 pt-3 first:border-t-0 first:pt-0">
-      <h4 className="m-0 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-500">
-        {title}
-      </h4>
-      <div className="mt-2 text-[12px] leading-relaxed text-stone-700">
-        {children}
-      </div>
-    </section>
+    <TechnicalMetricCard
+      label={label}
+      value={value}
+      multiline={variant === "text"}
+    />
+  );
+}
+
+function ScoreRow({ label, value }: { label: string; value: string | number }) {
+  return <TechnicalMetricCard label={label} value={value} />;
+}
+
+function formatScoreLabel(pudoId: string) {
+  switch (pudoId) {
+    case "closest":
+      return "Closest";
+    case "sheltered":
+      return "Sheltered";
+    case "soonest":
+      return "Soonest";
+    default:
+      return pudoId;
+  }
+}
+
+function MetricGrid({
+  children,
+  stack = false,
+}: {
+  children: ReactNode;
+  stack?: boolean;
+}) {
+  return (
+    <div
+      className={
+        stack
+          ? "robotaxi-tech-metric-grid robotaxi-tech-metric-grid--stack"
+          : "robotaxi-tech-metric-grid"
+      }
+    >
+      {children}
+    </div>
+  );
+}
+
+function ChipGrid({
+  children,
+  stack = false,
+}: {
+  children: ReactNode;
+  stack?: boolean;
+}) {
+  return <MetricGrid stack={stack}>{children}</MetricGrid>;
+}
+
+function Block({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="robotaxi-technical-panel__block">
+      <h4 className="robotaxi-technical-panel__block-title">{title}</h4>
+      <div className="robotaxi-technical-panel__block-body">{children}</div>
+    </div>
+  );
+}
+
+function CompactList({ items }: { items: string[] }) {
+  return (
+    <ul className="robotaxi-tech-list robotaxi-tech-list--compact">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -368,483 +400,470 @@ export function TechnicalEnginePanel({
     activeStage
       ? TECHNICAL_STAGE_BY_ACTIVE_STAGE[activeStage]
       : screen >= 1 && screen <= 4
-      ? TECHNICAL_STAGE_BY_SCREEN[screen as 1 | 2 | 3 | 4]
-      : TECHNICAL_STAGE_BY_SCREEN[1];
+        ? TECHNICAL_STAGE_BY_SCREEN[screen as 1 | 2 | 3 | 4]
+        : TECHNICAL_STAGE_BY_SCREEN[1];
   const selectedPickupMetrics =
     selection.candidatesWithComputedMetrics?.find(
       (candidate) => (candidate.id ?? candidate.pudo_id) === selectedPickupOption,
     ) ?? selection.selectedRecommendation;
-  const selectedInsight =
+
+  const pipelineSteps =
+    lang === "zh"
+      ? (selection.debugPipeline ?? []).map((item) =>
+          item
+            .replace(
+              "Query candidate pool within 150m search radius",
+              "150m 半径查询候选池",
+            )
+            .replace("Apply hard feasibility filters", "硬可行性过滤")
+            .replace("Calculate walking route exposure", "计算步行暴露")
+            .replace(
+              "Estimate vehicle ETA and boarding time",
+              "估算 ETA 与上车时间",
+            )
+            .replace("Calculate rain comfort score", "计算雨天舒适度")
+            .replace(
+              "Select Closest / Sheltered / Soonest",
+              "选择最近 / 遮蔽 / 最快",
+            ),
+        )
+      : (selection.debugPipeline ?? []);
+
+  const selectedDebugLabel =
     selectedPickupOption === "closest"
-      ? {
-          title: lang === "zh" ? "当前选择：P1 最近" : "Selected: P1 Closest",
-          bullets:
-            lang === "zh"
-              ? [
-                  "优化最短步行距离",
-                  "雨中暴露距离更高",
-                  "选择依据：min walkingDistanceM",
-                ]
-              : [
-                  "optimized for shortest walking distance",
-                  "higher rain-exposed distance",
-                  "selected by min walkingDistanceM",
-                ],
-        }
+      ? lang === "zh"
+        ? "P1 最近"
+        : "P1 Closest"
       : selectedPickupOption === "soonest"
-        ? {
-            title: lang === "zh" ? "当前选择：P3 最快" : "Selected: P3 Soonest",
-            bullets:
-              lang === "zh"
-                ? [
-                    "优化最早成功上车",
-                    "选择依据：min estimatedBoardingTimeMin",
-                    "不一定是最遮蔽方案",
-                  ]
-                : [
-                    "optimized for earliest boarding",
-                    "selected by min estimatedBoardingTimeMin",
-                    "not necessarily the most sheltered option",
-                  ],
-          }
-        : {
-            title: lang === "zh" ? "当前选择：P2 遮蔽" : "Selected: P2 Sheltered",
-            bullets:
-              lang === "zh"
-                ? [
-                    "优化雨天舒适度",
-                    "雨中暴露距离更低",
-                    "选择依据：max rainComfortScore",
-                  ]
-                : [
-                    "optimized for rain comfort",
-                    "lower rain-exposed distance",
-                    "selected by max rainComfortScore",
-                  ],
-          };
+        ? lang === "zh"
+          ? "P3 最快"
+          : "P3 Soonest"
+        : lang === "zh"
+          ? "P2 遮蔽"
+          : "P2 Sheltered";
+
+  const selectedDebugDetail =
+    selectedPickupOption === "closest"
+      ? lang === "zh"
+        ? "min walkingDistanceM"
+        : "min walkingDistanceM"
+      : selectedPickupOption === "soonest"
+        ? lang === "zh"
+          ? "min estimatedBoardingTimeMin"
+          : "min estimatedBoardingTimeMin"
+        : lang === "zh"
+          ? "max rainComfortScore"
+          : "max rainComfortScore";
+
+  const coordinationSteps =
+    lang === "zh"
+      ? [
+          "锁定选中 PUDO",
+          "启动乘客步行引导",
+          "追踪车辆接近路线",
+          "比较到达时间与 ETA",
+          "监控上车点有效性",
+        ]
+      : [
+          "Lock selected PUDO",
+          "Start passenger walking guidance",
+          "Track vehicle approach route",
+          "Compare arrival time vs ETA",
+          "Monitor pickup validity",
+        ];
 
   return (
     <aside className="robotaxi-technical-panel">
-      <p className="m-0 font-mono text-[10px] uppercase tracking-[0.16em] text-stone-400">
-        {copy.eyebrow}
-      </p>
-      <h3 className="m-0 mt-2 text-[15px] font-semibold leading-snug text-stone-950">
-        {copy.stageTitle[stage]}
-      </h3>
-      {lastInteractionEvent ? (
-        <p className="m-0 mt-2 font-mono text-[10px] tracking-[0.12em] text-stone-500">
-          event: {lastInteractionEvent}
+      <div className="robotaxi-technical-panel__header">
+        <p className="m-0 font-mono text-[10px] uppercase tracking-[0.16em] text-stone-400">
+          {copy.eyebrow}
         </p>
-      ) : null}
+        <h3 className="m-0 mt-1.5 text-[14px] font-semibold leading-snug text-stone-950">
+          {copy.stageTitle[stage]}
+        </h3>
+        {lastInteractionEvent ? (
+          <p className="robotaxi-tech-event">event: {lastInteractionEvent}</p>
+        ) : null}
+      </div>
 
       <div
         key={`${stage}-${selectedPickupOption}-${lastInteractionEvent ?? "idle"}`}
-        className="robotaxi-technical-panel__sections mt-4 grid gap-3"
+        className="robotaxi-technical-panel__body mt-2"
       >
-        {stage === "contextTrigger" ? (
-          <>
-            <Section title={copy.sections.input}>
-              <div className="grid gap-2">
-                <Metric
-                  label={copy.labels.userLocation}
-                  value={copy.values.originName}
-                />
-                <Metric
-                  label={copy.labels.destination}
-                  value={copy.values.destinationName}
-                />
-                <Metric
-                  label={copy.labels.pickupWindow}
-                  value={`${contextInput.pickupTimeWindowMin} min`}
-                />
-                <Metric
-                  label={copy.labels.weatherStatus}
-                  value={copy.values.moderateRain}
-                />
-                <Metric
-                  label={copy.labels.rainIntensity}
-                  value={contextInput.rainIntensity}
-                />
-                <Metric
-                  label={copy.labels.serviceArea}
-                  value={copy.values.serviceAreaName}
-                />
-                <Metric
-                  label={copy.labels.oddBoundary}
-                  value={
-                    contextInput.withinOdd
-                      ? copy.values.inside
-                      : copy.values.outside
-                  }
-                />
+        <div className="robotaxi-technical-panel__sections">
+          {stage === "contextTrigger" ? (
+            <>
+              <Block title={copy.sections.input}>
+                <ChipGrid>
+                  <Chip label={copy.labels.userLocation} value={copy.values.originName} />
+                  <Chip label={copy.labels.destination} value={copy.values.destinationName} />
+                  <Chip label={copy.labels.weatherStatus} value={copy.values.moderateRain} />
+                  <Chip label={copy.labels.rainIntensity} value={contextInput.rainIntensity} />
+                  <Chip
+                    label={copy.labels.pickupWindow}
+                    value={`${contextInput.pickupTimeWindowMin} min`}
+                  />
+                  <Chip label={copy.labels.serviceArea} value={copy.values.serviceAreaName} />
+                </ChipGrid>
+              </Block>
+              <Block title={copy.sections.method}>
+                <CompactList items={copy.screen1Method} />
+              </Block>
+              <div className="robotaxi-technical-panel__row robotaxi-technical-panel__row--2col">
+                <Block title={copy.sections.parameters}>
+                  <ChipGrid>
+                    <Chip
+                      label={copy.labels.rainThreshold}
+                      value={context.debug.threshold}
+                    />
+                    <Chip
+                      label={copy.labels.weatherConfidence}
+                      value={copy.values.medium}
+                    />
+                  </ChipGrid>
+                </Block>
+                <Block title={copy.sections.computed}>
+                  <ChipGrid>
+                    <Chip
+                      label={copy.labels.rainMode}
+                      value={
+                        context.rainModeActive
+                          ? copy.values.active
+                          : copy.values.inactive
+                      }
+                    />
+                    <Chip
+                      label={copy.labels.nextStage}
+                      value={
+                        context.nextStage === "service-gate"
+                          ? copy.values.serviceAvailabilityCheck
+                          : copy.values.inactive
+                      }
+                    />
+                    <Chip
+                      label={copy.labels.triggerRule}
+                      value={`${context.debug.value} ≥ ${context.debug.threshold}`}
+                    />
+                    <Chip
+                      label={copy.labels.withinOdd}
+                      value={context.withinOdd ? copy.values.true : copy.values.false}
+                    />
+                  </ChipGrid>
+                </Block>
               </div>
-            </Section>
-            <Section title={copy.sections.method}>
-              <ul className="m-0 space-y-1 p-0">
-                {copy.screen1Method.map((item) => (
-                  <li key={item} className="list-none">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Section>
-            <Section title={copy.sections.parameters}>
-              <div className="grid gap-2">
-                <Metric
-                  label={copy.labels.pickupWindow}
-                  value={`${contextInput.pickupTimeWindowMin} min`}
-                />
-                <Metric
-                  label={copy.labels.rainThreshold}
-                  value={context.debug.threshold}
-                />
-                <Metric
-                  label={copy.labels.weatherConfidence}
-                  value={copy.values.medium}
-                />
-              </div>
-            </Section>
-            <Section title={copy.sections.computed}>
-              <div className="grid gap-2">
-                <Metric
-                  label={copy.labels.rainMode}
-                  value={
-                    context.rainModeActive
-                      ? copy.values.active
-                      : copy.values.inactive
-                  }
-                />
-                <Metric
-                  label={copy.labels.weatherStatus}
-                  value={copy.values.moderateRain}
-                />
-                <Metric
-                  label={copy.labels.serviceAreaMatched}
-                  value={
-                    context.serviceAreaMatched
-                      ? copy.values.true
-                      : copy.values.false
-                  }
-                />
-                <Metric
-                  label={copy.labels.withinOdd}
-                  value={context.withinOdd ? copy.values.true : copy.values.false}
-                />
-                <Metric
-                  label={copy.labels.nextStage}
-                  value={
-                    context.nextStage === "service-gate"
-                      ? copy.values.serviceAvailabilityCheck
-                      : copy.values.inactive
-                  }
-                />
-                <Metric
-                  label={copy.labels.triggerRule}
-                  value={`${context.debug.triggerRule} (${context.debug.value} >= ${context.debug.threshold})`}
-                />
-              </div>
-            </Section>
-          </>
-        ) : null}
+            </>
+          ) : null}
 
-        {stage === "serviceGate" ? (
-          <>
-            <Section title={copy.sections.input}>
-              <div className="grid grid-cols-2 gap-2">
-                <Metric label={copy.labels.service} value={serviceGate.serviceStatus} />
-                <Metric label={copy.labels.supply} value={serviceGate.vehicleSupplyLevel} />
-                <Metric
-                  label={copy.labels.etaReliability}
-                  value={serviceGate.etaReliability}
+          {stage === "serviceGate" ? (
+            <>
+              <Block title={copy.sections.input}>
+                <ChipGrid>
+                  <Chip label={copy.labels.service} value={serviceGate.serviceStatus} />
+                  <Chip label={copy.labels.supply} value={serviceGate.vehicleSupplyLevel} />
+                  <Chip
+                    label={copy.labels.etaReliability}
+                    value={serviceGate.etaReliability}
+                  />
+                  <Chip label={copy.labels.queue} value={serviceGate.queueStatus ?? "n/a"} />
+                </ChipGrid>
+              </Block>
+              <Block title={copy.sections.method}>
+                <CompactList
+                  items={[
+                    copy.sentences.serviceGateMethod,
+                    `${copy.sentences.maxEtaRisk}: ${rainModeDemoData.thresholds.maxEtaReliabilityRisk}`,
+                  ]}
                 />
-                <Metric label={copy.labels.queue} value={serviceGate.queueStatus ?? "n/a"} />
+              </Block>
+              <div className="robotaxi-technical-panel__row robotaxi-technical-panel__row--2col">
+                <Block title={copy.sections.parametersThresholds}>
+                  <ChipGrid>
+                    <Chip
+                      label="max_eta_risk"
+                      value={rainModeDemoData.thresholds.maxEtaReliabilityRisk}
+                    />
+                    <Chip label="service_status" value={serviceGate.serviceStatus} />
+                  </ChipGrid>
+                </Block>
+                <Block title={copy.sections.computed}>
+                  <ChipGrid>
+                    <Chip
+                      label={copy.sentences.gateResult}
+                      value={serviceGate.passed ? copy.values.pass : copy.values.blocked}
+                    />
+                  </ChipGrid>
+                  <p className="m-0 mt-1.5 text-[10px] leading-snug text-stone-600">
+                    {serviceGate.passed
+                      ? copy.sentences.serviceGatePassed
+                      : copy.sentences.serviceGateBlocked}
+                  </p>
+                </Block>
               </div>
-            </Section>
-            <Section title={copy.sections.method}>
-              {copy.sentences.serviceGateMethod}
-            </Section>
-            <Section title={copy.sections.parametersThresholds}>
-              {copy.sentences.maxEtaRisk}{" "}
-              <strong>{rainModeDemoData.thresholds.maxEtaReliabilityRisk}</strong>
-            </Section>
-            <Section title={copy.sections.computed}>
-              {copy.sentences.gateResult}{" "}
-              <strong>
-                {serviceGate.passed ? copy.values.pass : copy.values.blocked}
-              </strong>
-              <br />
-              {serviceGate.passed
-                ? copy.sentences.serviceGatePassed
-                : copy.sentences.serviceGateBlocked}
-            </Section>
-          </>
-        ) : null}
+            </>
+          ) : null}
 
-        {stage === "pudoSelection" ? (
-          <>
-            <Section title={copy.sections.input}>
-              <div className="grid grid-cols-2 gap-2">
-                <Metric
-                  label="PudoCandidate"
-                  value={`${rainModeDemoData.pudoCandidates.length} items`}
+          {stage === "pudoSelection" ? (
+            <>
+              <Block title={copy.sections.input}>
+                <ChipGrid>
+                  <Chip
+                    label="PudoCandidate"
+                    value={`${rainModeDemoData.pudoCandidates.length} items`}
+                  />
+                  <Chip
+                    label="WalkingRoute"
+                    value={`${rainModeDemoData.walkingRoutes.length} routes`}
+                  />
+                  <Chip
+                    label="ShelterFeature"
+                    value={`${rainModeDemoData.shelterFeatures.length} item`}
+                  />
+                  <Chip
+                    label="VehicleApproachRoute"
+                    value={`${rainModeDemoData.vehicleApproachRoutes.length} route`}
+                  />
+                  <Chip
+                    label="EtaEstimate"
+                    value={`${rainModeDemoData.etaEstimates.length} estimates`}
+                  />
+                  <Chip label="LegalStoppingRule" value="assumed_valid_for_demo" />
+                </ChipGrid>
+              </Block>
+              <Block title={copy.sections.pipeline}>
+                <CompactList items={pipelineSteps} />
+              </Block>
+              <Block title={copy.sections.hardConstraints}>
+                <CompactList
+                  items={
+                    selection.hardFilterResults.length > 0
+                      ? selection.hardFilterResults.map((result) =>
+                          `${result.pudoId}: ${
+                            result.passed
+                              ? copy.values.pass
+                              : `${copy.values.rejected} (${result.failed.join(", ")})`
+                          }`,
+                        )
+                      : [copy.values.noneRejected]
+                  }
                 />
-                <Metric
-                  label="ShelterFeature"
-                  value={`${rainModeDemoData.shelterFeatures.length} item`}
-                />
-                <Metric
-                  label="WalkingRoute"
-                  value={`${rainModeDemoData.walkingRoutes.length} routes`}
-                />
-                <Metric
-                  label="VehicleApproachRoute"
-                  value={`${rainModeDemoData.vehicleApproachRoutes.length} route`}
-                />
-                <Metric
-                  label="EtaEstimate"
-                  value={`${rainModeDemoData.etaEstimates.length} estimates`}
-                />
-                <Metric
-                  label="LegalStoppingRule"
-                  value={lang === "zh" ? "assumed_valid_for_demo" : "assumed_valid_for_demo"}
-                />
-                <Metric
-                  label="OddServiceBoundary"
-                  value={lang === "zh" ? "范围内" : "within boundary"}
-                />
+              </Block>
+              <div className="robotaxi-technical-panel__row robotaxi-technical-panel__row--2col">
+                <Block title={copy.sections.walkingExposure}>
+                  <CompactList
+                    items={(selection.candidatesWithComputedMetrics ?? []).map(
+                      (candidate) =>
+                        `${candidate.debugId}: ${candidate.walkingDistanceM}m walk · ${candidate.rainExposedDistanceM}m exposed · ${Math.round((candidate.coveredRatio ?? 0) * 100)}% covered`,
+                    )}
+                  />
+                </Block>
+                <Block title={copy.sections.etaBoarding}>
+                  <CompactList
+                    items={(selection.candidatesWithComputedMetrics ?? []).map(
+                      (candidate) => {
+                        const pudoKey = candidate.id ?? candidate.pudo_id;
+                        const eta = selection.etaByPudo[pudoKey];
+                        return `${candidate.debugId}: ETA ${candidate.vehicleEtaMin ?? eta?.vehicle_eta_min ?? "n/a"}m · boarding ${candidate.estimatedBoardingTimeMin}m`;
+                      },
+                    )}
+                  />
+                </Block>
               </div>
-            </Section>
-            <Section title={lang === "zh" ? "计算管线" : "Computation Pipeline"}>
-              <ul className="m-0 space-y-1 p-0">
-                {(selection.debugPipeline ?? []).map((item) => (
-                  <li key={item} className="list-none">
-                    {lang === "zh"
-                      ? item
-                          .replace("Query candidate pool within 150m search radius", "在 150m 搜索半径内查询候选点池")
-                          .replace("Apply hard feasibility filters", "应用硬可行性过滤")
-                          .replace("Calculate walking route exposure", "计算步行路线暴露")
-                          .replace("Estimate vehicle ETA and boarding time", "估算车辆 ETA 与上车时间")
-                          .replace("Calculate rain comfort score", "计算雨天舒适度得分")
-                          .replace("Select Closest / Sheltered / Soonest", "选择最近 / 遮蔽 / 最快")
-                      : item}
-                  </li>
-                ))}
-              </ul>
-            </Section>
-            <Section title={lang === "zh" ? "参数与指标" : "Parameters & Indicators"}>
-              <div className="grid gap-2">
-                <Metric label="search radius" value="150 m" />
-                <Metric label="boarding buffer" value="0.5 min" />
-                <Metric label="sheltered walk cap" value="1.5 × closest walk" />
-                <Metric label="sheltered ETA cap" value="fastest ETA + 3 min" />
-                <Metric label="exposure reduction target" value="20 m" />
+              <div className="robotaxi-technical-panel__row robotaxi-technical-panel__row--2col">
+                <Block title={copy.sections.parametersThresholds}>
+                  <ChipGrid>
+                    <Chip label="search radius" value="150 m" />
+                    <Chip
+                      label="boarding buffer"
+                      value={`${rainModeDemoData.thresholds.boardingBufferMin} min`}
+                    />
+                    <Chip label="sheltered walk cap" value="1.5 × closest walk" />
+                    <Chip label="sheltered ETA cap" value="fastest ETA + 3 min" />
+                    <Chip label="exposure reduction" value="20 m" />
+                  </ChipGrid>
+                </Block>
+                <Block title={copy.sections.weights}>
+                  <p className="m-0 text-[11px] leading-snug text-stone-600">
+                    {copy.sentences.weightsSummary
+                      .replace(
+                        "{rainExposure}",
+                        String(rainModeDemoData.weights.rainExposure),
+                      )
+                      .replace(
+                        "{shelter}",
+                        String(rainModeDemoData.weights.shelterScore),
+                      )
+                      .replace(
+                        "{coveredWalk}",
+                        String(rainModeDemoData.weights.coveredWalking),
+                      )
+                      .replace("{eta}", String(rainModeDemoData.weights.vehicleEta))}
+                  </p>
+                </Block>
               </div>
-            </Section>
-            <Section title={lang === "zh" ? "公式" : "Formulas"}>
-              <ul className="m-0 space-y-1 p-0">
-                <li className="list-none">
+              <Block title={copy.sections.formulas}>
+                <div className="robotaxi-tech-formula-box">
                   covered distance = Σ segment length × coverage ratio
-                </li>
-                <li className="list-none">
-                  exposed distance = Σ segment length × (1 - coverage ratio)
-                </li>
-                <li className="list-none">
+                  <br />
+                  exposed distance = Σ segment length × (1 − coverage ratio)
+                  <br />
                   boarding time = max(walk time, vehicle ETA) + buffer
-                </li>
-                <li className="list-none">
-                  rain comfort score = shelter + covered + same-side + recognition - exposure - walk - ETA - crossing
-                </li>
-              </ul>
-            </Section>
-            <Section title={copy.sections.computed}>
-              <div className="grid gap-2">
-                <Metric label="raw candidates" value={selection.rawCandidateCount} />
-                <Metric
-                  label="valid after hard filter"
-                  value={selection.validCandidateCount}
-                />
-                <Metric
-                  label="Closest"
-                  value={`${selection.closest?.debugId ?? "P1"}, selected by minimum walking distance`}
-                />
-                <Metric
-                  label="Sheltered"
-                  value={`${selection.sheltered?.debugId ?? "P2"}, selected by maximum rain comfort score`}
-                />
-                <Metric
-                  label="Soonest"
-                  value={`${selection.soonest?.debugId ?? "P3"}, selected by minimum estimated boarding time`}
-                />
-                {(selection.candidatesWithComputedMetrics ?? []).map((candidate) => (
-                  <Metric
-                    key={candidate.debugId}
-                    label={`${candidate.debugId} ${candidate.label}`}
-                    value={`${candidate.walkingDistanceM}m walk · ${candidate.rainExposedDistanceM}m exposed · ${candidate.vehicleEtaMin}m ETA · ${candidate.estimatedBoardingTimeMin}m boarding · ${candidate.rainComfortScore} score`}
-                  />
-                ))}
-              </div>
-            </Section>
-            <Section title={selectedInsight.title}>
-              <ul className="m-0 space-y-1 p-0">
-                {selectedInsight.bullets.map((item) => (
-                  <li key={item} className="list-none">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              {selectedPickupMetrics ? (
-                <div className="mt-2 grid gap-2">
-                  <Metric
-                    label="computed metrics"
-                    value={`${selectedPickupMetrics.debugId}: ${selectedPickupMetrics.walkingDistanceM}m walk · ${selectedPickupMetrics.rainExposedDistanceM}m exposed · ${selectedPickupMetrics.estimatedBoardingTimeMin}m boarding`}
-                  />
+                  <br />
+                  rain comfort = shelter + covered + same-side + recognition −
+                  exposure − walk − ETA − crossing
                 </div>
-              ) : null}
-            </Section>
-          </>
-        ) : null}
+              </Block>
+              <Block title={copy.sections.comfortScore}>
+                <MetricGrid stack>
+                  {selection.scores.map((score) => (
+                    <ScoreRow
+                      key={score.pudoId}
+                      label={formatScoreLabel(score.pudoId)}
+                      value={`${score.rainComfortScore} score`}
+                    />
+                  ))}
+                </MetricGrid>
+              </Block>
+              <Block title={copy.sections.computed}>
+                <ChipGrid>
+                  <Chip label="raw candidates" value={selection.rawCandidateCount} />
+                  <Chip
+                    label="valid after hard filter"
+                    value={selection.validCandidateCount}
+                  />
+                  <Chip
+                    variant="text"
+                    label="Closest"
+                    value={`${selection.closest?.debugId ?? "P1"} · min walking distance`}
+                  />
+                  <Chip
+                    variant="text"
+                    label="Sheltered"
+                    value={`${selection.sheltered?.debugId ?? "P2"} · max rain comfort score`}
+                  />
+                  <Chip
+                    variant="text"
+                    label="Soonest"
+                    value={`${selection.soonest?.debugId ?? "P3"} · min boarding time`}
+                  />
+                </ChipGrid>
+                <MetricGrid stack>
+                  {(selection.candidatesWithComputedMetrics ?? []).map(
+                    (candidate) => (
+                      <TechnicalMetricCard
+                        key={candidate.debugId}
+                        multiline
+                        label={`${candidate.debugId} ${candidate.label}`}
+                        value={`${candidate.walkingDistanceM}m walk · ${candidate.rainExposedDistanceM}m exposed · ${candidate.vehicleEtaMin}m ETA · ${candidate.estimatedBoardingTimeMin}m boarding · ${candidate.rainComfortScore} score`}
+                      />
+                    ),
+                  )}
+                </MetricGrid>
+              </Block>
+              <Block title={copy.sections.selectedDebug}>
+                <div className="robotaxi-tech-debug-strip">
+                  <strong>{selectedDebugLabel}</strong>
+                  <span>{selectedDebugDetail}</span>
+                  {selectedPickupMetrics ? (
+                    <span>
+                      {selectedPickupMetrics.walkingDistanceM}m walk ·{" "}
+                      {selectedPickupMetrics.rainExposedDistanceM}m exposed ·{" "}
+                      {selectedPickupMetrics.estimatedBoardingTimeMin}m boarding
+                    </span>
+                  ) : null}
+                </div>
+              </Block>
+            </>
+          ) : null}
 
-        {stage === "pickupCoordination" ? (
-          <>
-            <Section title={copy.sections.input}>
-              <div className="grid gap-2">
-                <Metric
-                  label="selected_pudo"
-                  value={
-                    pickupCoordinationState
-                      ? `${pickupCoordinationState.selectedPickupLabel} / ${pickupCoordinationState.selectedPudoId}`
-                      : coordination.selectedPudoId
-                  }
-                />
-                <Metric
-                  label="passenger_walking_route"
-                  value={
-                    pickupCoordinationState
-                      ? `${pickupCoordinationState.passengerWalkDistanceM} m · ${pickupCoordinationState.passengerWalkTimeMin} min`
-                      : "n/a"
-                  }
-                />
-                <Metric
-                  label="vehicle_approach_route"
-                  value={
-                    pickupCoordinationState
-                      ? `${pickupCoordinationState.vehicleDistanceKm} km`
-                      : `${coordination.approachDistanceM} m`
-                  }
-                />
-                <Metric
-                  label="vehicle_position"
-                  value={shelteredApproachRoute?.vehicleId ?? coordination.vehicleId}
-                />
-                <Metric
-                  label="vehicle_eta"
-                  value={
-                    pickupCoordinationState
-                      ? `${pickupCoordinationState.vehicleEtaMin} min`
-                      : "n/a"
-                  }
-                />
-                <Metric
-                  label="route_confidence"
-                  value={shelteredWalkingRoute?.route_confidence ?? "medium"}
-                />
+          {stage === "pickupCoordination" ? (
+            <>
+              <Block title={copy.sections.input}>
+                <ChipGrid>
+                  <Chip
+                    label="selected_pudo"
+                    value={
+                      pickupCoordinationState
+                        ? `${pickupCoordinationState.selectedPickupLabel}`
+                        : coordination.selectedPudoId
+                    }
+                  />
+                  <Chip
+                    label="passenger_walk"
+                    value={
+                      pickupCoordinationState
+                        ? `${pickupCoordinationState.passengerWalkDistanceM} m`
+                        : "n/a"
+                    }
+                  />
+                  <Chip
+                    label="vehicle_approach"
+                    value={
+                      pickupCoordinationState
+                        ? `${pickupCoordinationState.vehicleDistanceKm} km`
+                        : `${coordination.approachDistanceM} m`
+                    }
+                  />
+                  <Chip
+                    label="vehicle_eta"
+                    value={
+                      pickupCoordinationState
+                        ? `${pickupCoordinationState.vehicleEtaMin} min`
+                        : "n/a"
+                    }
+                  />
+                  <Chip
+                    label="route_confidence"
+                    value={shelteredWalkingRoute?.route_confidence ?? "medium"}
+                  />
+                </ChipGrid>
+              </Block>
+              <Block title={copy.sections.method}>
+                <CompactList items={coordinationSteps} />
+              </Block>
+              <div className="robotaxi-technical-panel__row robotaxi-technical-panel__row--2col">
+                <Block title={copy.sections.parametersThresholds}>
+                  <ChipGrid>
+                    <Chip
+                      label="geofence"
+                      value={`${pickupCoordinationState?.debug.pickupGeofenceRadiusM ?? 25} m`}
+                    />
+                    <Chip
+                      label="buffer"
+                      value={`${pickupCoordinationState?.debug.boardingBufferMin ?? 0.5} min`}
+                    />
+                    <Chip
+                      label="sync gap"
+                      value={`${pickupCoordinationState?.debug.maxArrivalSyncGapMin ?? 5} min`}
+                    />
+                  </ChipGrid>
+                </Block>
+                <Block title={copy.sections.computed}>
+                  <ChipGrid>
+                    <Chip
+                      label="exposed"
+                      value={`${pickupCoordinationState?.rainExposedDistanceM ?? 15} m`}
+                    />
+                    <Chip
+                      label="covered"
+                      value={`${pickupCoordinationState?.coveredDistanceM ?? 45} m`}
+                    />
+                    <Chip
+                      label="sync gap"
+                      value={`${pickupCoordinationState?.arrivalSyncGapMin ?? 5} min`}
+                    />
+                    <Chip
+                      label="validity"
+                      value={pickupCoordinationState?.pickupValidity ?? "confirmed"}
+                    />
+                  </ChipGrid>
+                  <p className="m-0 mt-2 text-[11px] leading-snug text-stone-600">
+                    {copy.sentences.coordinationNote}
+                  </p>
+                </Block>
               </div>
-            </Section>
-            <Section title={copy.sections.method}>
-              <ul className="m-0 space-y-1 p-0">
-                {(lang === "zh"
-                  ? [
-                      "锁定选中的 PUDO",
-                      "启动乘客步行引导",
-                      "追踪车辆接近路线",
-                      "比较乘客到达时间与车辆 ETA",
-                      "持续监控上车点是否仍然有效",
-                    ]
-                  : [
-                      "Lock selected PUDO",
-                      "Start passenger walking guidance",
-                      "Track vehicle approach route",
-                      "Compare passenger arrival time and vehicle ETA",
-                      "Monitor whether pickup remains valid",
-                    ]
-                ).map((item) => (
-                  <li key={item} className="list-none">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Section>
-            <Section title={copy.sections.parametersThresholds}>
-              <div className="grid gap-2">
-                <Metric
-                  label="pickup geofence radius"
-                  value={`${pickupCoordinationState?.debug.pickupGeofenceRadiusM ?? 25} m`}
-                />
-                <Metric
-                  label="boarding buffer"
-                  value={`${pickupCoordinationState?.debug.boardingBufferMin ?? 0.5} min`}
-                />
-                <Metric
-                  label="ETA update interval"
-                  value={`${pickupCoordinationState?.debug.etaUpdateIntervalSec ?? 15} sec`}
-                />
-                <Metric
-                  label="max arrival sync gap"
-                  value={`${pickupCoordinationState?.debug.maxArrivalSyncGapMin ?? 5} min`}
-                />
-              </div>
-            </Section>
-            <Section title={copy.sections.computed}>
-              <div className="grid gap-2">
-                <Metric
-                  label="selected pickup"
-                  value={
-                    pickupCoordinationState
-                      ? `${pickupCoordinationState.selectedPickupLabel} / ${pickupCoordinationState.selectedPudoId}`
-                      : "Sheltered / P2"
-                  }
-                />
-                <Metric
-                  label="passenger walk"
-                  value={`${pickupCoordinationState?.passengerWalkDistanceM ?? 60} m`}
-                />
-                <Metric
-                  label="exposed distance"
-                  value={`${pickupCoordinationState?.rainExposedDistanceM ?? 15} m`}
-                />
-                <Metric
-                  label="covered distance"
-                  value={`${pickupCoordinationState?.coveredDistanceM ?? 45} m`}
-                />
-                <Metric
-                  label="vehicle distance"
-                  value={`${pickupCoordinationState?.vehicleDistanceKm ?? 1.2} km`}
-                />
-                <Metric
-                  label="vehicle ETA"
-                  value={`${pickupCoordinationState?.vehicleEtaMin ?? 7} min`}
-                />
-                <Metric
-                  label="arrival sync gap"
-                  value={`${pickupCoordinationState?.arrivalSyncGapMin ?? 5} min`}
-                />
-                <Metric
-                  label="pickup validity"
-                  value={pickupCoordinationState?.pickupValidity ?? "confirmed"}
-                />
-                <Metric
-                  label="fallback required"
-                  value={String(pickupCoordinationState?.fallbackRequired ?? false)}
-                />
-              </div>
-              <p className="m-0 mt-2">
-                {lang === "zh"
-                  ? "选中的 PUDO 不只是 UI 选项，而是同时约束乘客步行引导与车辆接近路线的可执行上车目标。"
-                  : "The selected PUDO is not only a UI choice; it becomes the executable pickup target that aligns passenger walking guidance with vehicle approach guidance."}
-              </p>
-            </Section>
-          </>
-        ) : null}
+            </>
+          ) : null}
+        </div>
       </div>
     </aside>
   );

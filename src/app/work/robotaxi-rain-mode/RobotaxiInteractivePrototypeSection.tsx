@@ -30,16 +30,16 @@ const DEMO_STAGES: DemoStage[] = [
     label: { en: "Set Trip", zh: "设置行程" },
   },
   {
-    id: "service-gate",
-    screen: 2,
-    guidedStep: 2,
-    label: { en: "Service", zh: "服务状态" },
-  },
-  {
     id: "pudo-selection",
     screen: 3,
     guidedStep: 3,
     label: { en: "Pickup", zh: "上车点选择" },
+  },
+  {
+    id: "service-gate",
+    screen: 2,
+    guidedStep: 2,
+    label: { en: "Service", zh: "服务状态" },
   },
   {
     id: "pickup-coordination",
@@ -120,51 +120,64 @@ export function RobotaxiInteractivePrototypeSection() {
       <p className="mt-4 max-w-2xl rounded-lg border border-stone-200/80 bg-stone-100/50 px-3 py-2 text-[12px] leading-relaxed text-stone-600">
         {PROTOTYPE_SECTION_DISCLAIMER[lang]}
       </p>
-      <div className="mt-6 flex flex-col gap-3 rounded-[24px] border border-stone-200/70 bg-stone-100/45 p-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={previousStage}
-            className="rounded-full border border-stone-200 bg-white/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-600 transition hover:border-stone-300 hover:text-stone-950"
-          >
-            {lang === "zh" ? "上一步" : "Previous"}
-          </button>
-          <button
-            type="button"
-            onClick={nextStage}
-            className="rounded-full bg-stone-950 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-50 shadow-[0_10px_24px_rgba(28,25,23,0.12)] transition hover:bg-stone-800"
-          >
-            {lang === "zh" ? "下一步" : "Next"}
-          </button>
-        </div>
+      <div className="robotaxi-shared-demo-shell mt-6">
         <div
-          className="flex flex-wrap items-center gap-1.5"
-          role="tablist"
-          aria-label={lang === "zh" ? "原型阶段" : "Prototype stages"}
+          className="robotaxi-demo-guide-rail"
+          aria-label={lang === "zh" ? "阶段导览" : "Stage guide"}
         >
-          {DEMO_STAGES.map((stage, index) => {
-            const selected = stage.id === activeStage;
-            return (
+          <div
+            className="robotaxi-demo-stage-controls"
+            role="toolbar"
+            aria-label={
+              lang === "zh" ? "原型阶段导航" : "Prototype stage navigation"
+            }
+          >
+          <div className="robotaxi-demo-stage-controls__inner flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2">
               <button
-                key={stage.id}
                 type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => setStageFromSecondaryControl(stage.id)}
-                className={[
-                  "rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] transition-colors",
-                  selected
-                    ? "bg-stone-950 text-stone-50"
-                    : "bg-white/65 text-stone-500 hover:text-stone-950",
-                ].join(" ")}
+                onClick={previousStage}
+                className="rounded-full border border-stone-200 bg-white/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-600 transition hover:border-stone-300 hover:text-stone-950"
               >
-                {String(index + 1).padStart(2, "0")} {stage.label[lang]}
+                {lang === "zh" ? "上一步" : "Previous"}
               </button>
-            );
-          })}
+              <button
+                type="button"
+                onClick={nextStage}
+                className="rounded-full bg-stone-950 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-stone-50 shadow-[0_10px_24px_rgba(28,25,23,0.12)] transition hover:bg-stone-800"
+              >
+                {lang === "zh" ? "下一步" : "Next"}
+              </button>
+            </div>
+            <div
+              className="flex flex-wrap items-center gap-1.5"
+              role="tablist"
+              aria-label={lang === "zh" ? "原型阶段" : "Prototype stages"}
+            >
+              {DEMO_STAGES.map((stage, index) => {
+                const selected = stage.id === activeStage;
+                return (
+                  <button
+                    key={stage.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    onClick={() => setStageFromSecondaryControl(stage.id)}
+                    className={[
+                      "rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] transition-colors",
+                      selected
+                        ? "bg-stone-950 text-stone-50"
+                        : "bg-white/65 text-stone-500 hover:text-stone-950",
+                    ].join(" ")}
+                  >
+                    {String(index + 1).padStart(2, "0")} {stage.label[lang]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="mt-6">
+        </div>
         <FigmaRainModeDemo
           lang={lang}
           activeStage={active.id}

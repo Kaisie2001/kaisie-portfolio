@@ -61,15 +61,26 @@
   );
 }
 
+/* Interactive prototype: wrap is layout-only — no second board behind SharedDemoBoard */
+.figma-demo-wrap:has(.figma-demo-stage--shared-board) {
+  padding: 0;
+  background: transparent;
+}
+
 .figma-demo-stage {
   position: relative;
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(290px, 360px) minmax(0, 1fr);
+  grid-template-areas:
+    "phone tech"
+    "phone controls";
+  align-items: center;
+  gap: 22px 34px;
   width: 100%;
   max-width: 1120px;
-  height: 760px;
-  max-height: 780px;
+  min-height: calc(var(--f-screen-h) + 92px);
   margin: 0 auto;
-  padding: 0;
+  padding: 40px 42px 34px;
   border: 1px solid rgb(28 25 23 / 0.07);
   border-radius: 34px;
   background:
@@ -78,7 +89,132 @@
   box-shadow:
     0 24px 70px rgb(28 25 23 / 0.08),
     inset 0 1px 0 rgb(255 255 255 / 0.72);
+  overflow: visible;
+}
+
+/* Interactive prototype — fixed SharedDemoBoard (phone + technical slots) */
+.figma-demo-stage--shared-board {
+  display: block;
+  width: 100%;
+  max-width: 1120px;
+  height: clamp(620px, calc(100vh - 160px), 740px);
+  max-height: clamp(620px, calc(100vh - 160px), 740px);
+  min-height: unset;
+  margin: 0 auto;
+  padding: 0;
   overflow: hidden;
+}
+
+/* Interactive prototype — hover-reveal stage controls (guide rail only, not on board) */
+.robotaxi-shared-demo-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Slim hover target above the board — does not cover phone / technical panel */
+.robotaxi-demo-guide-rail {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  overflow: hidden;
+  max-height: 34px;
+  padding: 0 14px;
+  transition: max-height 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.robotaxi-demo-guide-rail::after {
+  content: "";
+  position: absolute;
+  inset: auto 14px 10px;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(28 25 23 / 0.14) 20%,
+    rgb(28 25 23 / 0.14) 80%,
+    transparent
+  );
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.robotaxi-demo-stage-controls {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(-8px);
+  filter: blur(2px);
+  pointer-events: none;
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.robotaxi-demo-stage-controls__inner {
+  border: 1px solid rgb(28 25 23 / 0.12);
+  border-radius: 24px;
+  background: rgb(245 245 244 / 0.88);
+  padding: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgb(28 25 23 / 0.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .robotaxi-demo-guide-rail:hover,
+  .robotaxi-demo-guide-rail:focus-within {
+    max-height: 180px;
+  }
+
+  .robotaxi-demo-guide-rail:hover::after,
+  .robotaxi-demo-guide-rail:focus-within::after {
+    opacity: 0;
+  }
+
+  .robotaxi-demo-guide-rail:hover .robotaxi-demo-stage-controls,
+  .robotaxi-demo-guide-rail:focus-within .robotaxi-demo-stage-controls {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    pointer-events: auto;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .robotaxi-demo-guide-rail {
+    max-height: none;
+    overflow: visible;
+    padding: 0 14px;
+  }
+
+  .robotaxi-demo-guide-rail::after {
+    display: none;
+  }
+
+  .robotaxi-demo-stage-controls {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .robotaxi-demo-guide-rail {
+    transition: max-height 180ms ease;
+  }
+
+  .robotaxi-demo-stage-controls {
+    transform: none;
+    filter: none;
+    transition: opacity 180ms ease;
+  }
 }
 
 /* Guided showcase: panel | phone | controls inside one background */
@@ -199,17 +335,29 @@
 }
 
 .figma-demo-center {
-  position: absolute;
-  top: 64px;
-  left: 96px;
-  z-index: 3;
+  position: relative;
+  z-index: 2;
   display: flex;
-  width: 360px;
+  grid-area: phone;
+  align-self: center;
   justify-content: center;
   min-width: 0;
 }
 
-.figma-demo-center::before {
+.figma-demo-stage--shared-board .figma-demo-phone-slot {
+  position: absolute;
+  top: 48px;
+  left: 56px;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  width: 310px;
+  margin: 0;
+  pointer-events: auto;
+}
+
+.figma-demo-center::before,
+.figma-demo-stage--shared-board .figma-demo-phone-slot::before {
   content: "";
   position: absolute;
   inset: 34px 18px 18px;
@@ -224,110 +372,333 @@
   display: flex;
   justify-content: center;
   width: auto;
-  transform: none;
+  transform: translateY(-6px);
   will-change: opacity, transform;
 }
 
+.figma-demo-stage--shared-board .figma-demo-center__phone {
+  transform: none;
+}
+
 .figma-demo-technical {
-  position: absolute;
-  top: 72px;
-  right: 56px;
-  bottom: 58px;
-  left: 520px;
-  z-index: 2;
+  position: relative;
+  z-index: 1;
+  grid-area: tech;
   min-width: 0;
-  overflow: hidden;
+  align-self: stretch;
+}
+
+.figma-demo-stage--shared-board .figma-demo-technical-slot {
+  position: absolute;
+  top: 56px;
+  left: 430px;
+  right: 56px;
+  bottom: 48px;
+  z-index: 2;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  container-type: inline-size;
+  container-name: robotaxi-tech-slot;
+}
+
+.figma-demo-stage--shared-board .figma-demo-technical-slot::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.figma-demo-stage--shared-board .figma-demo-technical-slot > * {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .figma-demo-board-controls {
+  position: relative;
+  z-index: 1;
+  grid-area: controls;
+  width: min(100%, 420px);
+}
+
+.figma-demo-stage--shared-board .figma-demo-board-controls {
   position: absolute;
-  left: 96px;
-  bottom: 30px;
+  bottom: 28px;
+  left: 56px;
   z-index: 2;
-  width: 360px;
-  max-height: 72px;
-  overflow: hidden;
+  width: 310px;
+  max-width: calc(100% - 112px);
 }
 
 .robotaxi-technical-panel {
   box-sizing: border-box;
+  display: block;
   width: 100%;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  padding: 4px 2px 0;
+  max-width: 100%;
+  min-width: 0;
+  min-height: min-content;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+  overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
     sans-serif;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
-.robotaxi-technical-panel__sections {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-  gap: 8px 10px !important;
+.robotaxi-technical-panel__header {
+  padding-bottom: 6px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.robotaxi-technical-panel__body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
   animation: robotaxi-tech-content-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.robotaxi-technical-panel__sections > .robotaxi-tech-section:first-child,
-.robotaxi-technical-panel__sections > .robotaxi-tech-section:nth-child(2) {
-  grid-column: 1 / -1;
+.robotaxi-technical-panel__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  padding-bottom: 8px;
 }
 
-.robotaxi-tech-section {
-  padding-top: 8px !important;
-}
-
-.robotaxi-tech-section h4 {
-  font-size: 8px !important;
-  line-height: 1.2 !important;
-  letter-spacing: 0.13em !important;
-}
-
-.robotaxi-tech-section > div {
-  margin-top: 6px !important;
-  font-size: 10.5px !important;
-  line-height: 1.35 !important;
-}
-
-.robotaxi-tech-section ul {
+.robotaxi-technical-panel__row {
   display: grid;
-  gap: 3px !important;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
-.robotaxi-tech-metric {
-  padding: 6px 8px !important;
-  border-radius: 10px !important;
-  background: rgb(255 255 255 / 0.5) !important;
+.robotaxi-technical-panel__row--2col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+  row-gap: 10px;
 }
 
-.robotaxi-tech-metric p:first-child {
-  font-size: 7.5px !important;
-  line-height: 1.15 !important;
-  letter-spacing: 0.1em !important;
+.robotaxi-technical-panel__block {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
-.robotaxi-tech-metric p:last-child {
-  margin-top: 3px !important;
-  font-size: 10.5px !important;
-  line-height: 1.2 !important;
+.robotaxi-technical-panel__block-title {
+  margin: 0 0 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  line-height: 1.15;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #78716c;
+}
+
+.robotaxi-technical-panel__block-body {
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 0;
+  overflow-x: hidden;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #44403c;
+}
+
+/* ── TechnicalMetricCard system (all screens) ── */
+.robotaxi-tech-metric-grid,
+.robotaxi-tech-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@container robotaxi-tech-slot (max-width: 480px) {
+  .robotaxi-tech-metric-grid,
+  .robotaxi-tech-chip-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.robotaxi-technical-panel__row--2col .robotaxi-tech-metric-grid,
+.robotaxi-technical-panel__row--2col .robotaxi-tech-chip-grid {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.robotaxi-tech-metric-grid--stack,
+.robotaxi-tech-chip-grid--stack {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.robotaxi-tech-metric-card,
+.robotaxi-tech-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 64px;
+  height: auto;
+  padding: 10px 12px;
+  overflow: visible;
+  border: 1px solid rgb(28 25 23 / 0.08);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.5);
+}
+
+.robotaxi-tech-metric-card--multiline,
+.robotaxi-tech-chip--text {
+  min-height: 72px;
+}
+
+.robotaxi-tech-metric-card__label,
+.robotaxi-tech-chip__label {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a8a29e;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.robotaxi-tech-metric-card__value,
+.robotaxi-tech-chip__value {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #1c1917;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.robotaxi-tech-metric-card--multiline .robotaxi-tech-metric-card__value,
+.robotaxi-tech-chip--text .robotaxi-tech-chip__value {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.robotaxi-tech-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.robotaxi-tech-list li {
+  position: relative;
+  padding-left: 12px;
+  line-height: 1.35;
+}
+
+.robotaxi-tech-list li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: #a8a29e;
+}
+
+.robotaxi-tech-list--compact li {
+  margin-bottom: 2px;
+}
+
+.robotaxi-tech-formula-box {
+  padding: 8px 10px;
+  border: 1px solid rgb(28 25 23 / 0.07);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.42);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  line-height: 1.3;
+  color: #57534e;
+}
+
+.robotaxi-tech-debug-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgb(28 25 23 / 0.05);
+  font-size: 10px;
+  line-height: 1.35;
+  color: #44403c;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.robotaxi-tech-debug-strip strong {
+  font-weight: 600;
+  color: #1c1917;
+}
+
+.robotaxi-tech-event {
+  margin: 4px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #78716c;
 }
 
 @keyframes robotaxi-tech-content-in {
   from {
     opacity: 0;
-    transform: translateX(12px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .robotaxi-technical-panel__sections {
+  .robotaxi-technical-panel__body {
     animation: none;
   }
 }
@@ -350,14 +721,77 @@
 
 @media (max-width: 900px) {
   .figma-demo-stage {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "phone"
+      "tech"
+      "controls";
+    align-items: center;
+    max-width: 100%;
+    min-height: 0;
+    padding: 24px 16px;
+  }
+
+  .figma-demo-stage--shared-board {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 18px;
-    max-width: 100%;
+    grid-template-areas:
+      "phone"
+      "tech"
+      "controls";
     height: auto;
     max-height: none;
+    min-height: 0;
     padding: 24px 16px;
     overflow: visible;
+  }
+
+  .figma-demo-stage--shared-board .figma-demo-phone-slot {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .figma-demo-stage--shared-board .figma-demo-technical-slot {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    overflow: visible;
+    min-height: 280px;
+  }
+
+  .figma-demo-stage--shared-board .figma-demo-board-controls {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .robotaxi-demo-guide-rail {
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 4px;
+  }
+
+  .robotaxi-demo-guide-rail::after {
+    display: none;
+  }
+
+  .robotaxi-demo-stage-controls {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    pointer-events: auto;
+  }
+
+  .robotaxi-technical-panel__row--2col {
+    grid-template-columns: 1fr;
   }
 
   .figma-demo-stage--guided {
@@ -375,9 +809,6 @@
   }
 
   .figma-demo-center {
-    position: relative;
-    top: auto;
-    left: auto;
     width: 100%;
     justify-content: center;
   }
@@ -390,21 +821,8 @@
 
   .figma-demo-technical,
   .figma-demo-board-controls {
-    position: relative;
-    inset: auto;
     width: 100%;
     max-width: 640px;
-    max-height: none;
-    overflow: visible;
-  }
-
-  .robotaxi-technical-panel__sections {
-    grid-template-columns: 1fr;
-  }
-
-  .robotaxi-technical-panel {
-    height: auto;
-    overflow: visible;
   }
 
   .figma-demo-center__phone {

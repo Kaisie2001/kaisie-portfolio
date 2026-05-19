@@ -144,25 +144,19 @@ function FigmaRainModeDemoInner({
         className={
           guidedPanel
             ? "figma-demo-stage figma-demo-stage--guided"
-            : "figma-demo-stage"
+            : "figma-demo-stage figma-demo-stage--shared-board"
         }
         onPointerDownCapture={() => onUserInteraction?.()}
       >
         {guidedPanel ? (
           <div className="figma-demo-guided-panel">{guidedPanel}</div>
         ) : null}
-        <div className="figma-demo-center">
-          <motion.div
-            className="figma-demo-center__phone"
-            initial={
-              guidedPanel && !reduceMotion ? { opacity: 0, y: 6 } : false
-            }
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: guidedPanel && !reduceMotion ? 0.3 : 0,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
+        <div
+          className={
+            guidedPanel ? "figma-demo-center" : "figma-demo-center figma-demo-phone-slot"
+          }
+        >
+          <div className="figma-demo-center__phone">
             <PhoneFrame>
               <SheetHeightProvider screenKey={screen}>
                 <FigmaDemoStage
@@ -187,9 +181,19 @@ function FigmaRainModeDemoInner({
                 />
               </SheetHeightProvider>
             </PhoneFrame>
-          </motion.div>
+          </div>
         </div>
-        <div className="figma-demo-technical">
+        <motion.div
+          key={activeTechStage ?? activeStage ?? "context-trigger"}
+          className={
+            guidedPanel
+              ? "figma-demo-technical"
+              : "figma-demo-technical figma-demo-technical-slot"
+          }
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        >
           <TechnicalEnginePanel
             screen={screen}
             lang={lang}
@@ -199,7 +203,7 @@ function FigmaRainModeDemoInner({
             }
             lastInteractionEvent={lastInteractionEvent}
           />
-        </div>
+        </motion.div>
         <div className="figma-demo-board-controls">
           <DemoControlsPanel onRandomPickup={handleRandomPickup} />
         </div>
