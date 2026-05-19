@@ -18,6 +18,30 @@ type Props = {
 const MAP_W = 260;
 const MAP_H = 515;
 const TILE_SIZE = 256;
+const STEP_04_ROBOTAXI_START: LonLat = [113.936186, 22.521753];
+const STEP_01_TRIP_ROUTE: LonLat[] = [
+  [113.93345, 22.52015],
+  [113.93345, 22.51965],
+  [113.93225, 22.51965],
+  [113.93225, 22.5188],
+  [113.9312, 22.5188],
+];
+const STEP_04_APPROACH_ROUTE: LonLat[] = [
+  STEP_04_ROBOTAXI_START,
+  [113.936341, 22.521714],
+  [113.938479, 22.521177],
+  [113.937846, 22.518971],
+  [113.936504, 22.517697],
+  [113.935625, 22.517912],
+  [113.934671, 22.518145],
+  [113.933981, 22.5183],
+  [113.933001, 22.518523],
+  [113.93167, 22.518828],
+  [113.932202, 22.520731],
+  [113.932136, 22.520794],
+  [113.93202, 22.52042],
+  [113.9318718, 22.5201693],
+];
 
 function projectWebMercator([lon, lat]: LonLat, zoom: number) {
   const sinLat = Math.sin((lat * Math.PI) / 180);
@@ -32,6 +56,10 @@ function projectWebMercator([lon, lat]: LonLat, zoom: number) {
 }
 
 function viewportCenterForStep(stepId: GuidedDemoStepId) {
+  if (stepId === 3) {
+    return getSelectedFrozenOption().marker;
+  }
+
   return (
     GUIDED_DEMO_FROZEN_SCENARIO.stepViewports[
       stepId as keyof typeof GUIDED_DEMO_FROZEN_SCENARIO.stepViewports
@@ -77,6 +105,20 @@ function markerStyle(point: LonLat, stepId: GuidedDemoStepId): CSSProperties {
   };
 }
 
+function bearingDegrees(from: LonLat, to: LonLat) {
+  const fromLon = (from[0] * Math.PI) / 180;
+  const fromLat = (from[1] * Math.PI) / 180;
+  const toLon = (to[0] * Math.PI) / 180;
+  const toLat = (to[1] * Math.PI) / 180;
+  const deltaLon = toLon - fromLon;
+  const y = Math.sin(deltaLon) * Math.cos(toLat);
+  const x =
+    Math.cos(fromLat) * Math.sin(toLat) -
+    Math.sin(fromLat) * Math.cos(toLat) * Math.cos(deltaLon);
+
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+}
+
 function tileGrid(stepId: GuidedDemoStepId) {
   const { zoom } = GUIDED_DEMO_FROZEN_SCENARIO.viewport;
   const center = viewportCenterForStep(stepId);
@@ -114,7 +156,6 @@ export function GuidedDemoStaticMap({
   highlightPickupId,
 }: Props) {
   const scenario = GUIDED_DEMO_FROZEN_SCENARIO;
-  const selected = getSelectedFrozenOption();
   const activeId =
     highlightPickupId ?? (stepId >= 3 ? scenario.selectedOptionId : undefined);
   const activeOption = activeId ? scenario.options[activeId] : null;
@@ -122,7 +163,14 @@ export function GuidedDemoStaticMap({
   const activeMarkerStyle = activeOption
     ? markerStyle(activeOption.marker, stepId)
     : undefined;
-  const vehicleMarkerStyle = markerStyle(scenario.vehicleCurrent.coordinate, stepId);
+  const vehicleMarkerStyle = markerStyle(STEP_04_ROBOTAXI_START, stepId);
+  const tripRoutePoints = STEP_01_TRIP_ROUTE;
+  const approachRoutePoints = STEP_04_APPROACH_ROUTE;
+  const vehicleHeading = bearingDegrees(
+    approachRoutePoints[0],
+    approachRoutePoints[1],
+  );
+  const showCurrentLocation = stepId <= 2;
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-slate-100" aria-hidden>
@@ -148,20 +196,11 @@ export function GuidedDemoStaticMap({
         <span className="block truncate">{scenario.area.title[lang]}</span>
       </div>
 
-      <div
-        className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.22)]"
-        style={currentLocationStyle}
-      />
-      {stepId >= 3 ? (
+      {showCurrentLocation ? (
         <div
-          className="absolute z-10 -translate-x-1/2 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-semibold text-blue-700 shadow-sm"
-          style={{
-            left: currentLocationStyle.left,
-            top: Number(currentLocationStyle.top) - 27,
-          }}
-        >
-          {lang === "zh" ? "当前位置" : "Current"}
-        </div>
+          className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.22)]"
+          style={currentLocationStyle}
+        />
       ) : null}
 
       <svg
@@ -171,15 +210,24 @@ export function GuidedDemoStaticMap({
         aria-hidden
       >
         {stepId === 1 ? (
-          <polyline
-            points={pathPointsForStep(scenario.tripOverviewRoute, stepId)}
-            fill="none"
-            stroke="#1677ff"
-            strokeWidth={3.2}
-            strokeDasharray="6 6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <>
+            <polyline
+              points={pathPointsForStep(tripRoutePoints, stepId)}
+              fill="none"
+              stroke="rgba(255,255,255,0.92)"
+              strokeWidth={7}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <polyline
+              points={pathPointsForStep(tripRoutePoints, stepId)}
+              fill="none"
+              stroke="#1677ff"
+              strokeWidth={4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </>
         ) : null}
         {stepId === 2 && activeOption ? (
           <polyline
@@ -192,55 +240,44 @@ export function GuidedDemoStaticMap({
             strokeLinejoin="round"
           />
         ) : null}
-        {stepId === 3 ? (
-          <polyline
-            points={pathPointsForStep(scenario.vehicleRouteToSelected, stepId)}
-            fill="none"
-            stroke="#f5a623"
-            strokeWidth={3}
-            strokeDasharray="5 5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ) : null}
         {stepId === 4 ? (
           <>
             <polyline
-              points={pathPointsForStep(selected.walkingRoute, stepId)}
+              points={pathPointsForStep(approachRoutePoints, stepId)}
               fill="none"
-              stroke="#00a8b5"
-              strokeWidth={3}
-              strokeDasharray="3.5 5"
+              stroke="rgba(255,255,255,0.92)"
+              strokeWidth={7}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <polyline
-              points={pathPointsForStep(scenario.vehicleRouteToSelected, stepId)}
+              points={pathPointsForStep(approachRoutePoints, stepId)}
               fill="none"
               stroke="#1677ff"
-              strokeWidth={3.2}
-              strokeDasharray="6 6"
+              strokeWidth={4}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
           </>
         ) : null}
-        {COMPARE_OPTION_ORDER.map((id) => {
-          const option = scenario.options[id];
-          return (
-            <line
-              key={id}
-              x1={projectToScreen(option.zone[0], stepId).x}
-              y1={projectToScreen(option.zone[0], stepId).y}
-              x2={projectToScreen(option.zone[1], stepId).x}
-              y2={projectToScreen(option.zone[1], stepId).y}
-              stroke={option.color}
-              strokeWidth={8}
-              strokeLinecap="round"
-              opacity={id === activeId ? 0.66 : 0.25}
-            />
-          );
-        })}
+        {stepId === 2
+          ? COMPARE_OPTION_ORDER.map((id) => {
+              const option = scenario.options[id];
+              return (
+                <line
+                  key={id}
+                  x1={projectToScreen(option.zone[0], stepId).x}
+                  y1={projectToScreen(option.zone[0], stepId).y}
+                  x2={projectToScreen(option.zone[1], stepId).x}
+                  y2={projectToScreen(option.zone[1], stepId).y}
+                  stroke={option.color}
+                  strokeWidth={8}
+                  strokeLinecap="round"
+                  opacity={id === activeId ? 0.66 : 0.25}
+                />
+              );
+            })
+          : null}
       </svg>
 
       {stepId === 2
@@ -264,7 +301,7 @@ export function GuidedDemoStaticMap({
               />
             );
           })
-        : stepId >= 3 && activeOption && activeMarkerStyle ? (
+        : stepId === 4 && activeOption && activeMarkerStyle ? (
           <div
             className="absolute z-10 h-2.5 w-2.5 rounded-full border-2 border-white"
             style={{
@@ -276,6 +313,22 @@ export function GuidedDemoStaticMap({
             }}
           />
         ) : null}
+
+      {stepId === 3 && activeOption && activeMarkerStyle ? (
+        <div
+          className="absolute z-10 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center"
+          style={activeMarkerStyle}
+        >
+          <span className="absolute h-24 w-24 animate-ping rounded-full border border-cyan-500/55 bg-cyan-500/10" />
+          <span className="absolute h-16 w-16 rounded-full border-2 border-cyan-500/55 bg-cyan-400/10 shadow-[0_0_28px_rgba(6,182,212,0.28)]" />
+          <span
+            className="relative grid h-8 w-8 place-items-center rounded-full border-2 border-white shadow-[0_8px_20px_rgba(8,145,178,0.28)]"
+            style={{ background: activeOption.color }}
+          >
+            <span className="h-2.5 w-2.5 rounded-full bg-white" />
+          </span>
+        </div>
+      ) : null}
 
       {stepId === 2 && activeOption && activeMarkerStyle ? (
         <div
@@ -292,10 +345,22 @@ export function GuidedDemoStaticMap({
 
       {stepId === 4 ? (
         <div
-          className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-600 px-2 py-1 text-[8px] font-bold text-white shadow-[0_6px_14px_rgba(8,145,178,0.28)]"
-          style={vehicleMarkerStyle}
+          className="absolute z-10 grid h-5 w-5 place-items-center rounded-full bg-cyan-600 text-white shadow-[0_6px_16px_rgba(8,145,178,0.32)]"
+          style={{
+            ...vehicleMarkerStyle,
+            transform: `translate(-50%, -50%) rotate(${vehicleHeading}deg)`,
+          }}
         >
-          CAR
+          <svg viewBox="0 0 28 28" width={14} height={14} aria-hidden>
+            <path
+              d="M14 3.5 21.5 21 14 17.8 6.5 21 14 3.5Z"
+              fill="currentColor"
+              stroke="white"
+              strokeLinejoin="round"
+              strokeWidth={2}
+            />
+            <circle cx={14} cy={14.2} r={2.4} fill="white" />
+          </svg>
         </div>
       ) : null}
 

@@ -71,3 +71,41 @@ body::before {
   color: #0c0a09;
 }
 
+.guided-demo-flow-in {
+  animation: guided-demo-flow-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.guided-demo-copy-in {
+  animation: guided-demo-copy-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes guided-demo-flow-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes guided-demo-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guided-demo-flow-in,
+  .guided-demo-copy-in {
+    animation: none;
+  }
+}
+

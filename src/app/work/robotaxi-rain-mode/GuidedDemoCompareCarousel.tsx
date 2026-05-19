@@ -25,7 +25,7 @@ export function GuidedDemoCompareCarousel({ lang }: Props) {
   }, []);
 
   return (
-    <div className="flex w-full flex-col items-center gap-4">
+    <div className="flex min-h-[560px] w-full flex-col items-center justify-center gap-4">
       <div className="flex min-h-[515px] w-full justify-center">
         <GuidedDemoPhoneShowcase
           stepId={2}
