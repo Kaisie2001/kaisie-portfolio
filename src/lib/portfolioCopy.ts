@@ -40,7 +40,7 @@ export const portfolioCopy = {
             "Conversion Funnel",
             "Feedback Loop",
           ],
-          status: "Concept / In progress",
+          completed: true,
           href: "/work/robotaxi-rain-mode",
         },
         {
@@ -204,7 +204,7 @@ export const portfolioCopy = {
           title: "Robotaxi 旅程审计",
           description: "Robotaxi 从预约到乘车的产品链路诊断。",
           keywords: ["用户旅程", "痛点诊断", "转化漏斗", "反馈闭环"],
-          status: "概念 / 进行中",
+          completed: true,
           href: "/work/robotaxi-rain-mode",
         },
         {
