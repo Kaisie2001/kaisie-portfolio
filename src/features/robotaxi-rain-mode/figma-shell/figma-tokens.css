@@ -730,31 +730,38 @@
 .robotaxi-tech-metric-grid,
 .robotaxi-tech-chip-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 12px;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 8px 10px;
   align-items: stretch;
   width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
-@container robotaxi-tech-slot (max-width: 480px) {
-  .robotaxi-tech-metric-grid,
-  .robotaxi-tech-chip-grid {
+@container robotaxi-tech-slot (max-width: 300px) {
+  .robotaxi-tech-metric-grid:not(.robotaxi-tech-metric-grid--stack),
+  .robotaxi-tech-chip-grid:not(.robotaxi-tech-chip-grid--stack) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container robotaxi-tech-slot (max-width: 220px) {
+  .robotaxi-tech-metric-grid:not(.robotaxi-tech-metric-grid--stack),
+  .robotaxi-tech-chip-grid:not(.robotaxi-tech-chip-grid--stack) {
     grid-template-columns: 1fr;
   }
 }
 
 .robotaxi-technical-panel__row--2col .robotaxi-tech-metric-grid,
 .robotaxi-technical-panel__row--2col .robotaxi-tech-chip-grid {
-  grid-template-columns: 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
 }
 
 .robotaxi-tech-metric-grid--stack,
 .robotaxi-tech-chip-grid--stack {
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 .robotaxi-tech-metric-card,
@@ -763,23 +770,23 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 3px;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  min-height: 58px;
+  min-height: 48px;
   height: auto;
-  padding: 8px 12px;
+  padding: 6px 10px;
   overflow: visible;
   border: 1px solid rgb(28 25 23 / 0.08);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgb(255 255 255 / 0.5);
 }
 
 .robotaxi-tech-metric-card--multiline,
 .robotaxi-tech-chip--text {
-  min-height: 66px;
+  min-height: 54px;
 }
 
 .robotaxi-tech-metric-card__label,
@@ -790,10 +797,10 @@
   max-width: 100%;
   margin: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: 0.11em;
+  line-height: 1.1;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #a8a29e;
   white-space: normal;
@@ -808,9 +815,9 @@
   width: 100%;
   max-width: 100%;
   margin: 0;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.18;
   letter-spacing: -0.01em;
   color: #1c1917;
   white-space: normal;
@@ -820,9 +827,9 @@
 
 .robotaxi-tech-metric-card--multiline .robotaxi-tech-metric-card__value,
 .robotaxi-tech-chip--text .robotaxi-tech-chip__value {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.22;
   letter-spacing: 0;
 }
 
