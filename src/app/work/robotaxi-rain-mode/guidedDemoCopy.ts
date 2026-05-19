@@ -15,8 +15,8 @@ export const GUIDED_DEMO_SECTION_TITLE: Record<Lang, string> = {
 };
 
 export const GUIDED_DEMO_SECTION_SUBTITLE: Record<Lang, string> = {
-  en: "A quick visual walkthrough of how Rain Mode supports rainy-day Robotaxi pickup decisions.",
-  zh: "通过几个关键界面，快速展示 Rain Mode 如何辅助雨天 Robotaxi 上车决策。",
+  en: "A quick visual walkthrough of how rain-aware pickup recommendations work across key screens.",
+  zh: "通过几个关键界面，快速展示雨天条件下 Robotaxi 上车点推荐如何运作。",
 };
 
 export const PROTOTYPE_SECTION_TITLE: Record<Lang, string> = {

@@ -67,7 +67,7 @@
   background: transparent;
 }
 
-.figma-demo-stage {
+.figma-demo-stage:not(.figma-demo-stage--shared-board) {
   position: relative;
   display: grid;
   grid-template-columns: minmax(290px, 360px) minmax(0, 1fr);
@@ -92,34 +92,31 @@
   overflow: visible;
 }
 
-/* Interactive prototype — fixed SharedDemoBoard (phone + technical slots) */
+/* Interactive prototype — inner layout inside .robotaxi-case-board */
 .figma-demo-stage--shared-board {
   --f-demo-phone-top: 48px;
   --f-demo-phone-left: 56px;
   --f-demo-phone-width: 310px;
+  position: relative;
   display: block;
   width: 100%;
-  max-width: 1120px;
-  height: clamp(620px, calc(100vh - 160px), 740px);
-  max-height: clamp(620px, calc(100vh - 160px), 740px);
+  max-width: 100%;
+  height: clamp(620px, calc(100vh - 220px), 740px);
+  max-height: clamp(620px, calc(100vh - 220px), 740px);
   min-height: unset;
-  margin: 0 auto;
-  padding: 0;
+  margin: 0;
+  padding: 0 0 24px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   overflow: hidden;
 }
 
-/* Interactive prototype — hover-reveal stage guide (in-flow rail, overlay panel) */
-.robotaxi-demo-section-wrap {
-  position: relative;
+.robotaxi-case-board .figma-demo-wrap {
   width: 100%;
-  max-width: 1120px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.robotaxi-demo-section-wrap .figma-demo-stage--shared-board {
-  position: relative;
-  z-index: 1;
+  padding: 0;
+  background: transparent;
 }
 
 .robotaxi-prototype-disclaimer {
@@ -139,8 +136,8 @@
   box-sizing: border-box;
   width: 100%;
   min-height: 34px;
-  margin: 0 0 10px;
-  padding: 0 14px;
+  margin: 0;
+  padding: 0;
   overflow: visible;
   transition:
     min-height var(--robotaxi-guide-rail-duration) var(--robotaxi-guide-rail-ease),
@@ -996,7 +993,7 @@
 }
 
 @media (max-width: 900px) {
-  .figma-demo-stage {
+  .figma-demo-stage:not(.figma-demo-stage--shared-board) {
     grid-template-columns: 1fr;
     grid-template-areas:
       "phone"
@@ -1006,6 +1003,10 @@
     max-width: 100%;
     min-height: 0;
     padding: 24px 16px;
+  }
+
+  .robotaxi-interactive-board__remote {
+    padding: 16px 16px 0;
   }
 
   .figma-demo-stage--shared-board {
@@ -1018,7 +1019,7 @@
     height: auto;
     max-height: none;
     min-height: 0;
-    padding: 24px 16px;
+    padding: 0 16px 20px;
     overflow: visible;
   }
 

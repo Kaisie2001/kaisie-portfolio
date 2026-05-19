@@ -1,4 +1,8 @@
 import type { Lang } from "@/lib/portfolioCopy";
+import {
+  ROBOTAXI_PROJECT_SUBTITLE,
+  ROBOTAXI_PROJECT_TITLE,
+} from "./robotaxiProjectCopy";
 
 export type CaseOverviewTabId = "snapshot" | "problem" | "logic";
 
@@ -23,9 +27,8 @@ export const CASE_OVERVIEW_TABS: Record<Lang, CaseOverviewTab[]> = {
       id: "snapshot",
       tabLabel: "Snapshot",
       eyebrow: "Project Snapshot",
-      title: "Robotaxi Rain Mode",
-      oneLiner:
-        "A rain-aware pickup zone recommendation prototype for Robotaxi passengers.",
+      title: ROBOTAXI_PROJECT_TITLE.en,
+      oneLiner: ROBOTAXI_PROJECT_SUBTITLE.en,
       keywords: ["Valid pickup zones", "Rain exposure", "Vehicle ETA"],
     },
     {
@@ -66,8 +69,8 @@ export const CASE_OVERVIEW_TABS: Record<Lang, CaseOverviewTab[]> = {
       id: "snapshot",
       tabLabel: "项目概览",
       eyebrow: "项目概览",
-      title: "Robotaxi Rain Mode｜Robotaxi 雨天模式",
-      oneLiner: "一个面向雨天出行的 Robotaxi 上车区域推荐原型。",
+      title: ROBOTAXI_PROJECT_TITLE.zh,
+      oneLiner: ROBOTAXI_PROJECT_SUBTITLE.zh,
       keywords: ["合法上车区域", "雨中暴露", "车辆到达时间"],
     },
     {

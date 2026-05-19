@@ -343,7 +343,7 @@ function buildLegalRules(raw: RawRainModeBundle): LegalStoppingRule[] {
 function buildDataSourceMeta(raw: RawRainModeBundle): DataSourceMeta {
   const m = raw.metadata ?? {};
   return {
-    demo_name: m.demo_name ?? "Robotaxi Rain Mode Demo",
+    demo_name: m.demo_name ?? "Robotaxi Rain-aware Pickup Recommendation Demo",
     created: m.created,
     osm_source_file: m.osm_source_file,
     data_status: m.data_status ?? "simulated",

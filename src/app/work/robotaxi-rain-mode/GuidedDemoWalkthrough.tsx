@@ -63,7 +63,7 @@ export function GuidedDemoWalkthrough() {
 
   return (
     <div
-      className="overflow-hidden rounded-3xl border border-stone-200/45 bg-stone-50/45 shadow-[0_10px_34px_rgb(28_25_23_/_0.035),0_0_0_1px_rgb(255_255_255_/_0.22)] backdrop-blur-lg"
+      className="robotaxi-case-board"
       role="region"
       aria-label={lang === "zh" ? "流程演示" : "Guided demo walkthrough"}
     >

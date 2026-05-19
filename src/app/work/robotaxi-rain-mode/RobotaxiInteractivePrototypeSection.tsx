@@ -83,20 +83,26 @@ export function RobotaxiInteractivePrototypeSection() {
       <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-stone-600">
         {PROTOTYPE_SECTION_COPY[lang]}
       </p>
-      <div className="robotaxi-demo-section-wrap mt-6">
-        <DemoRemoteOverlay
-          lang={lang}
-          activeTechStage={activeTechStage}
-          stages={TECH_STAGE_INDICATORS}
-          onTechStagePreview={previewTechStage}
-        />
-        <FigmaRainModeDemo
-          lang={lang}
-          activeTechStage={activeTechStage}
-          selectedPickupOption={selectedPickupOption}
-          lastDemoEvent={lastDemoEvent}
-          onDemoEvent={handleDemoEvent}
-        />
+      <div className="mt-10">
+        <div className="robotaxi-case-board">
+          <div className="robotaxi-interactive-board__shell">
+            <div className="robotaxi-interactive-board__remote">
+              <DemoRemoteOverlay
+                lang={lang}
+                activeTechStage={activeTechStage}
+                stages={TECH_STAGE_INDICATORS}
+                onTechStagePreview={previewTechStage}
+              />
+            </div>
+            <FigmaRainModeDemo
+              lang={lang}
+              activeTechStage={activeTechStage}
+              selectedPickupOption={selectedPickupOption}
+              lastDemoEvent={lastDemoEvent}
+              onDemoEvent={handleDemoEvent}
+            />
+          </div>
+        </div>
       </div>
       <p className="robotaxi-prototype-disclaimer mt-4 max-w-2xl">
         {PROTOTYPE_SECTION_DISCLAIMER[lang]}
