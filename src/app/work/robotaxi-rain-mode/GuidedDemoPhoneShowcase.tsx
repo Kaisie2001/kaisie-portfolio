@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import type { Lang } from "@/lib/portfolioCopy";
 import type { GuidedDemoStepId } from "./guidedDemoCopy";
 import type { CompareOptionId } from "./guidedDemoFrozenScenario";
@@ -46,10 +47,35 @@ export function GuidedDemoPhoneShowcase({
   highlightPickupId,
   compareCycleKey,
 }: Props) {
+  const isCompareStep = stepId === 2;
+  const [compareSheetRevealed, setCompareSheetRevealed] = useState(!isCompareStep);
   const sheetStyle = {
     height: STATIC_SHEET_HEIGHT[stepId],
     minHeight: STATIC_SHEET_HEIGHT[stepId],
+    transform: isCompareStep
+      ? `translateY(${compareSheetRevealed ? 18 : 72}px)`
+      : undefined,
+    transition: isCompareStep
+      ? "transform 420ms cubic-bezier(0.22, 1, 0.36, 1)"
+      : undefined,
   } as CSSProperties;
+  const locateBottom = isCompareStep
+    ? `calc(${STATIC_SHEET_HEIGHT[stepId]} + ${compareSheetRevealed ? 30 : 84}px)`
+    : `calc(${STATIC_SHEET_HEIGHT[stepId]} + 14px)`;
+
+  useEffect(() => {
+    if (!isCompareStep) {
+      setCompareSheetRevealed(true);
+      return;
+    }
+
+    setCompareSheetRevealed(false);
+    const timer = window.setTimeout(() => {
+      setCompareSheetRevealed(true);
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [compareCycleKey, isCompareStep]);
 
   return (
     <div className="flex justify-center">
@@ -81,7 +107,7 @@ export function GuidedDemoPhoneShowcase({
         </div>
         <div
           className="absolute right-3 z-20 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-stone-700 shadow"
-          style={{ bottom: `calc(${STATIC_SHEET_HEIGHT[stepId]} + 14px)` }}
+          style={{ bottom: locateBottom }}
           aria-hidden
         >
           <GdIconLocate />

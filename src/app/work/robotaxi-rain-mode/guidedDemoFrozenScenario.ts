@@ -161,6 +161,24 @@ export const GUIDED_DEMO_FROZEN_SCENARIO = {
     center: [113.93475, 22.51992] as LonLat,
     zoom: 15,
   },
+  stepViewports: {
+    1: {
+      center: [113.93345, 22.52015] as LonLat,
+      focus: { x: 130, y: 152 },
+    },
+    2: {
+      center: [113.93345, 22.52028] as LonLat,
+      focus: { x: 130, y: 218 },
+    },
+    3: {
+      center: [113.93345, 22.52015] as LonLat,
+      focus: { x: 130, y: 150 },
+    },
+    4: {
+      center: [113.93265, 22.52018] as LonLat,
+      focus: { x: 130, y: 152 },
+    },
+  },
   routeSources: {
     walkingSheltered: "public/data/robotaxi-map/generated/walking_route_sheltered.geojson",
     walkingClosest: "public/data/robotaxi-map/generated/walking_route_closest.geojson",
@@ -184,6 +202,10 @@ export const GUIDED_DEMO_FROZEN_SCENARIO = {
   options: pickupOptions,
   tripOverviewRoute,
   vehicleRouteToSelected: vehicleRouteToSheltered,
+  vehicleCurrent: {
+    coordinate: [113.932202, 22.520731] as LonLat,
+    label: { en: "Robotaxi", zh: "Robotaxi" },
+  },
   search: {
     waitLabel: { en: "about 5 min", zh: "约 5 分钟" },
     queue: 2,

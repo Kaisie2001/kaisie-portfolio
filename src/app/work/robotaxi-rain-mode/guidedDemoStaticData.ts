@@ -52,7 +52,7 @@ export function getCompareOptions(): FrozenPickupOption[] {
 
 export const STATIC_SHEET_HEIGHT: Record<GuidedDemoStepId, string> = {
   1: "48%",
-  2: "39%",
+  2: "36%",
   3: "58%",
   4: "54%",
 };

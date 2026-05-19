@@ -31,36 +31,56 @@ function projectWebMercator([lon, lat]: LonLat, zoom: number) {
   };
 }
 
-function projectToScreen(point: LonLat) {
-  const { zoom, center } = GUIDED_DEMO_FROZEN_SCENARIO.viewport;
+function viewportCenterForStep(stepId: GuidedDemoStepId) {
+  return (
+    GUIDED_DEMO_FROZEN_SCENARIO.stepViewports[
+      stepId as keyof typeof GUIDED_DEMO_FROZEN_SCENARIO.stepViewports
+    ]?.center ?? GUIDED_DEMO_FROZEN_SCENARIO.viewport.center
+  );
+}
+
+function viewportFocusForStep(stepId: GuidedDemoStepId) {
+  return (
+    GUIDED_DEMO_FROZEN_SCENARIO.stepViewports[
+      stepId as keyof typeof GUIDED_DEMO_FROZEN_SCENARIO.stepViewports
+    ]?.focus ?? { x: MAP_W / 2, y: MAP_H / 2 }
+  );
+}
+
+function projectToScreen(point: LonLat, stepId: GuidedDemoStepId) {
+  const { zoom } = GUIDED_DEMO_FROZEN_SCENARIO.viewport;
+  const center = viewportCenterForStep(stepId);
+  const focus = viewportFocusForStep(stepId);
   const projected = projectWebMercator(point, zoom);
   const projectedCenter = projectWebMercator(center, zoom);
 
   return {
-    x: MAP_W / 2 + projected.x - projectedCenter.x,
-    y: MAP_H / 2 + projected.y - projectedCenter.y,
+    x: focus.x + projected.x - projectedCenter.x,
+    y: focus.y + projected.y - projectedCenter.y,
   };
 }
 
-function pathPoints(points: readonly LonLat[]) {
+function pathPointsForStep(points: readonly LonLat[], stepId: GuidedDemoStepId) {
   return points
     .map((point) => {
-      const projected = projectToScreen(point);
+      const projected = projectToScreen(point, stepId);
       return `${projected.x.toFixed(1)},${projected.y.toFixed(1)}`;
     })
     .join(" ");
 }
 
-function markerStyle(point: LonLat): CSSProperties {
-  const projected = projectToScreen(point);
+function markerStyle(point: LonLat, stepId: GuidedDemoStepId): CSSProperties {
+  const projected = projectToScreen(point, stepId);
   return {
     left: projected.x,
     top: projected.y,
   };
 }
 
-function tileGrid() {
-  const { zoom, center } = GUIDED_DEMO_FROZEN_SCENARIO.viewport;
+function tileGrid(stepId: GuidedDemoStepId) {
+  const { zoom } = GUIDED_DEMO_FROZEN_SCENARIO.viewport;
+  const center = viewportCenterForStep(stepId);
+  const focus = viewportFocusForStep(stepId);
   const centerPx = projectWebMercator(center, zoom);
   const centerTileX = Math.floor(centerPx.x / TILE_SIZE);
   const centerTileY = Math.floor(centerPx.y / TILE_SIZE);
@@ -73,8 +93,8 @@ function tileGrid() {
       tiles.push({
         key: `${x}-${y}`,
         src: `https://a.basemaps.cartocdn.com/light_all/${zoom}/${x}/${y}.png`,
-        left: x * TILE_SIZE - centerPx.x + MAP_W / 2,
-        top: y * TILE_SIZE - centerPx.y + MAP_H / 2,
+        left: x * TILE_SIZE - centerPx.x + focus.x,
+        top: y * TILE_SIZE - centerPx.y + focus.y,
       });
     }
   }
@@ -98,11 +118,16 @@ export function GuidedDemoStaticMap({
   const activeId =
     highlightPickupId ?? (stepId >= 3 ? scenario.selectedOptionId : undefined);
   const activeOption = activeId ? scenario.options[activeId] : null;
+  const currentLocationStyle = markerStyle(scenario.pickupAnchor.coordinate, stepId);
+  const activeMarkerStyle = activeOption
+    ? markerStyle(activeOption.marker, stepId)
+    : undefined;
+  const vehicleMarkerStyle = markerStyle(scenario.vehicleCurrent.coordinate, stepId);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-slate-100" aria-hidden>
       <div className="absolute inset-0 overflow-hidden">
-        {tileGrid().map((tile) => (
+        {tileGrid(stepId).map((tile) => (
           <img
             key={tile.key}
             src={tile.src}
@@ -125,8 +150,19 @@ export function GuidedDemoStaticMap({
 
       <div
         className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.22)]"
-        style={markerStyle(scenario.pickupAnchor.coordinate)}
+        style={currentLocationStyle}
       />
+      {stepId >= 3 ? (
+        <div
+          className="absolute z-10 -translate-x-1/2 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-semibold text-blue-700 shadow-sm"
+          style={{
+            left: currentLocationStyle.left,
+            top: Number(currentLocationStyle.top) - 27,
+          }}
+        >
+          {lang === "zh" ? "当前位置" : "Current"}
+        </div>
+      ) : null}
 
       <svg
         className="absolute inset-0 z-[6] h-full w-full"
@@ -136,7 +172,7 @@ export function GuidedDemoStaticMap({
       >
         {stepId === 1 ? (
           <polyline
-            points={pathPoints(scenario.tripOverviewRoute)}
+            points={pathPointsForStep(scenario.tripOverviewRoute, stepId)}
             fill="none"
             stroke="#1677ff"
             strokeWidth={3.2}
@@ -147,7 +183,7 @@ export function GuidedDemoStaticMap({
         ) : null}
         {stepId === 2 && activeOption ? (
           <polyline
-            points={pathPoints(activeOption.walkingRoute)}
+            points={pathPointsForStep(activeOption.walkingRoute, stepId)}
             fill="none"
             stroke="#00a8b5"
             strokeWidth={3}
@@ -158,7 +194,7 @@ export function GuidedDemoStaticMap({
         ) : null}
         {stepId === 3 ? (
           <polyline
-            points={pathPoints(scenario.vehicleRouteToSelected)}
+            points={pathPointsForStep(scenario.vehicleRouteToSelected, stepId)}
             fill="none"
             stroke="#f5a623"
             strokeWidth={3}
@@ -170,7 +206,7 @@ export function GuidedDemoStaticMap({
         {stepId === 4 ? (
           <>
             <polyline
-              points={pathPoints(selected.walkingRoute)}
+              points={pathPointsForStep(selected.walkingRoute, stepId)}
               fill="none"
               stroke="#00a8b5"
               strokeWidth={3}
@@ -179,7 +215,7 @@ export function GuidedDemoStaticMap({
               strokeLinejoin="round"
             />
             <polyline
-              points={pathPoints(scenario.vehicleRouteToSelected)}
+              points={pathPointsForStep(scenario.vehicleRouteToSelected, stepId)}
               fill="none"
               stroke="#1677ff"
               strokeWidth={3.2}
@@ -194,10 +230,10 @@ export function GuidedDemoStaticMap({
           return (
             <line
               key={id}
-              x1={projectToScreen(option.zone[0]).x}
-              y1={projectToScreen(option.zone[0]).y}
-              x2={projectToScreen(option.zone[1]).x}
-              y2={projectToScreen(option.zone[1]).y}
+              x1={projectToScreen(option.zone[0], stepId).x}
+              y1={projectToScreen(option.zone[0], stepId).y}
+              x2={projectToScreen(option.zone[1], stepId).x}
+              y2={projectToScreen(option.zone[1], stepId).y}
               stroke={option.color}
               strokeWidth={8}
               strokeLinecap="round"
@@ -216,7 +252,7 @@ export function GuidedDemoStaticMap({
                 key={id}
                 className="absolute z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white"
                 style={{
-                  ...markerStyle(option.marker),
+                  ...markerStyle(option.marker, stepId),
                   background: optionColor(id),
                   transform: active
                     ? "translate(-50%, -50%) scale(1.65)"
@@ -228,11 +264,11 @@ export function GuidedDemoStaticMap({
               />
             );
           })
-        : stepId >= 3 && activeOption ? (
+        : stepId >= 3 && activeOption && activeMarkerStyle ? (
           <div
             className="absolute z-10 h-2.5 w-2.5 rounded-full border-2 border-white"
             style={{
-              ...markerStyle(activeOption.marker),
+              ...activeMarkerStyle,
               background: activeOption.color,
               transform: "translate(-50%, -50%) scale(1.65)",
               boxShadow:
@@ -241,11 +277,33 @@ export function GuidedDemoStaticMap({
           />
         ) : null}
 
+      {stepId === 2 && activeOption && activeMarkerStyle ? (
+        <div
+          className="absolute z-10 -translate-x-1/2 rounded-full bg-white/90 px-2 py-0.5 text-[8px] font-semibold shadow-sm"
+          style={{
+            left: activeMarkerStyle.left,
+            top: Number(activeMarkerStyle.top) - 30,
+            color: activeOption.color,
+          }}
+        >
+          {activeOption.name[lang]}
+        </div>
+      ) : null}
+
+      {stepId === 4 ? (
+        <div
+          className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-600 px-2 py-1 text-[8px] font-bold text-white shadow-[0_6px_14px_rgba(8,145,178,0.28)]"
+          style={vehicleMarkerStyle}
+        >
+          CAR
+        </div>
+      ) : null}
+
       {stepId === 1 ? (
         <div
           className="absolute z-10 h-3.5 w-3.5 rounded-full rounded-bl-none border-2 border-white bg-blue-600 shadow-sm"
           style={{
-            ...markerStyle(scenario.dropoff.coordinate),
+            ...markerStyle(scenario.dropoff.coordinate, stepId),
             transform: "translate(-50%, -50%) rotate(-45deg)",
           }}
         />

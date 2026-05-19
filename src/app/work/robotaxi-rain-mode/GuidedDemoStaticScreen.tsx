@@ -47,6 +47,14 @@ export function GuidedDemoStaticScreen({
   const labels = tripLabels(lang);
   const scenario = GUIDED_DEMO_FROZEN_SCENARIO;
   const selected = getSelectedFrozenOption();
+  const compareOptions = getCompareOptions();
+  const orderedCompareOptions =
+    stepId === 2
+      ? [
+          ...compareOptions.filter((option) => option.id === highlightPickupId),
+          ...compareOptions.filter((option) => option.id !== highlightPickupId),
+        ]
+      : compareOptions;
 
   if (stepId === 1) {
     return (
@@ -100,7 +108,7 @@ export function GuidedDemoStaticScreen({
             : `${scenario.area.title.en} · compare three zones`}
         </p>
         <div className="grid gap-1">
-          {getCompareOptions().map((option) => {
+          {orderedCompareOptions.map((option) => {
             const isSelected = option.id === highlightPickupId;
             return (
               <div
