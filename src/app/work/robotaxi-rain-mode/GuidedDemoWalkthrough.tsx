@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { GuidedDemoCompareCarousel } from "./GuidedDemoCompareCarousel";
 import { GuidedDemoPhoneShowcase } from "./GuidedDemoPhoneShowcase";
@@ -21,6 +21,9 @@ export function GuidedDemoWalkthrough() {
   const { lang } = useLanguage();
   const steps = GUIDED_WALKTHROUGH_STEPS[lang];
   const [activeIndex, setActiveIndex] = useState(0);
+  const [stepIndicator, setStepIndicator] = useState({ top: 0, height: 0 });
+  const stepNavRef = useRef<HTMLElement | null>(null);
+  const stepButtonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const active = steps[activeIndex] ?? steps[0];
 
   useEffect(() => {
@@ -37,15 +40,36 @@ export function GuidedDemoWalkthrough() {
     return () => window.clearTimeout(timer);
   }, [activeIndex]);
 
+  useLayoutEffect(() => {
+    const updateIndicator = () => {
+      const nav = stepNavRef.current;
+      const button = stepButtonRefs.current[activeIndex];
+
+      if (!nav || !button) return;
+
+      const navRect = nav.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      setStepIndicator({
+        top: buttonRect.top - navRect.top,
+        height: buttonRect.height,
+      });
+    };
+
+    updateIndicator();
+    window.addEventListener("resize", updateIndicator);
+
+    return () => window.removeEventListener("resize", updateIndicator);
+  }, [activeIndex, lang]);
+
   return (
     <div
-      className="overflow-hidden rounded-3xl border border-stone-200/80 bg-white shadow-[0_8px_40px_rgb(28_25_23_/_0.06),0_0_0_1px_rgb(0_0_0_/_0.03)]"
+      className="overflow-hidden rounded-3xl border border-stone-200/45 bg-stone-50/45 shadow-[0_10px_34px_rgb(28_25_23_/_0.035),0_0_0_1px_rgb(255_255_255_/_0.22)] backdrop-blur-lg"
       role="region"
       aria-label={lang === "zh" ? "流程演示" : "Guided demo walkthrough"}
     >
       <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,17.5rem)]">
         <div
-          className="flex items-center justify-center border-b border-stone-100 bg-gradient-to-b from-white to-stone-50/60 px-6 py-10 sm:px-10 sm:py-12 lg:border-b-0 lg:border-r lg:py-14"
+          className="flex items-center justify-center border-b border-stone-200/35 bg-gradient-to-b from-stone-50/35 to-transparent px-6 py-10 sm:px-10 sm:py-12 lg:border-b-0 lg:border-r lg:py-14"
           role="tabpanel"
           id={`guided-demo-panel-${active.id}`}
           aria-labelledby={`guided-demo-step-${active.id}`}
@@ -66,15 +90,27 @@ export function GuidedDemoWalkthrough() {
 
         <div className="flex flex-col justify-center px-5 py-8 sm:px-7 sm:py-10 lg:px-8">
           <nav
-            className="flex flex-col gap-1.5"
+            ref={stepNavRef}
+            className="relative flex flex-col gap-1.5"
             role="tablist"
             aria-label={lang === "zh" ? "演示步骤" : "Walkthrough steps"}
           >
+            <span
+              className="absolute left-0 right-0 z-0 rounded-full bg-stone-950 shadow-[0_10px_30px_rgba(28,25,23,0.12)] transition-[height,transform] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{
+                height: stepIndicator.height,
+                transform: `translateY(${stepIndicator.top}px)`,
+              }}
+              aria-hidden
+            />
             {steps.map((step, index) => {
               const selected = index === activeIndex;
               return (
                 <button
                   key={step.id}
+                  ref={(node) => {
+                    stepButtonRefs.current[index] = node;
+                  }}
                   id={`guided-demo-step-${step.id}`}
                   type="button"
                   role="tab"
@@ -82,24 +118,15 @@ export function GuidedDemoWalkthrough() {
                   aria-controls={`guided-demo-panel-${step.id}`}
                   onClick={() => setActiveIndex(index)}
                   className={[
-                    "relative w-full overflow-hidden rounded-xl border px-3.5 py-2.5 text-left font-mono text-[11px] tracking-[0.04em] transition-[border-color,box-shadow,color,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                    "relative z-10 w-full rounded-full px-4 py-2.5 text-left font-mono text-[11px] tracking-[0.12em] transition-colors duration-[260ms]",
                     selected
-                      ? "border-cyan-600/25 font-medium text-stone-900 shadow-[0_0_0_1px_rgb(8_145_178_/_0.08),0_10px_24px_rgb(8_145_178_/_0.07)]"
-                      : "border-transparent text-stone-500 hover:border-stone-200/80 hover:text-stone-700",
+                      ? "font-medium text-stone-50"
+                      : "text-stone-500 hover:text-stone-900",
                   ]
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  <span
-                    className={[
-                      "absolute inset-0 origin-left rounded-xl bg-gradient-to-r from-cyan-50/90 via-sky-50/60 to-white opacity-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                      selected ? "scale-x-100 opacity-100" : "scale-x-0",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    aria-hidden
-                  />
-                  <span className="relative z-10">{step.tabLabel}</span>
+                  {step.tabLabel}
                 </button>
               );
             })}
