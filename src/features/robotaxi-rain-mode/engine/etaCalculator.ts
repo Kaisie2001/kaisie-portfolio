@@ -1,18 +1,24 @@
 import type { EtaEstimate, PudoCandidate, RainModeThresholds } from "../data/types";
 
-export function estimateEtaAndBoardingTime(
-  candidate: PudoCandidate,
-  thresholds: RainModeThresholds,
-): EtaEstimate {
+export const BOARDING_BUFFER_MIN = 0.5;
+
+export function calculateEstimatedBoardingTime(candidate: PudoCandidate) {
   const etaMin = candidate.vehicleEtaMin ?? candidate.vehicle_eta_min;
   const walkMin =
     candidate.walkingTimeMin ??
     candidate.walking_time_min ??
     Math.ceil((candidate.walkingDistanceM ?? candidate.walking_distance_m) / 75);
-  const estimatedBoardingTimeMin = Math.max(
-    etaMin,
-    walkMin + thresholds.boardingBufferMin,
-  );
+
+  return Math.max(walkMin, etaMin) + BOARDING_BUFFER_MIN;
+}
+
+export function estimateEtaAndBoardingTime(
+  candidate: PudoCandidate,
+  thresholds: RainModeThresholds,
+): EtaEstimate {
+  void thresholds;
+  const etaMin = candidate.vehicleEtaMin ?? candidate.vehicle_eta_min;
+  const estimatedBoardingTimeMin = calculateEstimatedBoardingTime(candidate);
 
   return {
     pudo_id: candidate.id ?? candidate.pudo_id,

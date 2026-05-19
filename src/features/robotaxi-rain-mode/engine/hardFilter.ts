@@ -59,3 +59,15 @@ export function filterValidPudoCandidates(candidates: PudoCandidate[]) {
     rejected: results.filter((result) => !result.passed),
   };
 }
+
+export function filterValidCandidates(candidates: PudoCandidate[]) {
+  const filtered = filterValidPudoCandidates(candidates);
+
+  return {
+    validCandidates: filtered.valid,
+    rejectedCandidates: filtered.rejected.map((result) => ({
+      candidateId: result.pudoId,
+      reasons: result.failed,
+    })),
+  };
+}

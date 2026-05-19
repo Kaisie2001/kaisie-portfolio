@@ -58,7 +58,9 @@ export type PudoCandidate = {
   /** Data-driven engine fields. Kept optional so legacy JSON adapters remain valid. */
   id?: string;
   label?: string;
+  optionType?: PudoOptionType;
   coordinates?: [number, number];
+  relatedPoi?: string;
   is_valid_pudo: boolean;
   isValidPudo?: boolean;
   validity_type: string;
@@ -76,10 +78,13 @@ export type PudoCandidate = {
   hard_constraint_passed: boolean;
   walking_distance_m: number;
   walkingDistanceM?: number;
+  rainExposedDistanceM?: number;
   rain_exposed_distance_m: number;
   rainExposedWalkingDistanceM?: number;
+  coveredDistanceM?: number;
   covered_distance_m?: number;
   coveredWalkingDistanceM?: number;
+  coveredRatio?: number;
   vehicle_eta_min: number;
   vehicleEtaMin?: number;
   walking_time_min?: number;
@@ -95,6 +100,9 @@ export type PudoCandidate = {
   recognizabilityScore?: number;
   demandProximityScore?: number;
   demandIndex?: number;
+  sourceType?: SourceType;
+  confidenceLevel?: ConfidenceLevel;
+  recommendationReason?: string;
   recommendation_reason_en: string;
   recommendation_reason_zh: string;
   tradeoff_summary_en?: string;
@@ -117,6 +125,7 @@ export type WalkingRoute = {
   estimated_walk_time_min?: number;
   route_confidence: string;
   source_type: SourceType;
+  segments?: WalkingRouteSegment[];
 };
 
 export type ShelterFeature = {
@@ -232,7 +241,11 @@ export type HardConstraintResult = {
 
 export type WalkingRouteSegment = {
   segmentId: string;
+  id?: string;
   type: "covered" | "exposed" | "crossing";
+  lengthM?: number;
+  coverageRatio?: number;
+  shelterType?: string;
   distanceM: number;
   coordinates: [number, number][];
 };
@@ -275,6 +288,16 @@ export type CandidateScore = {
   components: Record<keyof RainModeWeights, number>;
 };
 
+export type CandidateWithComputedMetrics = PudoCandidate & {
+  debugId: "P1" | "P2" | "P3" | string;
+  totalDistanceM: number;
+  coveredDistanceM: number;
+  rainExposedDistanceM: number;
+  coveredRatio: number;
+  estimatedBoardingTimeMin: number;
+  rainComfortScore: number;
+};
+
 export type PickupSelectionOutput = {
   rawCandidateCount: number;
   validCandidateCount: number;
@@ -291,6 +314,12 @@ export type PickupSelectionOutput = {
   >;
   etaByPudo: Record<string, EtaEstimate>;
   scores: CandidateScore[];
+  candidatesWithComputedMetrics?: CandidateWithComputedMetrics[];
+  closest?: CandidateWithComputedMetrics;
+  sheltered?: CandidateWithComputedMetrics;
+  soonest?: CandidateWithComputedMetrics;
+  selectedRecommendation?: CandidateWithComputedMetrics;
+  debugPipeline?: string[];
   selections: {
     closest: string;
     sheltered: string;

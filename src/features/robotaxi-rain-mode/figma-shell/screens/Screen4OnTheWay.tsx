@@ -27,8 +27,7 @@ export function Screen4OnTheWay({ pickup, onBack, onStartWalking }: Props) {
   const selection = selectPickupOptions(
     rainModeDemoData.pudoCandidates,
     rainModeDemoData.walkingRoutes,
-    rainModeDemoData.thresholds,
-    rainModeDemoData.weights,
+    rainModeDemoData.vehicleApproachRoutes,
   );
   const coordination = planPickupCoordination(
     selection,

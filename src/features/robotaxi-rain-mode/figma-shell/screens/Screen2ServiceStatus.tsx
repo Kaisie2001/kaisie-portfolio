@@ -36,8 +36,7 @@ function Screen2SheetBody({
   const selection = selectPickupOptions(
     rainModeDemoData.pudoCandidates,
     rainModeDemoData.walkingRoutes,
-    rainModeDemoData.thresholds,
-    rainModeDemoData.weights,
+    rainModeDemoData.vehicleApproachRoutes,
   );
   const selectedEta = selection.etaByPudo[selection.selections.recommended];
   const etaMin = selectedEta?.vehicle_eta_min ?? 5;

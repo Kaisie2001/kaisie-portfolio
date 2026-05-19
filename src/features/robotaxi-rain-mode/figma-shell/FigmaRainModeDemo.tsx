@@ -38,9 +38,19 @@ import { TechnicalEnginePanel } from "../components/TechnicalEnginePanel";
 const DISPATCH_SEARCH_MS = 4000;
 const DISPATCH_ASSIGNED_MS = 1800;
 
+export type RobotaxiDemoStageId =
+  | "context-trigger"
+  | "service-gate"
+  | "pudo-selection"
+  | "pickup-coordination";
+
 export type FigmaRainModeDemoProps = {
   /** Existing site-level language passed by the page. */
   lang?: Lang;
+  /** Slideshow stage controlled by the case-study section. */
+  activeStage?: RobotaxiDemoStageId;
+  /** Keeps phone primary actions aligned with stage navigation. */
+  slideshowMode?: boolean;
   /** When set, screen is controlled by the parent (e.g. guided step navigator). */
   screen?: FigmaScreen;
   onScreenChange?: (screen: FigmaScreen) => void;
@@ -71,6 +81,8 @@ export function FigmaRainModeDemo(props: FigmaRainModeDemoProps = {}) {
 
 function FigmaRainModeDemoInner({
   lang = "en",
+  activeStage,
+  slideshowMode = false,
   screen: controlledScreen,
   onScreenChange,
   pauseDispatchAuto = false,
@@ -92,7 +104,8 @@ function FigmaRainModeDemoInner({
   };
 
   const [toast, setToast] = useState<string | null>(null);
-  const { randomSimulateUserLocation, randomPickupAnchorOnly } = useScenario();
+  const { scenario, randomSimulateUserLocation, randomPickupAnchorOnly } =
+    useScenario();
 
   const handleRandomPickup = () => {
     if (screen === 3) {
@@ -136,6 +149,7 @@ function FigmaRainModeDemoInner({
                   pauseDispatchAuto={pauseDispatchAuto}
                   guidedStep={guidedStep}
                   guidedPreviewOption={guidedPreviewOption}
+                  slideshowMode={slideshowMode}
                   onUserInteraction={onUserInteraction}
                   onStartWalking={() => {
                     onUserInteraction?.();
@@ -148,7 +162,12 @@ function FigmaRainModeDemoInner({
           </motion.div>
         </div>
         <div className="figma-demo-right-rail">
-          <TechnicalEnginePanel screen={screen} lang={lang} />
+          <TechnicalEnginePanel
+            screen={screen}
+            lang={lang}
+            activeStage={activeStage}
+            selectedPickupOption={guidedPreviewOption ?? scenario.selectedZoneId}
+          />
           <DemoControlsPanel onRandomPickup={handleRandomPickup} />
         </div>
       </div>
@@ -167,6 +186,7 @@ type FigmaDemoStageProps = {
   pauseDispatchAuto?: boolean;
   guidedStep?: 1 | 2 | 3 | 4;
   guidedPreviewOption?: PickupId | null;
+  slideshowMode?: boolean;
   onUserInteraction?: () => void;
   onStartWalking: () => void;
 };
@@ -177,6 +197,7 @@ function FigmaDemoStage({
   pauseDispatchAuto = false,
   guidedStep,
   guidedPreviewOption = null,
+  slideshowMode = false,
   onUserInteraction,
   onStartWalking,
 }: FigmaDemoStageProps) {
@@ -192,6 +213,7 @@ function FigmaDemoStage({
     continueToAssignedVehicle,
     markVehicleAssigned,
     cancelRobotaxiRequest,
+    generateDemoTrip,
   } = useScenario();
   const [dispatchPhase, setDispatchPhase] = useState<DispatchPhase>("searching");
   const dispatchAutoRef = useRef(true);
@@ -223,7 +245,7 @@ function FigmaDemoStage({
 
   const confirmZoneAndReturn = () => {
     confirmPickupZone(scenario.selectedZoneId);
-    onScreenChange(1);
+    onScreenChange(slideshowMode ? 4 : 1);
   };
 
   const handleDropoffSelect = (location: { lng: number; lat: number; label: string }) => {
@@ -249,17 +271,17 @@ function FigmaDemoStage({
 
     switch (guidedStep) {
       case 1:
+        if (slideshowMode && !canRequestRobotaxi(scenario)) {
+          generateDemoTrip();
+        }
         break;
       case 2:
         ensurePickupZones();
         break;
       case 3:
         if (ensurePickupZones()) {
-          if (
-            !scenario.pickupZoneConfirmed ||
-            scenario.selectedZoneId !== "sheltered"
-          ) {
-            confirmPickupZone("sheltered");
+          if (!scenario.pickupZoneConfirmed) {
+            confirmPickupZone(slideshowMode ? scenario.selectedZoneId : "sheltered");
           }
         }
         setDispatchPhase("searching");
@@ -284,6 +306,8 @@ function FigmaDemoStage({
     confirmPickupZone,
     markVehicleAssigned,
     continueToAssignedVehicle,
+    generateDemoTrip,
+    slideshowMode,
   ]);
 
   useEffect(() => {

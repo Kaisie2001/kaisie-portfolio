@@ -1,17 +1,29 @@
 import type { ReactNode } from "react";
 import type { Lang } from "@/lib/portfolioCopy";
-import type { FigmaScreen } from "../figma-shell/types";
+import type { FigmaScreen, PickupId } from "../figma-shell/types";
+import type { RobotaxiDemoStageId } from "../figma-shell/FigmaRainModeDemo";
 import { rainModeDemoData } from "../data/rainModeDemoData";
-import type { PudoCandidate, TechnicalStage } from "../data/types";
+import type { TechnicalStage } from "../data/types";
 import { buildRainModeContext } from "../engine/contextTrigger";
 import { evaluateServiceGate } from "../engine/serviceGate";
-import { HARD_CONSTRAINTS } from "../engine/hardFilter";
 import { selectPickupOptions } from "../engine/selectPickupOptions";
-import { planPickupCoordination } from "../engine/pickupCoordination";
+import {
+  buildPickupCoordinationState,
+  planPickupCoordination,
+} from "../engine/pickupCoordination";
 
 type Props = {
   screen: FigmaScreen;
   lang: Lang;
+  activeStage?: RobotaxiDemoStageId;
+  selectedPickupOption?: PickupId;
+};
+
+const TECHNICAL_STAGE_BY_ACTIVE_STAGE: Record<RobotaxiDemoStageId, TechnicalStage> = {
+  "context-trigger": "contextTrigger",
+  "service-gate": "serviceGate",
+  "pudo-selection": "pudoSelection",
+  "pickup-coordination": "pickupCoordination",
 };
 
 export const TECHNICAL_STAGE_BY_SCREEN: Record<1 | 2 | 3 | 4, TechnicalStage> = {
@@ -250,18 +262,6 @@ const PANEL_COPY: Record<
   },
 };
 
-function formatPudoLabel(candidate: PudoCandidate, lang: Lang) {
-  return lang === "zh"
-    ? candidate.label_zh
-    : candidate.label_en ?? candidate.label ?? candidate.pudo_id;
-}
-
-function candidateById(id: string) {
-  return rainModeDemoData.pudoCandidates.find((candidate) => {
-    return (candidate.id ?? candidate.pudo_id) === id;
-  });
-}
-
 function Metric({
   label,
   value,
@@ -300,7 +300,12 @@ function Section({
   );
 }
 
-export function TechnicalEnginePanel({ screen, lang }: Props) {
+export function TechnicalEnginePanel({
+  screen,
+  lang,
+  activeStage,
+  selectedPickupOption = "sheltered",
+}: Props) {
   const copy = PANEL_COPY[lang];
   const contextInput = {
     userLocation: rainModeDemoData.userRequest.userLocation,
@@ -321,19 +326,97 @@ export function TechnicalEnginePanel({ screen, lang }: Props) {
   const selection = selectPickupOptions(
     rainModeDemoData.pudoCandidates,
     rainModeDemoData.walkingRoutes,
-    rainModeDemoData.thresholds,
-    rainModeDemoData.weights,
+    rainModeDemoData.vehicleApproachRoutes,
   );
   const coordination = planPickupCoordination(
     selection,
     rainModeDemoData.vehicleApproachRoutes,
     rainModeDemoData.operationNotices,
   );
+  const shelteredCandidate =
+    selection.sheltered ??
+    selection.candidatesWithComputedMetrics?.find(
+      (candidate) => (candidate.id ?? candidate.pudo_id) === "sheltered",
+    );
+  const shelteredWalkingRoute =
+    rainModeDemoData.walkingRoutes.find((route) => route.pudo_id === "sheltered") ??
+    rainModeDemoData.walkingRoutes[0];
+  const shelteredApproachRoute =
+    rainModeDemoData.vehicleApproachRoutes.find(
+      (route) => route.pudoId === "sheltered",
+    ) ?? rainModeDemoData.vehicleApproachRoutes[0];
+  const pickupCoordinationState =
+    shelteredCandidate && shelteredWalkingRoute && shelteredApproachRoute
+      ? buildPickupCoordinationState({
+          selectedCandidate: shelteredCandidate,
+          walkingRoute: shelteredWalkingRoute,
+          vehicleApproachRoute: {
+            ...shelteredApproachRoute,
+            distanceM: 1200,
+          },
+          vehicleEtaMin: 7,
+          vehicleDistanceKm: 1.2,
+          pickupValidity: "confirmed",
+        })
+      : null;
   const stage =
-    screen >= 1 && screen <= 4
+    activeStage
+      ? TECHNICAL_STAGE_BY_ACTIVE_STAGE[activeStage]
+      : screen >= 1 && screen <= 4
       ? TECHNICAL_STAGE_BY_SCREEN[screen as 1 | 2 | 3 | 4]
       : TECHNICAL_STAGE_BY_SCREEN[1];
-  const selectedCandidate = candidateById(coordination.selectedPudoId);
+  const selectedPickupMetrics =
+    selection.candidatesWithComputedMetrics?.find(
+      (candidate) => (candidate.id ?? candidate.pudo_id) === selectedPickupOption,
+    ) ?? selection.selectedRecommendation;
+  const selectedInsight =
+    selectedPickupOption === "closest"
+      ? {
+          title: lang === "zh" ? "当前选择：P1 最近" : "Selected: P1 Closest",
+          bullets:
+            lang === "zh"
+              ? [
+                  "优化最短步行距离",
+                  "雨中暴露距离更高",
+                  "选择依据：min walkingDistanceM",
+                ]
+              : [
+                  "optimized for shortest walking distance",
+                  "higher rain-exposed distance",
+                  "selected by min walkingDistanceM",
+                ],
+        }
+      : selectedPickupOption === "soonest"
+        ? {
+            title: lang === "zh" ? "当前选择：P3 最快" : "Selected: P3 Soonest",
+            bullets:
+              lang === "zh"
+                ? [
+                    "优化最早成功上车",
+                    "选择依据：min estimatedBoardingTimeMin",
+                    "不一定是最遮蔽方案",
+                  ]
+                : [
+                    "optimized for earliest boarding",
+                    "selected by min estimatedBoardingTimeMin",
+                    "not necessarily the most sheltered option",
+                  ],
+          }
+        : {
+            title: lang === "zh" ? "当前选择：P2 遮蔽" : "Selected: P2 Sheltered",
+            bullets:
+              lang === "zh"
+                ? [
+                    "优化雨天舒适度",
+                    "雨中暴露距离更低",
+                    "选择依据：max rainComfortScore",
+                  ]
+                : [
+                    "optimized for rain comfort",
+                    "lower rain-exposed distance",
+                    "selected by max rainComfortScore",
+                  ],
+          };
 
   return (
     <aside className="robotaxi-technical-panel">
@@ -489,90 +572,121 @@ export function TechnicalEnginePanel({ screen, lang }: Props) {
             <Section title={copy.sections.input}>
               <div className="grid grid-cols-2 gap-2">
                 <Metric
-                  label={copy.labels.rawCandidates}
-                  value={selection.rawCandidateCount}
+                  label="PudoCandidate"
+                  value={`${rainModeDemoData.pudoCandidates.length} items`}
                 />
                 <Metric
-                  label={copy.labels.afterHardFilter}
-                  value={selection.validCandidateCount}
+                  label="ShelterFeature"
+                  value={`${rainModeDemoData.shelterFeatures.length} item`}
+                />
+                <Metric
+                  label="WalkingRoute"
+                  value={`${rainModeDemoData.walkingRoutes.length} routes`}
+                />
+                <Metric
+                  label="VehicleApproachRoute"
+                  value={`${rainModeDemoData.vehicleApproachRoutes.length} route`}
+                />
+                <Metric
+                  label="EtaEstimate"
+                  value={`${rainModeDemoData.etaEstimates.length} estimates`}
+                />
+                <Metric
+                  label="LegalStoppingRule"
+                  value={lang === "zh" ? "assumed_valid_for_demo" : "assumed_valid_for_demo"}
+                />
+                <Metric
+                  label="OddServiceBoundary"
+                  value={lang === "zh" ? "范围内" : "within boundary"}
                 />
               </div>
             </Section>
-            <Section title={copy.sections.hardConstraints}>
-              <p className="m-0">
-                {HARD_CONSTRAINTS.join(" · ")}
-              </p>
-              {selection.rejectedCandidates.length > 0 ? (
-                <ul className="m-0 mt-2 space-y-1 p-0">
-                  {selection.rejectedCandidates.map((item) => (
-                    <li key={item.pudoId} className="list-none">
-                      <strong>{item.pudoId}</strong>{" "}
-                      {copy.sentences.hardRejectedPrefix}{" "}
-                      {item.failed.join(", ")}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="m-0 mt-2">{copy.values.noneRejected}</p>
-              )}
-            </Section>
-            <Section title={copy.sections.walkingExposure}>
-              <div className="grid gap-2">
-                {Object.entries(selection.exposureByPudo).map(([pudoId, exposure]) => (
-                  <Metric
-                    key={pudoId}
-                    label={pudoId}
-                    value={`${exposure.walkingDistanceM}m ${copy.values.walk} · ${exposure.rainExposedWalkingDistanceM}m ${copy.values.exposed} · ${Math.round(exposure.exposureRatio * 100)}% ${copy.values.exposure}`}
-                  />
+            <Section title={lang === "zh" ? "计算管线" : "Computation Pipeline"}>
+              <ul className="m-0 space-y-1 p-0">
+                {(selection.debugPipeline ?? []).map((item) => (
+                  <li key={item} className="list-none">
+                    {lang === "zh"
+                      ? item
+                          .replace("Query candidate pool within 150m search radius", "在 150m 搜索半径内查询候选点池")
+                          .replace("Apply hard feasibility filters", "应用硬可行性过滤")
+                          .replace("Calculate walking route exposure", "计算步行路线暴露")
+                          .replace("Estimate vehicle ETA and boarding time", "估算车辆 ETA 与上车时间")
+                          .replace("Calculate rain comfort score", "计算雨天舒适度得分")
+                          .replace("Select Closest / Sheltered / Soonest", "选择最近 / 遮蔽 / 最快")
+                      : item}
+                  </li>
                 ))}
+              </ul>
+            </Section>
+            <Section title={lang === "zh" ? "参数与指标" : "Parameters & Indicators"}>
+              <div className="grid gap-2">
+                <Metric label="search radius" value="150 m" />
+                <Metric label="boarding buffer" value="0.5 min" />
+                <Metric label="sheltered walk cap" value="1.5 × closest walk" />
+                <Metric label="sheltered ETA cap" value="fastest ETA + 3 min" />
+                <Metric label="exposure reduction target" value="20 m" />
               </div>
             </Section>
-            <Section title={copy.sections.etaBoarding}>
-              <div className="grid gap-2">
-                {Object.entries(selection.etaByPudo).map(([pudoId, eta]) => (
-                  <Metric
-                    key={pudoId}
-                    label={pudoId}
-                    value={`${eta.vehicle_eta_min}m ${copy.values.eta} · ${eta.estimated_boarding_time_min}m ${copy.values.boarding}`}
-                  />
-                ))}
-              </div>
-            </Section>
-            <Section title={copy.sections.weights}>
-              <p className="m-0">
-                {copy.sentences.weights
-                  .replace(
-                    "{rainExposure}",
-                    String(rainModeDemoData.weights.rainExposure),
-                  )
-                  .replace("{shelter}", String(rainModeDemoData.weights.shelterScore))
-                  .replace(
-                    "{coveredWalk}",
-                    String(rainModeDemoData.weights.coveredWalking),
-                  )
-                  .replace("{eta}", String(rainModeDemoData.weights.vehicleEta))}
-              </p>
-            </Section>
-            <Section title={copy.sections.comfortScore}>
-              <div className="grid gap-2">
-                {selection.scores.map((score) => (
-                  <Metric
-                    key={score.pudoId}
-                    label={score.pudoId}
-                    value={`${score.rainComfortScore}/100 ${copy.values.comfort} · ${score.weightedScore} ${copy.values.weighted}`}
-                  />
-                ))}
-              </div>
+            <Section title={lang === "zh" ? "公式" : "Formulas"}>
+              <ul className="m-0 space-y-1 p-0">
+                <li className="list-none">
+                  covered distance = Σ segment length × coverage ratio
+                </li>
+                <li className="list-none">
+                  exposed distance = Σ segment length × (1 - coverage ratio)
+                </li>
+                <li className="list-none">
+                  boarding time = max(walk time, vehicle ETA) + buffer
+                </li>
+                <li className="list-none">
+                  rain comfort score = shelter + covered + same-side + recognition - exposure - walk - ETA - crossing
+                </li>
+              </ul>
             </Section>
             <Section title={copy.sections.computed}>
-              {copy.values.closest}: <strong>{selection.selections.closest}</strong>
-              <br />
-              {copy.values.sheltered}: <strong>{selection.selections.sheltered}</strong>
-              <br />
-              {copy.values.soonest}: <strong>{selection.selections.soonest}</strong>
-              <br />
-              {copy.values.recommended}:{" "}
-              <strong>{selection.selections.recommended}</strong>
+              <div className="grid gap-2">
+                <Metric label="raw candidates" value={selection.rawCandidateCount} />
+                <Metric
+                  label="valid after hard filter"
+                  value={selection.validCandidateCount}
+                />
+                <Metric
+                  label="Closest"
+                  value={`${selection.closest?.debugId ?? "P1"}, selected by minimum walking distance`}
+                />
+                <Metric
+                  label="Sheltered"
+                  value={`${selection.sheltered?.debugId ?? "P2"}, selected by maximum rain comfort score`}
+                />
+                <Metric
+                  label="Soonest"
+                  value={`${selection.soonest?.debugId ?? "P3"}, selected by minimum estimated boarding time`}
+                />
+                {(selection.candidatesWithComputedMetrics ?? []).map((candidate) => (
+                  <Metric
+                    key={candidate.debugId}
+                    label={`${candidate.debugId} ${candidate.label}`}
+                    value={`${candidate.walkingDistanceM}m walk · ${candidate.rainExposedDistanceM}m exposed · ${candidate.vehicleEtaMin}m ETA · ${candidate.estimatedBoardingTimeMin}m boarding · ${candidate.rainComfortScore} score`}
+                  />
+                ))}
+              </div>
+            </Section>
+            <Section title={selectedInsight.title}>
+              <ul className="m-0 space-y-1 p-0">
+                {selectedInsight.bullets.map((item) => (
+                  <li key={item} className="list-none">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              {selectedPickupMetrics ? (
+                <div className="mt-2 grid gap-2">
+                  <Metric
+                    label="computed metrics"
+                    value={`${selectedPickupMetrics.debugId}: ${selectedPickupMetrics.walkingDistanceM}m walk · ${selectedPickupMetrics.rainExposedDistanceM}m exposed · ${selectedPickupMetrics.estimatedBoardingTimeMin}m boarding`}
+                  />
+                </div>
+              ) : null}
             </Section>
           </>
         ) : null}
@@ -582,42 +696,139 @@ export function TechnicalEnginePanel({ screen, lang }: Props) {
             <Section title={copy.sections.input}>
               <div className="grid gap-2">
                 <Metric
-                  label={copy.labels.selectedPudo}
+                  label="selected_pudo"
                   value={
-                    selectedCandidate
-                      ? formatPudoLabel(selectedCandidate, lang)
+                    pickupCoordinationState
+                      ? `${pickupCoordinationState.selectedPickupLabel} / ${pickupCoordinationState.selectedPudoId}`
                       : coordination.selectedPudoId
                   }
                 />
-                <Metric label={copy.labels.vehicle} value={coordination.vehicleId} />
+                <Metric
+                  label="passenger_walking_route"
+                  value={
+                    pickupCoordinationState
+                      ? `${pickupCoordinationState.passengerWalkDistanceM} m · ${pickupCoordinationState.passengerWalkTimeMin} min`
+                      : "n/a"
+                  }
+                />
+                <Metric
+                  label="vehicle_approach_route"
+                  value={
+                    pickupCoordinationState
+                      ? `${pickupCoordinationState.vehicleDistanceKm} km`
+                      : `${coordination.approachDistanceM} m`
+                  }
+                />
+                <Metric
+                  label="vehicle_position"
+                  value={shelteredApproachRoute?.vehicleId ?? coordination.vehicleId}
+                />
+                <Metric
+                  label="vehicle_eta"
+                  value={
+                    pickupCoordinationState
+                      ? `${pickupCoordinationState.vehicleEtaMin} min`
+                      : "n/a"
+                  }
+                />
+                <Metric
+                  label="route_confidence"
+                  value={shelteredWalkingRoute?.route_confidence ?? "medium"}
+                />
               </div>
             </Section>
             <Section title={copy.sections.method}>
-              {copy.sentences.coordinationMethod}
+              <ul className="m-0 space-y-1 p-0">
+                {(lang === "zh"
+                  ? [
+                      "锁定选中的 PUDO",
+                      "启动乘客步行引导",
+                      "追踪车辆接近路线",
+                      "比较乘客到达时间与车辆 ETA",
+                      "持续监控上车点是否仍然有效",
+                    ]
+                  : [
+                      "Lock selected PUDO",
+                      "Start passenger walking guidance",
+                      "Track vehicle approach route",
+                      "Compare passenger arrival time and vehicle ETA",
+                      "Monitor whether pickup remains valid",
+                    ]
+                ).map((item) => (
+                  <li key={item} className="list-none">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </Section>
             <Section title={copy.sections.parametersThresholds}>
-              {copy.sentences.boardingBuffer}{" "}
-              <strong>{rainModeDemoData.thresholds.boardingBufferMin} min</strong>
+              <div className="grid gap-2">
+                <Metric
+                  label="pickup geofence radius"
+                  value={`${pickupCoordinationState?.debug.pickupGeofenceRadiusM ?? 25} m`}
+                />
+                <Metric
+                  label="boarding buffer"
+                  value={`${pickupCoordinationState?.debug.boardingBufferMin ?? 0.5} min`}
+                />
+                <Metric
+                  label="ETA update interval"
+                  value={`${pickupCoordinationState?.debug.etaUpdateIntervalSec ?? 15} sec`}
+                />
+                <Metric
+                  label="max arrival sync gap"
+                  value={`${pickupCoordinationState?.debug.maxArrivalSyncGapMin ?? 5} min`}
+                />
+              </div>
             </Section>
             <Section title={copy.sections.computed}>
-              {copy.sentences.approachRoute}{" "}
-              <strong>{coordination.approachDistanceM}m</strong>{" "}
-              {copy.sentences.across}{" "}
-              <strong>{coordination.approachPointCount}</strong>{" "}
-              {copy.values.routePoints}
-              <br />
-              {copy.sentences.passengerInstruction}
-              {coordination.operationNotice ? (
-                <>
-                  <br />
-                  {copy.values.notice}:{" "}
-                  <strong>
-                    {lang === "zh"
-                      ? coordination.operationNotice.title_zh
-                      : coordination.operationNotice.title_en}
-                  </strong>
-                </>
-              ) : null}
+              <div className="grid gap-2">
+                <Metric
+                  label="selected pickup"
+                  value={
+                    pickupCoordinationState
+                      ? `${pickupCoordinationState.selectedPickupLabel} / ${pickupCoordinationState.selectedPudoId}`
+                      : "Sheltered / P2"
+                  }
+                />
+                <Metric
+                  label="passenger walk"
+                  value={`${pickupCoordinationState?.passengerWalkDistanceM ?? 60} m`}
+                />
+                <Metric
+                  label="exposed distance"
+                  value={`${pickupCoordinationState?.rainExposedDistanceM ?? 15} m`}
+                />
+                <Metric
+                  label="covered distance"
+                  value={`${pickupCoordinationState?.coveredDistanceM ?? 45} m`}
+                />
+                <Metric
+                  label="vehicle distance"
+                  value={`${pickupCoordinationState?.vehicleDistanceKm ?? 1.2} km`}
+                />
+                <Metric
+                  label="vehicle ETA"
+                  value={`${pickupCoordinationState?.vehicleEtaMin ?? 7} min`}
+                />
+                <Metric
+                  label="arrival sync gap"
+                  value={`${pickupCoordinationState?.arrivalSyncGapMin ?? 5} min`}
+                />
+                <Metric
+                  label="pickup validity"
+                  value={pickupCoordinationState?.pickupValidity ?? "confirmed"}
+                />
+                <Metric
+                  label="fallback required"
+                  value={String(pickupCoordinationState?.fallbackRequired ?? false)}
+                />
+              </div>
+              <p className="m-0 mt-2">
+                {lang === "zh"
+                  ? "选中的 PUDO 不只是 UI 选项，而是同时约束乘客步行引导与车辆接近路线的可执行上车目标。"
+                  : "The selected PUDO is not only a UI choice; it becomes the executable pickup target that aligns passenger walking guidance with vehicle approach guidance."}
+              </p>
             </Section>
           </>
         ) : null}

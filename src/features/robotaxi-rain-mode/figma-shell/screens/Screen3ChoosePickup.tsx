@@ -49,8 +49,7 @@ export function Screen3ChoosePickup({
       selectPickupOptions(
         rainModeDemoData.pudoCandidates,
         rainModeDemoData.walkingRoutes,
-        rainModeDemoData.thresholds,
-        rainModeDemoData.weights,
+        rainModeDemoData.vehicleApproachRoutes,
       ),
     [],
   );
