@@ -35,7 +35,7 @@ export const COMPARE_CAROUSEL_VARIANTS: CompareCarouselVariant[] = [
   {
     id: "farthest",
     pickupKey: "farthest",
-    label: { en: "Farthest area", zh: "最远区域" },
+    label: { en: "Fastest area", zh: "最近区域" },
   },
   {
     id: "soonest",

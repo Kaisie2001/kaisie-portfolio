@@ -116,7 +116,7 @@ const pickupOptions: Record<CompareOptionId, FrozenPickupOption> = {
   },
   farthest: {
     id: "farthest",
-    name: { en: "Farthest area", zh: "最远区域" },
+    name: { en: "Fastest area", zh: "最近区域" },
     sub: { en: "Shortest walk", zh: "步行最近" },
     marker: [113.9332498, 22.5206235],
     zone: [
