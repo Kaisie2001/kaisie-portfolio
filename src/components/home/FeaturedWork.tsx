@@ -19,7 +19,7 @@ const projects = [
       "Structured a cross-functional audit of robotaxi user journeys—diagnosed pickup, routing, disengagements, and operator handoff as product operations artifacts for fleet and navigation teams.",
     capabilityZh:
       "结构化 Robotaxi 用户旅程审计，诊断接单、路线、接管与运营交接，沉淀为车队与导航团队可用的产品运营产出。",
-    href: "/work/robotaxi-journey-audit",
+    href: "/work/robotaxi-rain-mode",
     badge: "Product analysis · Concept",
     badgeZh: "产品分析 · 概念",
   },

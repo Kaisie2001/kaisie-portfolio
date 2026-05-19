@@ -41,6 +41,7 @@ export const portfolioCopy = {
             "Feedback Loop",
           ],
           status: "Concept / In progress",
+          href: "/work/robotaxi-rain-mode",
         },
         {
           title: "Drone Mission Workflow",
@@ -204,6 +205,7 @@ export const portfolioCopy = {
           description: "Robotaxi 从预约到乘车的产品链路诊断。",
           keywords: ["用户旅程", "痛点诊断", "转化漏斗", "反馈闭环"],
           status: "概念 / 进行中",
+          href: "/work/robotaxi-rain-mode",
         },
         {
           title: "无人机任务工作流",

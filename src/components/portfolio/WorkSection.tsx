@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import SplitText from "@/components/ui/SplitText";
 import type { Lang } from "@/lib/portfolioCopy";
@@ -17,6 +18,8 @@ type Featured = {
   status?: string;
   /** When true, show a Completed badge instead of `status`. */
   completed?: boolean;
+  /** Internal route to the project case-study page. */
+  href?: string;
 };
 
 type Additional = { title: string; line: string };
@@ -62,6 +65,7 @@ export function WorkSection({
 }: Props) {
   const kEyebrow = lang === "en" ? "Work" : "作品";
   const completedLabel = lang === "en" ? "Completed" : "已完成";
+  const viewProjectLabel = lang === "en" ? "View project" : "查看项目";
   const slide = density === "slide";
   const reduceMotion = useReducedMotion();
   const motionDuration = reduceMotion ? 0.14 : 0.85;
@@ -156,34 +160,20 @@ export function WorkSection({
               : "mt-8 grid grid-cols-1 gap-4 sm:mt-9 md:grid-cols-2 md:gap-5 lg:mt-10 lg:grid-cols-3 lg:gap-5"
           }
         >
-          {featured.map((item) => (
-            <li key={item.title} className="min-h-0">
-              <motion.article
-                initial={false}
-                whileHover={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        y: -6,
-                        transition: { duration: 0.22, ease },
-                      }
-                }
-                whileTap={
-                  reduceMotion ? undefined : { scale: 0.985, y: -2 }
-                }
-                transition={{ type: "spring", stiffness: 420, damping: 28 }}
-                className={
-                  slide
-                    ? "group flex h-full min-h-[220px] cursor-default flex-col rounded-2xl border border-stone-200/70 bg-white p-6 shadow-[0_2px_8px_rgba(28,25,23,0.06)] ring-1 ring-stone-900/[0.04] transition-[border-color,box-shadow] duration-200 ease-out hover:border-stone-400/75 hover:shadow-[0_18px_46px_rgba(28,25,23,0.14)] hover:ring-stone-900/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-400 sm:min-h-[240px] sm:p-7 lg:min-h-0"
-                    : "group flex h-full cursor-default flex-col rounded-xl border border-stone-200/75 bg-white p-5 shadow-[0_1px_3px_rgba(28,25,23,0.06)] ring-1 ring-stone-900/[0.03] transition-[border-color,box-shadow] duration-200 ease-out hover:border-stone-400/70 hover:shadow-[0_14px_36px_rgba(28,25,23,0.12)] hover:ring-stone-900/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-400 sm:p-5"
-                }
-              >
+          {featured.map((item) => {
+            const cardClassName = slide
+              ? "group flex h-full min-h-[220px] flex-col rounded-2xl border border-stone-200/70 bg-white p-6 shadow-[0_2px_8px_rgba(28,25,23,0.06)] ring-1 ring-stone-900/[0.04] transition-[border-color,box-shadow] duration-200 ease-out hover:border-stone-400/75 hover:shadow-[0_18px_46px_rgba(28,25,23,0.14)] hover:ring-stone-900/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-400 sm:min-h-[240px] sm:p-7 lg:min-h-0"
+              : "group flex h-full flex-col rounded-xl border border-stone-200/75 bg-white p-5 shadow-[0_1px_3px_rgba(28,25,23,0.06)] ring-1 ring-stone-900/[0.03] transition-[border-color,box-shadow] duration-200 ease-out hover:border-stone-400/70 hover:shadow-[0_14px_36px_rgba(28,25,23,0.12)] hover:ring-stone-900/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-400 sm:p-5";
+            const cursorClass = item.href ? "cursor-pointer" : "cursor-default";
+
+            const cardBody = (
+              <>
                 <div>
                   <h3
                     className={
                       slide
-                        ? "font-display text-lg font-medium leading-snug tracking-[-0.02em] text-stone-900 sm:text-xl lg:text-[1.35rem]"
-                        : "font-display text-[1.0625rem] font-medium leading-snug tracking-[-0.02em] text-stone-900 sm:text-lg"
+                        ? "font-display text-lg font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:text-xl lg:text-[1.35rem]"
+                        : "font-display text-[1.0625rem] font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:text-lg"
                     }
                   >
                     {item.title}
@@ -222,7 +212,7 @@ export function WorkSection({
                   className={
                     slide
                       ? "mt-4 flex-1 font-sans text-sm leading-relaxed text-stone-600 sm:text-[15px] sm:leading-relaxed"
-                      : "mt-3 font-sans text-sm leading-relaxed text-stone-600 sm:text-[15px]"
+                      : "mt-3 flex-1 font-sans text-sm leading-relaxed text-stone-600 sm:text-[15px]"
                   }
                 >
                   {item.description}
@@ -234,9 +224,60 @@ export function WorkSection({
                     </li>
                   ))}
                 </ul>
-              </motion.article>
-            </li>
-          ))}
+                {item.href ? (
+                  <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-stone-500 transition group-hover:text-stone-800 sm:mt-5 sm:text-[11px]">
+                    {viewProjectLabel} →
+                  </p>
+                ) : null}
+              </>
+            );
+
+            return (
+              <li key={item.title} className="min-h-0">
+                {item.href ? (
+                  <Link href={item.href} className="block h-full">
+                    <motion.article
+                      initial={false}
+                      whileHover={
+                        reduceMotion
+                          ? undefined
+                          : {
+                              y: -6,
+                              transition: { duration: 0.22, ease },
+                            }
+                      }
+                      whileTap={
+                        reduceMotion ? undefined : { scale: 0.985, y: -2 }
+                      }
+                      transition={{ type: "spring", stiffness: 420, damping: 28 }}
+                      className={`${cardClassName} ${cursorClass}`}
+                    >
+                      {cardBody}
+                    </motion.article>
+                  </Link>
+                ) : (
+                  <motion.article
+                    initial={false}
+                    whileHover={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            y: -6,
+                            transition: { duration: 0.22, ease },
+                          }
+                    }
+                    whileTap={
+                      reduceMotion ? undefined : { scale: 0.985, y: -2 }
+                    }
+                    transition={{ type: "spring", stiffness: 420, damping: 28 }}
+                    className={`${cardClassName} ${cursorClass}`}
+                  >
+                    {cardBody}
+                  </motion.article>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         <div
