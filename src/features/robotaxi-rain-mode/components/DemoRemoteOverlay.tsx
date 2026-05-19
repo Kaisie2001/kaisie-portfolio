@@ -3,7 +3,7 @@
 import { useId, type MouseEvent } from "react";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import type { Lang } from "@/lib/portfolioCopy";
-import type { RobotaxiDemoStageId } from "../figma-shell/FigmaRainModeDemo";
+import type { RobotaxiDemoStageId } from "../figma-shell/demoEvents";
 
 export type DemoRemoteOverlayStage = {
   id: RobotaxiDemoStageId;
@@ -12,29 +12,26 @@ export type DemoRemoteOverlayStage = {
 
 export type DemoRemoteOverlayProps = {
   lang: Lang;
-  activeStage: RobotaxiDemoStageId;
+  /** Current technical stage (observed from demo; pills are passive preview). */
+  activeTechStage: RobotaxiDemoStageId;
   stages: DemoRemoteOverlayStage[];
-  onPrevious: () => void;
-  onNext: () => void;
-  onStageSelect: (stageId: RobotaxiDemoStageId) => void;
+  /** Preview technical explanation only — does not control the phone demo. */
+  onTechStagePreview: (stageId: RobotaxiDemoStageId) => void;
 };
 
 const STAGE_PILL_LAYOUT_ID = "robotaxi-demo-stage-pill-bg";
 
-/** Hover-reveal stage guide above the shared demo board (desktop); always visible on touch. */
+/** Passive technical-stage indicator above the shared demo board. */
 export function DemoRemoteOverlay({
   lang,
-  activeStage,
+  activeTechStage,
   stages,
-  onPrevious,
-  onNext,
-  onStageSelect,
+  onTechStagePreview,
 }: DemoRemoteOverlayProps) {
   const panelId = useId();
   const reduceMotion = useReducedMotion();
-  const toolbarLabel =
-    lang === "zh" ? "原型阶段导航" : "Prototype stage navigation";
-  const stagesLabel = lang === "zh" ? "原型阶段" : "Prototype stages";
+  const stagesLabel =
+    lang === "zh" ? "技术说明阶段（仅预览）" : "Technical stages (preview only)";
 
   const pillTransition = reduceMotion
     ? { duration: 0 }
@@ -52,57 +49,35 @@ export function DemoRemoteOverlay({
   return (
     <div
       className="robotaxi-demo-remote-overlay"
-      aria-label={lang === "zh" ? "阶段导览" : "Stage guide"}
+      aria-label={lang === "zh" ? "技术阶段指示" : "Technical stage indicator"}
     >
-      <div
+      <motion.div
         id={panelId}
         className="robotaxi-demo-stage-controls"
-        role="toolbar"
-        aria-label={toolbarLabel}
+        role="group"
+        aria-label={stagesLabel}
       >
-        <div className="robotaxi-demo-stage-controls__inner flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="robotaxi-demo-stage-nav flex items-center gap-2">
-            <button
-              type="button"
-              onClick={(event) => {
-                onPrevious();
-                releaseFocus(event);
-              }}
-              className="robotaxi-demo-stage-nav__btn robotaxi-demo-stage-nav__btn--ghost"
-            >
-              {lang === "zh" ? "上一步" : "Previous"}
-            </button>
-            <button
-              type="button"
-              onClick={(event) => {
-                onNext();
-                releaseFocus(event);
-              }}
-              className="robotaxi-demo-stage-nav__btn robotaxi-demo-stage-nav__btn--primary"
-            >
-              {lang === "zh" ? "下一步" : "Next"}
-            </button>
-          </div>
+        <div className="robotaxi-demo-stage-controls__inner flex flex-col gap-2">
           <LayoutGroup id="robotaxi-demo-stage-pills">
             <div
               className="robotaxi-demo-stage-pills"
-              role="tablist"
+              role="list"
               aria-label={stagesLabel}
             >
               {stages.map((stage, index) => {
-                const selected = stage.id === activeStage;
+                const selected = stage.id === activeTechStage;
                 return (
                   <button
                     key={stage.id}
                     type="button"
-                    role="tab"
-                    aria-selected={selected}
+                    role="listitem"
+                    aria-current={selected ? "step" : undefined}
                     data-selected={selected ? "true" : "false"}
                     onClick={(event) => {
-                      onStageSelect(stage.id);
+                      onTechStagePreview(stage.id);
                       releaseFocus(event);
                     }}
-                    className="robotaxi-demo-stage-pill"
+                    className="robotaxi-demo-stage-pill robotaxi-demo-stage-pill--passive"
                   >
                     {selected ? (
                       <motion.span
@@ -120,7 +95,7 @@ export function DemoRemoteOverlay({
             </div>
           </LayoutGroup>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

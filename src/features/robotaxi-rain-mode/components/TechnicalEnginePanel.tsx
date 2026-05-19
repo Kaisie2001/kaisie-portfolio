@@ -1,10 +1,8 @@
 import type { ReactNode } from "react";
 import type { Lang } from "@/lib/portfolioCopy";
 import type { FigmaScreen, PickupId } from "../figma-shell/types";
-import type {
-  RobotaxiDemoStageId,
-  RobotaxiInteractionEvent,
-} from "../figma-shell/FigmaRainModeDemo";
+import type { RobotaxiDemoStageId } from "../figma-shell/demoEvents";
+import type { RobotaxiInteractionEvent } from "../figma-shell/FigmaRainModeDemo";
 import { rainModeDemoData } from "../data/rainModeDemoData";
 import type { TechnicalStage } from "../data/types";
 import { buildRainModeContext } from "../engine/contextTrigger";
@@ -20,10 +18,13 @@ type Props = {
   lang: Lang;
   activeStage?: RobotaxiDemoStageId;
   selectedPickupOption?: PickupId;
-  lastInteractionEvent?: RobotaxiInteractionEvent | null;
+  lastInteractionEvent?: RobotaxiInteractionEvent | string | null;
 };
 
-const TECHNICAL_STAGE_BY_ACTIVE_STAGE: Record<RobotaxiDemoStageId, TechnicalStage> = {
+const TECHNICAL_STAGE_BY_ACTIVE_STAGE: Record<
+  Exclude<RobotaxiDemoStageId, "empty">,
+  TechnicalStage
+> = {
   "context-trigger": "contextTrigger",
   "service-gate": "serviceGate",
   "pudo-selection": "pudoSelection",
@@ -396,12 +397,31 @@ export function TechnicalEnginePanel({
           pickupValidity: "confirmed",
         })
       : null;
-  const stage =
-    activeStage
-      ? TECHNICAL_STAGE_BY_ACTIVE_STAGE[activeStage]
-      : screen >= 1 && screen <= 4
-        ? TECHNICAL_STAGE_BY_SCREEN[screen as 1 | 2 | 3 | 4]
-        : TECHNICAL_STAGE_BY_SCREEN[1];
+  if (activeStage === "empty") {
+    return (
+      <aside className="robotaxi-technical-panel robotaxi-technical-panel--idle">
+        <div className="robotaxi-technical-panel__header">
+          <p className="m-0 font-mono text-[10px] uppercase tracking-[0.16em] text-stone-400">
+            {copy.eyebrow}
+          </p>
+          <h3 className="m-0 mt-1.5 text-[14px] font-semibold leading-snug text-stone-950">
+            {lang === "zh" ? "等待行程上下文" : "Waiting for Trip Context"}
+          </h3>
+          <p className="m-0 mt-2 text-[11px] leading-relaxed text-stone-500">
+            {lang === "zh"
+              ? "在手机中生成或重置场景后，技术说明将随操作自动更新。"
+              : "Generate or reset a scenario on the phone to sync technical notes with your actions."}
+          </p>
+        </div>
+      </aside>
+    );
+  }
+
+  const stage = activeStage
+    ? TECHNICAL_STAGE_BY_ACTIVE_STAGE[activeStage]
+    : screen >= 1 && screen <= 4
+      ? TECHNICAL_STAGE_BY_SCREEN[screen as 1 | 2 | 3 | 4]
+      : TECHNICAL_STAGE_BY_SCREEN[1];
   const selectedPickupMetrics =
     selection.candidatesWithComputedMetrics?.find(
       (candidate) => (candidate.id ?? candidate.pudo_id) === selectedPickupOption,

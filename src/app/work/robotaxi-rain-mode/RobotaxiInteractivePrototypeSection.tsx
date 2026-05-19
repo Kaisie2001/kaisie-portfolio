@@ -1,113 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   FigmaRainModeDemo,
+  type RobotaxiDemoEvent,
   type RobotaxiDemoStageId,
-  type RobotaxiInteractionEvent,
 } from "@/features/robotaxi-rain-mode/figma-shell";
 import { DemoRemoteOverlay } from "@/features/robotaxi-rain-mode/components/DemoRemoteOverlay";
 import { useLanguage } from "@/contexts/LanguageContext";
-import type { FigmaScreen } from "@/features/robotaxi-rain-mode/figma-shell/types";
 import type { PickupId } from "@/features/robotaxi-rain-mode/figma-shell/types";
+import {
+  isScenarioGeneratedEvent,
+  techStageFromDemoEvent,
+  type RobotaxiDemoEventDetail,
+} from "@/features/robotaxi-rain-mode/figma-shell/demoEvents";
 import {
   PROTOTYPE_SECTION_COPY,
   PROTOTYPE_SECTION_DISCLAIMER,
   PROTOTYPE_SECTION_TITLE,
 } from "./guidedDemoCopy";
 
-type DemoStage = {
+type TechStageIndicator = {
   id: RobotaxiDemoStageId;
-  screen: FigmaScreen;
-  guidedStep: 1 | 2 | 3 | 4;
   label: { en: string; zh: string };
 };
 
-const DEMO_STAGES: DemoStage[] = [
-  {
-    id: "context-trigger",
-    screen: 1,
-    guidedStep: 1,
-    label: { en: "Set Trip", zh: "设置行程" },
-  },
-  {
-    id: "pudo-selection",
-    screen: 3,
-    guidedStep: 3,
-    label: { en: "Pickup", zh: "上车点选择" },
-  },
-  {
-    id: "service-gate",
-    screen: 2,
-    guidedStep: 2,
-    label: { en: "Service", zh: "服务状态" },
-  },
-  {
-    id: "pickup-coordination",
-    screen: 4,
-    guidedStep: 4,
-    label: { en: "On the Way", zh: "车辆接近" },
-  },
+/** Passive technical-stage indicators — observe demo; do not drive the phone. */
+const TECH_STAGE_INDICATORS: TechStageIndicator[] = [
+  { id: "empty", label: { en: "Reset", zh: "初始" } },
+  { id: "context-trigger", label: { en: "Set Trip", zh: "设置行程" } },
+  { id: "pudo-selection", label: { en: "Pickup", zh: "上车点选择" } },
+  { id: "service-gate", label: { en: "Service", zh: "服务状态" } },
+  { id: "pickup-coordination", label: { en: "On the Way", zh: "车辆接近" } },
 ];
 
-function stageFromScreen(screen: FigmaScreen): RobotaxiDemoStageId {
-  switch (screen) {
-    case 2:
-      return "service-gate";
-    case 3:
-      return "pudo-selection";
-    case 4:
-      return "pickup-coordination";
-    case 1:
-    case 5:
-    default:
-      return "context-trigger";
-  }
-}
-
-/** Live coded prototype — phone is primary; stage remote is secondary overlay */
+/** Live coded prototype — phone is primary; technical panel observes demo events. */
 export function RobotaxiInteractivePrototypeSection() {
   const { lang } = useLanguage();
-  const [activeStage, setActiveStage] =
-    useState<RobotaxiDemoStageId>("context-trigger");
   const [activeTechStage, setActiveTechStage] =
     useState<RobotaxiDemoStageId>("context-trigger");
+  const [scenarioGenerated, setScenarioGenerated] = useState(true);
   const [selectedPickupOption, setSelectedPickupOption] =
     useState<PickupId>("sheltered");
-  const [lastInteractionEvent, setLastInteractionEvent] =
-    useState<RobotaxiInteractionEvent | null>(null);
-  const activeIndex = Math.max(
-    0,
-    DEMO_STAGES.findIndex((stage) => stage.id === activeStage),
+  const [lastDemoEvent, setLastDemoEvent] = useState<RobotaxiDemoEvent | null>(
+    null,
   );
-  const active = DEMO_STAGES[activeIndex] ?? DEMO_STAGES[0];
-  const setStageFromEvent = (
-    stage: RobotaxiDemoStageId,
-    event: RobotaxiInteractionEvent,
-  ) => {
-    setActiveStage(stage);
+
+  const handleDemoEvent = useCallback(
+    (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => {
+      setLastDemoEvent(event);
+      setActiveTechStage(techStageFromDemoEvent(event));
+      if (isScenarioGeneratedEvent(event)) {
+        setScenarioGenerated(true);
+      }
+      if (event === "demo_reset" || event === "demo_idle") {
+        setScenarioGenerated(false);
+        setSelectedPickupOption("sheltered");
+      }
+      if (event === "pickup_option_selected" && detail?.pickupOption) {
+        setSelectedPickupOption(detail.pickupOption);
+      }
+    },
+    [],
+  );
+
+  const previewTechStage = (stage: RobotaxiDemoStageId) => {
     setActiveTechStage(stage);
-    setLastInteractionEvent(event);
-  };
-  const setStageFromSecondaryControl = (stage: RobotaxiDemoStageId) => {
-    setActiveStage(stage);
-    setActiveTechStage(stage);
-  };
-  const previousStage = () => {
-    setStageFromSecondaryControl(
-      DEMO_STAGES[(activeIndex - 1 + DEMO_STAGES.length) % DEMO_STAGES.length].id,
-    );
-  };
-  const nextStage = () => {
-    setStageFromSecondaryControl(
-      DEMO_STAGES[(activeIndex + 1) % DEMO_STAGES.length].id,
-    );
   };
 
   return (
     <section
       className="mt-14"
       aria-labelledby="robotaxi-interactive-prototype"
+      data-scenario-generated={scenarioGenerated ? "true" : "false"}
     >
       <h2
         id="robotaxi-interactive-prototype"
@@ -121,46 +86,16 @@ export function RobotaxiInteractivePrototypeSection() {
       <div className="robotaxi-demo-section-wrap mt-6">
         <DemoRemoteOverlay
           lang={lang}
-          activeStage={activeStage}
-          stages={DEMO_STAGES}
-          onPrevious={previousStage}
-          onNext={nextStage}
-          onStageSelect={setStageFromSecondaryControl}
+          activeTechStage={activeTechStage}
+          stages={TECH_STAGE_INDICATORS}
+          onTechStagePreview={previewTechStage}
         />
         <FigmaRainModeDemo
           lang={lang}
-          activeStage={active.id}
           activeTechStage={activeTechStage}
           selectedPickupOption={selectedPickupOption}
-          lastInteractionEvent={lastInteractionEvent}
-          screen={active.screen}
-          guidedStep={active.guidedStep}
-          pauseDispatchAuto
-          slideshowMode
-          onTripSetupConfirmed={() =>
-            setStageFromEvent("service-gate", "trip_setup_confirmed")
-          }
-          onServiceStatusConfirmed={() =>
-            setStageFromEvent("pudo-selection", "service_status_confirmed")
-          }
-          onPickupOptionSelected={(option) => {
-            setSelectedPickupOption(option);
-            setActiveStage("pudo-selection");
-            setActiveTechStage("pudo-selection");
-            setLastInteractionEvent("pickup_option_selected");
-          }}
-          onPickupConfirmed={() =>
-            setStageFromEvent("pickup-coordination", "pickup_confirmed")
-          }
-          onWalkingGuidanceStarted={() =>
-            setStageFromEvent(
-              "pickup-coordination",
-              "walking_guidance_started",
-            )
-          }
-          onScreenChange={(screen) =>
-            setStageFromSecondaryControl(stageFromScreen(screen))
-          }
+          lastDemoEvent={lastDemoEvent}
+          onDemoEvent={handleDemoEvent}
         />
       </div>
       <p className="robotaxi-prototype-disclaimer mt-4 max-w-2xl">

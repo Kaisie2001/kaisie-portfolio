@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -47,6 +48,7 @@ import {
   resetScenarioRandomSeed,
 } from "../data/randomScenario";
 import { fetchRoutesForScenario } from "../data/routeService";
+import type { RobotaxiDemoEvent, RobotaxiDemoEventDetail } from "./demoEvents";
 
 type ScenarioContextValue = {
   scenario: RobotaxiScenario;
@@ -184,11 +186,28 @@ function withPickupAnchor(
   };
 }
 
-export function ScenarioProvider({ children }: { children: ReactNode }) {
+export function ScenarioProvider({
+  children,
+  onDemoEvent,
+}: {
+  children: ReactNode;
+  onDemoEvent?: (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => void;
+}) {
   const [scenario, setScenario] = useState<RobotaxiScenario>(() =>
     createDefaultScenario(),
   );
   const [routesLoading, setRoutesLoading] = useState(false);
+  const onDemoEventRef = useRef(onDemoEvent);
+  onDemoEventRef.current = onDemoEvent;
+  /** Defer so parent setState never runs during this provider's render/updater. */
+  const emitDemoEvent = useCallback(
+    (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => {
+      queueMicrotask(() => {
+        onDemoEventRef.current?.(event, detail);
+      });
+    },
+    [],
+  );
 
   const dropoffReady = hasDropoffLocation(scenario);
   const pickupZoneConfirmed = hasPickupZoneConfirmed(scenario);
@@ -242,10 +261,13 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
 
       const routed = await attachRoutes(withPudo, { includeWalking: true });
       setScenario(routed);
+      if (routed.pickupZoneCandidates.length > 0) {
+        emitDemoEvent("pickup_candidates_generated");
+      }
     } finally {
       setRoutesLoading(false);
     }
-  }, []);
+  }, [emitDemoEvent]);
 
   const reloadDropoffPudoAndRoutes = useCallback(
     async (base: RobotaxiScenario, anchor: ScenarioLocation) => {
@@ -301,11 +323,12 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
         setScenario(withDrop);
 
         setScenario(await attachRoutes(withDrop, { includeWalking: false }));
+        emitDemoEvent("trip_setup_completed");
       } finally {
         setRoutesLoading(false);
       }
     },
-    [],
+    [emitDemoEvent],
   );
 
   const useCurrentLocationAsPickupAnchor = useCallback(() => {
@@ -534,16 +557,18 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
         };
         const withDrop = await attachDropoffPudo(withPickup, dropoffAnchor);
         setScenario(await attachRoutes(withDrop));
+        emitDemoEvent("scenario_generated");
       } finally {
         setRoutesLoading(false);
       }
     })();
-  }, [scenario, bumpSeed]);
+  }, [scenario, bumpSeed, emitDemoEvent]);
 
   const resetScenario = useCallback(() => {
     resetScenarioRandomSeed(42);
     void applyScenario(createDefaultScenario());
-  }, [applyScenario]);
+    emitDemoEvent("demo_reset");
+  }, [applyScenario, emitDemoEvent]);
 
   const setSelectedZoneId = useCallback((id: PickupZoneId) => {
     setScenario((prev) => {
@@ -602,8 +627,10 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
   }, [applyScenario]);
 
   const requestRobotaxi = useCallback(() => {
+    let requested = false;
     setScenario((prev) => {
       if (!canRequestRobotaxi(prev)) return prev;
+      requested = true;
       return {
         ...prev,
         requestStatus: "searching",
@@ -615,21 +642,31 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
           prev.walkingRoutes?.[prev.selectedZoneId],
       };
     });
-  }, []);
+    if (requested) {
+      emitDemoEvent("robotaxi_requested");
+    }
+  }, [emitDemoEvent]);
 
   const markVehicleAssigned = useCallback(() => {
+    let assigned = false;
     setScenario((prev) => {
       if (prev.requestStatus !== "searching") return prev;
+      assigned = true;
       return { ...prev, requestStatus: "assigned" };
     });
-  }, []);
+    if (assigned) {
+      emitDemoEvent("vehicle_assigned");
+    }
+  }, [emitDemoEvent]);
 
   const continueToAssignedVehicle = useCallback(() => {
+    let enRoute = false;
     setScenario((prev) => {
       if (!canRequestRobotaxi(prev)) return prev;
       const zone = getSelectedPickupZone(prev);
       const anchor = getPickupAnchor(prev);
       if (!zone) return prev;
+      enRoute = true;
       const next: RobotaxiScenario = {
         ...prev,
         requestStatus: "onTheWay",
@@ -639,7 +676,10 @@ export function ScenarioProvider({ children }: { children: ReactNode }) {
       void applyScenario(next, true, { includeWalking: false });
       return next;
     });
-  }, [applyScenario]);
+    if (enRoute) {
+      emitDemoEvent("vehicle_assigned");
+    }
+  }, [applyScenario, emitDemoEvent]);
 
   const cancelRobotaxiRequest = useCallback(() => {
     setScenario((prev) => ({

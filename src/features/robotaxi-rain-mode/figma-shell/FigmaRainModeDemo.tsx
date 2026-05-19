@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -33,17 +34,19 @@ import { Screen5DropoffSearch } from "./screens/Screen5DropoffSearch";
 import { getDispatchPickupLabelForScenario } from "./ScenarioContext";
 import type { StartingPlaceResult } from "../data/pickupAnchorSearch";
 import { TechnicalEnginePanel } from "../components/TechnicalEnginePanel";
+import type {
+  RobotaxiDemoEvent,
+  RobotaxiDemoEventDetail,
+  RobotaxiDemoStageId,
+} from "./demoEvents";
+
+export type { RobotaxiDemoEvent, RobotaxiDemoStageId } from "./demoEvents";
 
 /** Dispatch screen: searching → assigned → auto open en-route screen */
 const DISPATCH_SEARCH_MS = 4000;
 const DISPATCH_ASSIGNED_MS = 1800;
 
-export type RobotaxiDemoStageId =
-  | "context-trigger"
-  | "service-gate"
-  | "pudo-selection"
-  | "pickup-coordination";
-
+/** @deprecated Use RobotaxiDemoEvent — kept for technical panel debug labels. */
 export type RobotaxiInteractionEvent =
   | "trip_setup_confirmed"
   | "service_status_confirmed"
@@ -54,18 +57,19 @@ export type RobotaxiInteractionEvent =
 export type FigmaRainModeDemoProps = {
   /** Existing site-level language passed by the page. */
   lang?: Lang;
-  /** Slideshow stage controlled by the case-study section. */
-  activeStage?: RobotaxiDemoStageId;
+  /** Technical explanation stage (observes demo; does not control phone). */
   activeTechStage?: RobotaxiDemoStageId;
   selectedPickupOption?: PickupId;
-  lastInteractionEvent?: RobotaxiInteractionEvent | null;
-  /** Keeps phone primary actions aligned with stage navigation. */
-  slideshowMode?: boolean;
+  lastDemoEvent?: RobotaxiDemoEvent | null;
+  /** Demo → parent event bridge for technical panel sync. */
+  onDemoEvent?: (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => void;
   /** When set, screen is controlled by the parent (e.g. guided step navigator). */
   screen?: FigmaScreen;
   onScreenChange?: (screen: FigmaScreen) => void;
   /** Keeps dispatch on the searching state — used by guided demo step 3. */
   pauseDispatchAuto?: boolean;
+  /** Keeps phone primary actions aligned with stage navigation. */
+  slideshowMode?: boolean;
   /** Optional left column inside the demo showcase (guided steps). Layout only. */
   guidedPanel?: ReactNode;
   /** Active guided step — applies minimal scenario presets when set. */
@@ -74,11 +78,6 @@ export type FigmaRainModeDemoProps = {
   guidedPreviewOption?: PickupId | null;
   /** Called when the user interacts with the demo (pauses guided autoplay). */
   onUserInteraction?: () => void;
-  onTripSetupConfirmed?: () => void;
-  onServiceStatusConfirmed?: () => void;
-  onPickupOptionSelected?: (option: PickupId) => void;
-  onPickupConfirmed?: () => void;
-  onWalkingGuidanceStarted?: () => void;
 };
 
 /**
@@ -87,7 +86,7 @@ export type FigmaRainModeDemoProps = {
 export function FigmaRainModeDemo(props: FigmaRainModeDemoProps = {}) {
   return (
     <div className="figma-demo-wrap">
-      <ScenarioProvider>
+      <ScenarioProvider onDemoEvent={props.onDemoEvent}>
         <FigmaRainModeDemoInner {...props} />
       </ScenarioProvider>
     </div>
@@ -96,10 +95,10 @@ export function FigmaRainModeDemo(props: FigmaRainModeDemoProps = {}) {
 
 function FigmaRainModeDemoInner({
   lang = "en",
-  activeStage,
-  activeTechStage,
+  activeTechStage = "context-trigger",
   selectedPickupOption,
-  lastInteractionEvent,
+  lastDemoEvent = null,
+  onDemoEvent,
   slideshowMode = false,
   screen: controlledScreen,
   onScreenChange,
@@ -108,12 +107,15 @@ function FigmaRainModeDemoInner({
   guidedStep,
   guidedPreviewOption = null,
   onUserInteraction,
-  onTripSetupConfirmed,
-  onServiceStatusConfirmed,
-  onPickupOptionSelected,
-  onPickupConfirmed,
-  onWalkingGuidanceStarted,
 }: FigmaRainModeDemoProps) {
+  const emitDemoEvent = useCallback(
+    (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => {
+      queueMicrotask(() => {
+        onDemoEvent?.(event, detail);
+      });
+    },
+    [onDemoEvent],
+  );
   const reduceMotion = useReducedMotion();
   const [internalScreen, setInternalScreen] = useState<FigmaScreen>(1);
   const isControlled = controlledScreen !== undefined;
@@ -168,13 +170,10 @@ function FigmaRainModeDemoInner({
                   selectedPickupOption={selectedPickupOption}
                   slideshowMode={slideshowMode}
                   onUserInteraction={onUserInteraction}
-                  onTripSetupConfirmed={onTripSetupConfirmed}
-                  onServiceStatusConfirmed={onServiceStatusConfirmed}
-                  onPickupOptionSelected={onPickupOptionSelected}
-                  onPickupConfirmed={onPickupConfirmed}
+                  onDemoEvent={emitDemoEvent}
                   onStartWalking={() => {
                     onUserInteraction?.();
-                    onWalkingGuidanceStarted?.();
+                    emitDemoEvent("walking_guidance_started");
                     setToast("Navigation started.");
                     window.setTimeout(() => setToast(null), 2500);
                   }}
@@ -184,7 +183,6 @@ function FigmaRainModeDemoInner({
           </div>
         </div>
         <motion.div
-          key={activeTechStage ?? activeStage ?? "context-trigger"}
           className={
             guidedPanel
               ? "figma-demo-technical"
@@ -197,11 +195,11 @@ function FigmaRainModeDemoInner({
           <TechnicalEnginePanel
             screen={screen}
             lang={lang}
-            activeStage={activeTechStage ?? activeStage}
+            activeStage={activeTechStage}
             selectedPickupOption={
               selectedPickupOption ?? guidedPreviewOption ?? scenario.selectedZoneId
             }
-            lastInteractionEvent={lastInteractionEvent}
+            lastInteractionEvent={lastDemoEvent}
           />
         </motion.div>
         <div className="figma-demo-board-controls">
@@ -226,10 +224,7 @@ type FigmaDemoStageProps = {
   selectedPickupOption?: PickupId;
   slideshowMode?: boolean;
   onUserInteraction?: () => void;
-  onTripSetupConfirmed?: () => void;
-  onServiceStatusConfirmed?: () => void;
-  onPickupOptionSelected?: (option: PickupId) => void;
-  onPickupConfirmed?: () => void;
+  onDemoEvent?: (event: RobotaxiDemoEvent, detail?: RobotaxiDemoEventDetail) => void;
   onStartWalking: () => void;
 };
 
@@ -242,10 +237,7 @@ function FigmaDemoStage({
   selectedPickupOption,
   slideshowMode = false,
   onUserInteraction,
-  onTripSetupConfirmed,
-  onServiceStatusConfirmed,
-  onPickupOptionSelected,
-  onPickupConfirmed,
+  onDemoEvent,
   onStartWalking,
 }: FigmaDemoStageProps) {
   const {
@@ -274,7 +266,7 @@ function FigmaDemoStage({
   const handlePickupSelect = (id: PickupId) => {
     onUserInteraction?.();
     setSelectedZoneId(id);
-    onPickupOptionSelected?.(id);
+    onDemoEvent?.("pickup_option_selected", { pickupOption: id });
   };
   const { heightPct } = useSheetHeight();
   const stageStyle = {
@@ -294,23 +286,22 @@ function FigmaDemoStage({
 
   const confirmZoneAndReturn = () => {
     confirmPickupZone(scenario.selectedZoneId);
-    onPickupConfirmed?.();
     onScreenChange(slideshowMode ? 4 : 1);
   };
 
   const handleDropoffSelect = (location: { lng: number; lat: number; label: string }) => {
     setDropoffLocation(location);
+    onDemoEvent?.("trip_setup_completed");
     onScreenChange(1);
   };
 
   const handleRequestRobotaxi = () => {
     requestRobotaxi();
-    onTripSetupConfirmed?.();
     onScreenChange(2);
   };
 
   const handleServiceStatusContinue = () => {
-    onServiceStatusConfirmed?.();
+    onDemoEvent?.("service_status_checked");
     onScreenChange(3);
   };
 

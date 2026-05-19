@@ -1,5 +1,11 @@
 export { FigmaRainModeDemo } from "./FigmaRainModeDemo";
 export type {
+  RobotaxiDemoEvent,
+  RobotaxiDemoEventDetail,
   RobotaxiDemoStageId,
-  RobotaxiInteractionEvent,
-} from "./FigmaRainModeDemo";
+} from "./demoEvents";
+export type { RobotaxiInteractionEvent } from "./FigmaRainModeDemo";
+export {
+  isScenarioGeneratedEvent,
+  techStageFromDemoEvent,
+} from "./demoEvents";
