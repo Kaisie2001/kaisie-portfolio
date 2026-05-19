@@ -55,22 +55,46 @@ export type PudoCandidate = {
   label_en: string;
   label_zh: string;
   geometry: GeoPoint;
+  /** Data-driven engine fields. Kept optional so legacy JSON adapters remain valid. */
+  id?: string;
+  label?: string;
+  coordinates?: [number, number];
   is_valid_pudo: boolean;
+  isValidPudo?: boolean;
   validity_type: string;
   legal_stopping: boolean;
+  legalStopping?: boolean;
   vehicle_accessible: boolean;
+  vehicleAccessible?: boolean;
   within_service_area: boolean;
+  withinServiceArea?: boolean;
   within_odd: boolean;
+  withinOdd?: boolean;
+  roadSafetyPass?: boolean;
+  boardingSafetyPass?: boolean;
+  realTimeRoadPass?: boolean;
   hard_constraint_passed: boolean;
   walking_distance_m: number;
+  walkingDistanceM?: number;
   rain_exposed_distance_m: number;
+  rainExposedWalkingDistanceM?: number;
   covered_distance_m?: number;
+  coveredWalkingDistanceM?: number;
   vehicle_eta_min: number;
+  vehicleEtaMin?: number;
   walking_time_min?: number;
+  walkingTimeMin?: number;
   estimated_boarding_time_min?: number;
+  estimatedBoardingTimeMin?: number;
   shelter_score: number;
+  shelterScore?: number;
   same_side_access?: boolean;
+  sameSideAccess?: boolean;
   crossing_count?: number;
+  crossingCount?: number;
+  recognizabilityScore?: number;
+  demandProximityScore?: number;
+  demandIndex?: number;
   recommendation_reason_en: string;
   recommendation_reason_zh: string;
   tradeoff_summary_en?: string;
@@ -168,6 +192,118 @@ export type DataSourceMeta = {
   disclaimer: string;
   is_simulated: boolean;
 };
+
+export type PickupTimeWindow = {
+  requestedAtIso: string;
+  earliestPickupIso: string;
+  latestPickupIso: string;
+};
+
+export type RainModeUserRequest = {
+  requestId: string;
+  userLocation: {
+    id: string;
+    label: string;
+    coordinates: [number, number];
+  };
+  destination: {
+    id: string;
+    label: string;
+    coordinates: [number, number];
+  };
+  pickupTimeWindow: PickupTimeWindow;
+};
+
+export type HardConstraintKey =
+  | "isValidPudo"
+  | "legalStopping"
+  | "vehicleAccessible"
+  | "withinServiceArea"
+  | "withinOdd"
+  | "roadSafetyPass"
+  | "boardingSafetyPass"
+  | "realTimeRoadPass";
+
+export type HardConstraintResult = {
+  pudoId: string;
+  passed: boolean;
+  failed: HardConstraintKey[];
+};
+
+export type WalkingRouteSegment = {
+  segmentId: string;
+  type: "covered" | "exposed" | "crossing";
+  distanceM: number;
+  coordinates: [number, number][];
+};
+
+export type VehicleApproachRoute = {
+  routeId: string;
+  pudoId: string;
+  vehicleId: string;
+  coordinates: [number, number][];
+  distanceM: number;
+};
+
+export type RainModeThresholds = {
+  triggerRainIntensityMin: RainIntensity;
+  maxEtaReliabilityRisk: ReliabilityLevel;
+  maxWalkingDistanceM: number;
+  maxExposedWalkingDistanceM: number;
+  maxCrossingCount: number;
+  boardingBufferMin: number;
+  minComfortScore: number;
+};
+
+export type RainModeWeights = {
+  walkingDistance: number;
+  rainExposure: number;
+  coveredWalking: number;
+  shelterScore: number;
+  sameSideAccess: number;
+  crossingCount: number;
+  vehicleEta: number;
+  boardingTime: number;
+  recognizability: number;
+  demandProximity: number;
+};
+
+export type CandidateScore = {
+  pudoId: string;
+  rainComfortScore: number;
+  weightedScore: number;
+  components: Record<keyof RainModeWeights, number>;
+};
+
+export type PickupSelectionOutput = {
+  rawCandidateCount: number;
+  validCandidateCount: number;
+  hardFilterResults: HardConstraintResult[];
+  rejectedCandidates: HardConstraintResult[];
+  exposureByPudo: Record<
+    string,
+    {
+      walkingDistanceM: number;
+      rainExposedWalkingDistanceM: number;
+      coveredWalkingDistanceM: number;
+      exposureRatio: number;
+    }
+  >;
+  etaByPudo: Record<string, EtaEstimate>;
+  scores: CandidateScore[];
+  selections: {
+    closest: string;
+    sheltered: string;
+    soonest: string;
+    recommended: string;
+  };
+};
+
+export type TechnicalStage =
+  | "contextTrigger"
+  | "serviceGate"
+  | "pudoSelection"
+  | "pickupCoordination";
 
 export type RainModeDemoBundle = {
   scenario: RainModeScenario;

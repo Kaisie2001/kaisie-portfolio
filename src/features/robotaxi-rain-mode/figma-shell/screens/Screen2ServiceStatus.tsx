@@ -14,6 +14,8 @@ import {
 import { ScreenShell } from "../ScreenShell";
 import { useSheet } from "../SheetContext";
 import { SheetHeader } from "../SheetHeader";
+import { rainModeDemoData } from "../../data/rainModeDemoData";
+import { selectPickupOptions } from "../../engine/selectPickupOptions";
 
 type Props = {
   phase: DispatchPhase;
@@ -31,6 +33,19 @@ function Screen2SheetBody({
 }: Props) {
   const assigned = phase === "assigned";
   const { fitToContent } = useSheet();
+  const selection = selectPickupOptions(
+    rainModeDemoData.pudoCandidates,
+    rainModeDemoData.walkingRoutes,
+    rainModeDemoData.thresholds,
+    rainModeDemoData.weights,
+  );
+  const selectedEta = selection.etaByPudo[selection.selections.recommended];
+  const etaMin = selectedEta?.vehicle_eta_min ?? 5;
+  const boardingMin = selectedEta?.estimated_boarding_time_min ?? etaMin + 2;
+  const queueAhead =
+    rainModeDemoData.serviceStatus.queue_status === "normal" ? 2 : 3;
+  const nearbyVehicleCount = selection.validCandidateCount;
+  const rainDelayMin = rainModeDemoData.thresholds.boardingBufferMin;
 
   useEffect(() => {
     const id = requestAnimationFrame(fitToContent);
@@ -64,7 +79,9 @@ function Screen2SheetBody({
           </div>
           <span className="figma-metric-label">Estimated wait:</span>
           <span className="figma-metric-value">
-            {assigned ? "3–5 min" : "8–10 min"}
+            {assigned
+              ? `${etaMin}–${etaMin + rainDelayMin} min`
+              : `${boardingMin}–${boardingMin + rainDelayMin} min`}
           </span>
         </div>
         <div className="figma-metric">
@@ -73,7 +90,7 @@ function Screen2SheetBody({
           </div>
           <span className="figma-metric-label">Queue ahead:</span>
           <span className="figma-metric-value">
-            {assigned ? "0 requests" : "3 requests"}
+            {assigned ? "0 requests" : `${queueAhead} requests`}
           </span>
         </div>
         <div className="figma-metric">
@@ -81,7 +98,9 @@ function Screen2SheetBody({
             <IconCar />
           </div>
           <span className="figma-metric-label">Nearby:</span>
-          <span className="figma-metric-value">{assigned ? "1" : "6"}</span>
+          <span className="figma-metric-value">
+            {assigned ? "1" : nearbyVehicleCount}
+          </span>
         </div>
         <div className={`figma-metric${assigned ? "" : " is-warn"}`}>
           <div className="figma-metric-icon">
@@ -89,7 +108,7 @@ function Screen2SheetBody({
           </div>
           <span className="figma-metric-label">Rain delay:</span>
           <span className="figma-metric-value">
-            {assigned ? "Included" : "+3 to 5 min"}
+            {assigned ? "Included" : `+${rainDelayMin} min`}
           </span>
         </div>
       </div>

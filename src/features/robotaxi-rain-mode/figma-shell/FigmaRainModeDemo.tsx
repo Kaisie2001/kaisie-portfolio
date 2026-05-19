@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import type { Lang } from "@/lib/portfolioCopy";
 
 import type { DispatchPhase, FigmaScreen, PickupId } from "./types";
 import { DemoControlsPanel } from "./DemoControlsPanel";
@@ -31,12 +32,15 @@ import { Screen4OnTheWay } from "./screens/Screen4OnTheWay";
 import { Screen5DropoffSearch } from "./screens/Screen5DropoffSearch";
 import { getDispatchPickupLabelForScenario } from "./ScenarioContext";
 import type { StartingPlaceResult } from "../data/pickupAnchorSearch";
+import { TechnicalEnginePanel } from "../components/TechnicalEnginePanel";
 
 /** Dispatch screen: searching → assigned → auto open en-route screen */
 const DISPATCH_SEARCH_MS = 4000;
 const DISPATCH_ASSIGNED_MS = 1800;
 
 export type FigmaRainModeDemoProps = {
+  /** Existing site-level language passed by the page. */
+  lang?: Lang;
   /** When set, screen is controlled by the parent (e.g. guided step navigator). */
   screen?: FigmaScreen;
   onScreenChange?: (screen: FigmaScreen) => void;
@@ -66,6 +70,7 @@ export function FigmaRainModeDemo(props: FigmaRainModeDemoProps = {}) {
 }
 
 function FigmaRainModeDemoInner({
+  lang = "en",
   screen: controlledScreen,
   onScreenChange,
   pauseDispatchAuto = false,
@@ -142,7 +147,10 @@ function FigmaRainModeDemoInner({
             </PhoneFrame>
           </motion.div>
         </div>
-        <DemoControlsPanel onRandomPickup={handleRandomPickup} />
+        <div className="figma-demo-right-rail">
+          <TechnicalEnginePanel screen={screen} lang={lang} />
+          <DemoControlsPanel onRandomPickup={handleRandomPickup} />
+        </div>
       </div>
       {toast ? (
         <div className="figma-toast" role="status">

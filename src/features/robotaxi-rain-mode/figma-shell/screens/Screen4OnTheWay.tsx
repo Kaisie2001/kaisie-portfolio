@@ -12,6 +12,9 @@ import {
 } from "../icons";
 import { ScreenShell } from "../ScreenShell";
 import { SheetHeader } from "../SheetHeader";
+import { rainModeDemoData } from "../../data/rainModeDemoData";
+import { selectPickupOptions } from "../../engine/selectPickupOptions";
+import { planPickupCoordination } from "../../engine/pickupCoordination";
 
 type Props = {
   pickup: PickupId;
@@ -21,6 +24,23 @@ type Props = {
 
 export function Screen4OnTheWay({ pickup, onBack, onStartWalking }: Props) {
   const p = getPickupOption(pickup);
+  const selection = selectPickupOptions(
+    rainModeDemoData.pudoCandidates,
+    rainModeDemoData.walkingRoutes,
+    rainModeDemoData.thresholds,
+    rainModeDemoData.weights,
+  );
+  const coordination = planPickupCoordination(
+    selection,
+    rainModeDemoData.vehicleApproachRoutes,
+    rainModeDemoData.operationNotices,
+  );
+  const exposure = selection.exposureByPudo[pickup];
+  const eta = selection.etaByPudo[pickup];
+  const walkM = exposure?.walkingDistanceM ?? Number.parseInt(p.walk, 10);
+  const exposedM =
+    exposure?.rainExposedWalkingDistanceM ?? Number.parseInt(p.exposureVal, 10);
+  const etaMin = eta?.vehicle_eta_min ?? Number.parseInt(p.etaVal, 10);
 
   return (
     <ScreenShell>
@@ -30,13 +50,13 @@ export function Screen4OnTheWay({ pickup, onBack, onStartWalking }: Props) {
           <div className="ico">
             <IconCar />
           </div>
-          <p>1.2 km</p>
+          <p>{(coordination.approachDistanceM / 1000).toFixed(1)} km</p>
         </div>
         <div className="figma-stat-cell">
           <div className="ico">
             <IconClock />
           </div>
-          <p>In {p.etaVal}</p>
+          <p>In {etaMin} min</p>
         </div>
         <div className="figma-stat-cell">
           <div className="ico">
@@ -48,19 +68,19 @@ export function Screen4OnTheWay({ pickup, onBack, onStartWalking }: Props) {
       <div className="figma-detail">
         <IconWalk />
         <span>
-          Walk {p.walk} · about <strong>{p.walkMin}</strong>
+          Walk {walkM} m · about <strong>{p.walkMin}</strong>
         </span>
       </div>
       <div className="figma-detail">
         <IconUmbrella />
         <span>
-          Only <strong>{p.exposureVal}</strong> is exposed to rain
+          Only <strong>{exposedM} m</strong> is exposed to rain
         </span>
       </div>
       <div className="figma-detail">
         <IconCar />
         <span>
-          Vehicle arrives in <strong>{p.etaVal}</strong>
+          Vehicle arrives in <strong>{etaMin} min</strong>
         </span>
       </div>
       <div className="figma-banner-ok">

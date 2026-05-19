@@ -30,7 +30,7 @@ export function RobotaxiInteractivePrototypeSection() {
         {PROTOTYPE_SECTION_DISCLAIMER[lang]}
       </p>
       <div className="mt-6 overflow-hidden rounded-[28px] border border-black/[0.05] bg-stone-50 shadow-[0_20px_56px_rgb(28_25_23_/_0.08)]">
-        <FigmaRainModeDemo />
+        <FigmaRainModeDemo lang={lang} />
       </div>
     </section>
   );

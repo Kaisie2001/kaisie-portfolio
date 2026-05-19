@@ -14,6 +14,8 @@ import { PICKUP_OPTIONS } from "../pickup-data";
 import { IconPin, IconPinTeal, IconSearch } from "../icons";
 import { ScreenShell } from "../ScreenShell";
 import { SheetHeader } from "../SheetHeader";
+import { rainModeDemoData } from "../../data/rainModeDemoData";
+import { selectPickupOptions } from "../../engine/selectPickupOptions";
 
 type Props = {
   selected: PickupId;
@@ -41,6 +43,16 @@ export function Screen3ChoosePickup({
   const searchResults = useMemo(
     () => searchStartingPlaces(query, userCurrentLocation),
     [query, userCurrentLocation],
+  );
+  const selection = useMemo(
+    () =>
+      selectPickupOptions(
+        rainModeDemoData.pudoCandidates,
+        rainModeDemoData.walkingRoutes,
+        rainModeDemoData.thresholds,
+        rainModeDemoData.weights,
+      ),
+    [],
   );
 
   return (
@@ -105,6 +117,9 @@ export function Screen3ChoosePickup({
               const zone = scenario.pickupZoneCandidates.find((z) => z.id === o.id);
               const walkLabel = zone ? `${zone.walkM} m` : o.walk;
               const exposureLabel = zone ? `${zone.exposureM} m` : o.exposureVal;
+              const etaLabel = selection.etaByPudo[o.id]
+                ? `${selection.etaByPudo[o.id].vehicle_eta_min} min`
+                : o.etaVal;
               return (
                 <button
                   key={o.id}
@@ -155,7 +170,7 @@ export function Screen3ChoosePickup({
                       className={`val${isSelected ? " bold" : ""}`}
                       style={{ color: isSelected ? o.etaLabelColor : undefined }}
                     >
-                      {o.etaVal}
+                      {etaLabel}
                     </p>
                   </div>
                 </button>
