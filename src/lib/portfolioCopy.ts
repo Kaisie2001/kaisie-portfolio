@@ -31,14 +31,14 @@ export const portfolioCopy = {
           completed: true,
         },
         {
-          title: "Robotaxi Journey Audit",
+          title: "Robotaxi Rain-aware Pickup Recommendation",
           description:
-            "Booking-to-ride product journey analysis for autonomous mobility.",
+            "Interactive prototype for recommending more suitable Robotaxi pickup points under rainy conditions.",
           keywords: [
-            "User Journey",
-            "Pain Points",
-            "Conversion Funnel",
-            "Feedback Loop",
+            "PUDO Recommendation",
+            "Rain-aware Routing",
+            "Interactive Prototype",
+            "ETA Logic",
           ],
           completed: true,
           href: "/work/robotaxi-rain-mode",
@@ -201,9 +201,10 @@ export const portfolioCopy = {
           completed: true,
         },
         {
-          title: "Robotaxi 旅程审计",
-          description: "Robotaxi 从预约到乘车的产品链路诊断。",
-          keywords: ["用户旅程", "痛点诊断", "转化漏斗", "反馈闭环"],
+          title: "Robotaxi 雨天感知上车点推荐",
+          description:
+            "面向雨天场景的 Robotaxi 上车点推荐交互原型，展示 PUDO 筛选、遮蔽暴露与 ETA 判断逻辑。",
+          keywords: ["PUDO 推荐", "雨天感知路径", "交互原型", "ETA 逻辑"],
           completed: true,
           href: "/work/robotaxi-rain-mode",
         },
