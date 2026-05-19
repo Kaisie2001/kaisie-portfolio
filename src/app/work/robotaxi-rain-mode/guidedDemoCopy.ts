@@ -25,13 +25,13 @@ export const PROTOTYPE_SECTION_TITLE: Record<Lang, string> = {
 };
 
 export const PROTOTYPE_SECTION_COPY: Record<Lang, string> = {
-  en: "This coded prototype uses interactive map layers and simulated Robotaxi scenario data. It is included as a technical proof-of-work rather than the main storytelling layer.",
-  zh: "这个 coded prototype 使用交互式地图图层和模拟 Robotaxi 场景数据。它主要作为技术实现展示，而不是页面叙事的唯一入口。",
+  en: "This section combines an interactive demo with technical explanation, showing how Robotaxi generates, filters, and recommends more suitable pickup points under rainy conditions.",
+  zh: "这一部分将交互演示与技术说明结合起来，展示雨天条件下 Robotaxi 如何生成、筛选并推荐更合理的上车点。",
 };
 
 export const PROTOTYPE_SECTION_DISCLAIMER: Record<Lang, string> = {
-  en: "Simulated demo only. Pickup zones, shelter exposure, and vehicle availability are generated for portfolio demonstration.",
-  zh: "该 demo 为模拟演示。上车区域、遮蔽暴露和车辆状态均为作品集展示用途。",
+  en: "Note: This prototype uses structured simulated data for portfolio demonstration. Pickup zones, shelter exposure, routes, and vehicle states are used to illustrate the system logic rather than represent real Robotaxi operations.",
+  zh: "注：本原型使用结构化模拟数据进行作品集展示。上车点、遮蔽暴露、路线和车辆状态用于说明系统逻辑，不代表真实 Robotaxi 运营数据。",
 };
 
 export const GUIDED_WALKTHROUGH_STEPS: Record<Lang, GuidedWalkthroughStep[]> = {

@@ -118,9 +118,6 @@ export function RobotaxiInteractivePrototypeSection() {
       <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-stone-600">
         {PROTOTYPE_SECTION_COPY[lang]}
       </p>
-      <p className="mt-4 max-w-2xl rounded-lg border border-stone-200/80 bg-stone-100/50 px-3 py-2 text-[12px] leading-relaxed text-stone-600">
-        {PROTOTYPE_SECTION_DISCLAIMER[lang]}
-      </p>
       <div className="robotaxi-demo-section-wrap mt-6">
         <DemoRemoteOverlay
           lang={lang}
@@ -166,6 +163,9 @@ export function RobotaxiInteractivePrototypeSection() {
           }
         />
       </div>
+      <p className="robotaxi-prototype-disclaimer mt-4 max-w-2xl">
+        {PROTOTYPE_SECTION_DISCLAIMER[lang]}
+      </p>
     </section>
   );
 }
