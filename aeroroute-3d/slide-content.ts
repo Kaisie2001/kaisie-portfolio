@@ -1,7 +1,9 @@
 /**
- * Structured slide content for AeroRoute 3D case study intro.
- * Visible copy only — full editorial source: website-copy.md
+ * Visible deck copy for AeroRoute 3D (rendered UI only).
+ * Editorial source: aeroroute-3d/website-copy.md
  */
+
+import type { Lang } from "@/lib/portfolioCopy";
 
 export type AeroRouteSlideCard = {
   title: string;
@@ -12,299 +14,426 @@ export type AeroRouteSlide = {
   id: string;
   number: string;
   label: string;
+  layout: string;
   title: string;
   body: string;
   cards?: AeroRouteSlideCard[];
   tags?: string[];
   note?: string;
   sourceNote?: string;
-  layoutHint?: string;
 };
 
-export const aeroRouteSlides: AeroRouteSlide[] = [
+const slidesEn: AeroRouteSlide[] = [
   {
     id: "hero",
     number: "00",
     label: "00 Hero",
+    layout: "hero",
     title: "AeroRoute 3D",
-    body: "A 3D route-readiness sandbox for dense-city drone delivery. Before a drone corridor goes live, AeroRoute 3D helps route launch teams evaluate whether it is operationally feasible under dense urban geometry, regulatory constraints, and extreme heat scenarios.",
+    body: "A 3D route-readiness sandbox for dense-city drone delivery.",
     tags: [
       "Dense-city Drone Delivery",
       "Route Readiness",
       "3D Airspace Sandbox",
-      "Extreme Heat Scenario",
+      "Pre-operation Assessment",
     ],
-    note: "Pre-operation route assessment — not a drone-control interface or live dispatch system.",
-    layoutHint:
-      "Large project title, concise subtitle, one short paragraph, four compact tags. Main visual: 3D sandbox with buildings, candidate landing nodes, restricted zones, and route alternatives.",
+    sourceNote: "Pre-operation route assessment — not real-time flight control.",
   },
   {
-    id: "context",
+    id: "industry-shift",
     number: "01",
-    label: "01 Context",
-    title: "Drone delivery is moving from flight demos to urban operations.",
-    body: "Delivery drones are no longer only experimental flying machines. They are becoming part of urban logistics systems, connecting commercial districts, communities, scenic areas, and local service nodes.",
+    label: "01 Industry Shift",
+    layout: "context",
+    title: "From flight capability to route operations",
+    body: "Routes must launch, run, and adjust in complex cities—not only prove a single flight works.",
     cards: [
       {
-        title: "Urban deployment",
-        body: "Drone delivery is already being tested and deployed across commercial, community, and tourism scenarios.",
+        title: "System operation",
+        body: "Aircraft, stations, dispatch, and monitoring work as one system.",
       },
       {
-        title: "Automated operation",
-        body: "Modern drone delivery systems rely on automated route selection, fleet monitoring, and exception handling, rather than manual control of every flight.",
+        title: "Route launch",
+        body: "Each corridor needs local feasibility checks before pilot operation.",
       },
       {
-        title: "Controlled-condition limits",
-        body: "Drone specifications are usually measured under controlled conditions. Real-city deployment still requires route-level assessment.",
+        title: "Operational reliability",
+        body: "Can this route run repeatedly and explainably?",
       },
     ],
-    sourceNote:
-      "Source directions: Meituan urban low-altitude logistics; Wing automated delivery operations; DJI FlyCart 30 controlled-condition specifications.",
-    layoutHint:
-      "Three small evidence cards. Grounded tone — avoid unsupported market-size claims.",
   },
   {
-    id: "problem",
+    id: "route-launch-challenges",
     number: "02",
-    label: "02 Problem",
-    title: "A drone route is not just a line between two points.",
-    body: "In dense cities, route feasibility is shaped by buildings, restricted zones, candidate landing nodes, weather sensitivity, and operational trade-offs. A short route on a 2D map may become risky once placed inside a 3D urban environment.",
+    label: "02 Challenges",
+    layout: "problem",
+    title: "A launchable route is not the shortest path",
+    body: "Candidate corridors must pass spatial, regulatory, device, weather, and operational checks before going live.",
     cards: [
       {
-        title: "Building obstruction",
-        body: "High-rise geometry turns a 2D path into a 3D clearance problem.",
+        title: "3D urban space",
+        body: "Buildings, clearance, and restricted zones shape flyable corridors.",
       },
       {
-        title: "Regulatory constraint",
-        body: "Restricted flying zones must be checked before route launch.",
+        title: "Spec ≠ readiness",
+        body: "Controlled-condition specs do not equal real-city operation.",
       },
       {
-        title: "Weather sensitivity",
-        body: "Extreme heat scenarios may activate additional route risk.",
-      },
-      {
-        title: "Operational trade-off",
-        body: "A safer route may require detour; a shorter route may carry higher risk.",
+        title: "Weather strategy",
+        body: "Extreme weather drives continue, reroute, pause, or validate—not only stop/fly.",
       },
     ],
-    note: "A short route is not always an operable route. This project focuses on pre-operation route-readiness assessment, not replacing execution or monitoring systems.",
-    layoutHint:
-      "Four constraint cards, visually balanced. Optional visual: flat 2D line becoming a constrained 3D corridor.",
   },
   {
-    id: "research-insight",
+    id: "target-users",
     number: "03",
-    label: "03 Research Insight",
-    title: "From urban heat exposure research to drone route risk screening.",
-    body: "My previous research focused on route-level thermal exposure in Hong Kong, using long-term Landsat LST anomaly, spatial networks, and built-environment indicators. This project transfers that spatial-risk thinking into a new mobility context: drone corridor assessment.",
-    cards: [
-      {
-        title: "From exposure surface",
-        body: "Long-term thermal anomaly can be transformed into a spatial risk layer.",
-      },
-      {
-        title: "From route analysis",
-        body: "Route-level indicators can reveal risk differences between alternative corridors.",
-      },
-      {
-        title: "From urban diagnosis",
-        body: "Built environment data can explain why some corridors are more exposed or constrained.",
-      },
-    ],
-    note: "Does not claim real-time thermal updraft detection. Historical LST anomaly is used as a thermal susceptibility proxy for scenario-based route assessment — not proof of drone crash risk.",
-    layoutHint:
-      "One main paragraph, three method-transfer cards, one visually distinct boundary note.",
-  },
-  {
-    id: "target-user",
-    number: "04",
-    label: "04 Target User",
-    title: "Designed for route launch and operations strategy teams.",
-    body: "The users are not individual drone pilots. They are the teams responsible for deciding whether a candidate route should be launched, adjusted, suspended, or sent for field validation.",
+    label: "03 Target Users",
+    layout: "personas",
+    title: "Route launch & operations strategy teams",
+    body: "Teams decide launch, reroute, pause, node changes, or field validation—not individual pilots.",
     cards: [
       {
         title: "Route Launch Manager",
-        body: "Decide whether a new delivery corridor is ready for pilot operation. Needs route feasibility, clearance risks, restricted-zone conflicts, and a launch recommendation.",
+        body: "Is this corridor ready for pilot operation?",
       },
       {
         title: "Operations Strategy PM",
-        body: "Compare route strategies under different operating scenarios. Needs baseline, safety, and balanced routes with clear risk explanation.",
+        body: "Compare baseline, safer, and balanced route options.",
       },
       {
         title: "Solution Consultant",
-        body: "Explain route feasibility to city partners, business teams, or internal stakeholders. Needs a 3D sandbox, route-readiness report, and visual evidence.",
+        body: "Explain feasibility to partners and internal stakeholders.",
       },
     ],
-    note: "Supports pre-operation decision-making — does not replace flight control engineers or pilots.",
-    layoutHint: "Three concise persona cards. Operational/product roles, not consumer personas.",
   },
   {
-    id: "user-pain-points",
-    number: "05",
-    label: "05 User Pain Points",
-    title: "Early route screening is fragmented.",
-    body: "Teams need to check buildings, restricted zones, landing nodes, and weather-related risks across different tools. This makes early-stage route screening slow, fragmented, and difficult to explain.",
+    id: "workflow-pain",
+    number: "04",
+    label: "04 Workflow Pain",
+    layout: "pains",
+    title: "The pain is decision fragmentation",
+    body: "Maps, rules, weather, and site knowledge still need one route-level decision workflow.",
     cards: [
       {
-        title: "Fragmented screening",
-        body: "Buildings, restricted zones, landing nodes, and weather risks are often checked separately.",
+        title: "Fragmented checks",
+        body: "Buildings, zones, nodes, and weather are reviewed separately.",
       },
       {
-        title: "2D blind spots",
-        body: "A short route may fail once building clearance and altitude constraints are considered.",
+        title: "Weak comparison",
+        body: "Alternative corridors lack one consistent comparison logic.",
       },
       {
-        title: "Coarse weather decisions",
-        body: "A city-level heat warning does not explain which candidate route should be adjusted or avoided.",
+        title: "Unclear next step",
+        body: "Teams need approve, reroute, pause, adjust, or validate guidance.",
       },
     ],
-    note: "The pain is decision fragmentation — not missing data entirely.",
-    layoutHint: "Three minimal pain cards. Product discovery tone, not a literature review.",
   },
   {
     id: "product-opportunity",
-    number: "06",
-    label: "06 Product Opportunity",
-    title: "Route readiness before route launch.",
-    body: "Existing drone systems focus heavily on flight execution, automation, and fleet monitoring. Before a route reaches that stage, teams still need a structured way to compare candidate corridors, explain risks, and decide whether a route is ready for pilot operation.",
+    number: "05",
+    label: "05 Product Opportunity",
+    layout: "opportunity",
+    title: "Route readiness before launch",
+    body: "A pre-operation assessment layer before live execution, monitoring, or enterprise dispatch.",
     cards: [
       {
         title: "Before execution",
-        body: "Evaluate route feasibility before live operation.",
+        body: "Check feasibility before live operation.",
       },
       {
         title: "Before field validation",
-        body: "Prioritize which candidate routes deserve on-site checking.",
+        body: "Prioritize which corridors deserve site visits.",
       },
       {
-        title: "Before operational risk",
-        body: "Prepare alternate corridors for extreme heat scenarios.",
-      },
-      {
-        title: "Before stakeholder review",
-        body: "Turn spatial constraints into explainable route decisions.",
+        title: "Before risk escalation",
+        body: "Prepare fallback routes for extreme scenarios.",
       },
     ],
-    note: "Pre-operation assessment layer — not a replacement for existing flight execution or fleet monitoring tools.",
-    layoutHint: 'Four "Before…" cards. Transition slide from problem to product.',
   },
   {
-    id: "design-question",
-    number: "07",
-    label: "07 Design Question",
-    title:
-      "How might we help drone delivery teams evaluate route readiness before launch?",
-    body: "AeroRoute 3D turns 3D urban constraints and thermal susceptibility into explainable route decisions, helping teams compare baseline, safety-first, and balanced corridors before field testing or pilot operation.",
-    note: "Core question: How might we help drone delivery teams evaluate route readiness before launch, by turning 3D urban constraints and thermal susceptibility into explainable route decisions?",
-    layoutHint:
-      "Large typography for the design question. Spacious, clean — hinge slide before scope and data strategy.",
-  },
-  {
-    id: "scope",
-    number: "08",
-    label: "08 Scope",
-    title: "Pre-operation assessment, not real-time flight control.",
-    body: "The MVP focuses on evaluating candidate routes within a selected Hong Kong district using 3D buildings, restricted-zone data, a synthetic candidate landing-node database, and historical thermal susceptibility layers.",
+    id: "candidate-landing-node-database",
+    number: "06",
+    label: "06 Candidate Nodes",
+    layout: "data",
+    title: "From landing points to a reusable node database",
+    body: "The MVP structures candidate landing points as a filterable database, so route evaluation can scale from one corridor to multiple origin–destination pairs.",
     cards: [
       {
-        title: "Included in MVP",
-        body: "3D route-readiness sandbox · candidate landing-node database · restricted-zone screening · thermal susceptibility scenario · baseline / safety / balanced route comparison · route readiness recommendation",
+        title: "Structured nodes",
+        body: "Each node stores type, altitude, area, clearance, access, and readiness fields.",
       },
       {
-        title: "Excluded from MVP",
-        body: "Real-time flight control · real-time thermal updraft detection · multi-drone traffic control · enterprise API dispatch · full CFD wind simulation · real commercial vertiport network",
+        title: "Batch evaluation",
+        body: "Node pairs can be combined to screen multiple candidate corridors.",
+      },
+      {
+        title: "PoC boundary",
+        body: "Synthetic nodes are used to test the product logic, not to claim real vertiport access.",
       },
     ],
-    note: "Clear scope boundaries are part of product maturity — not hidden limitations.",
-    layoutHint: "Two-column Included / Excluded layout. Honest, professional tone.",
+    sourceNote: "Synthetic candidate nodes support PoC route-pair evaluation.",
+  },
+  {
+    id: "route-readiness-workflow",
+    number: "07",
+    label: "07 Workflow",
+    layout: "opportunity",
+    title: "From candidate nodes to recommendation",
+    body: "Node selection, scenario testing, and route comparison in one workflow.",
+    cards: [
+      {
+        title: "1. Select nodes",
+        body: "Choose origin and destination from the node database.",
+      },
+      {
+        title: "2. Generate routes",
+        body: "Compare baseline, safety-first, and balanced corridors.",
+      },
+      {
+        title: "3. Decide action",
+        body: "Approve, reroute, pause, adjust node, or request field validation.",
+      },
+    ],
   },
   {
     id: "data-strategy",
-    number: "09",
-    label: "09 Data Strategy",
-    title: "Real constraints. Synthetic nodes. Clear boundaries.",
-    body: "The project separates real spatial constraints from simulated operating inputs. Buildings, restricted zones, and thermal susceptibility are used as spatial evidence. Candidate landing nodes are generated as a synthetic database to support route-pair evaluation where public commercial vertiport data is not yet available.",
+    number: "08",
+    label: "08 Data Strategy",
+    layout: "data",
+    title: "Real constraints · synthetic inputs",
+    body: "Evidence-based spatial layers plus simulated PoC inputs—without claiming enterprise operations data.",
     cards: [
       {
-        title: "Real spatial constraints",
-        body: "3D buildings, restricted zones, and base map layers define where routes cannot or should not pass.",
+        title: "Real constraints",
+        body: "3D buildings, restricted zones, and base maps set hard limits.",
       },
       {
-        title: "Thermal susceptibility proxy",
-        body: "Historical LST anomaly is used to identify areas that may become more sensitive under extreme heat scenarios.",
+        title: "Thermal proxy",
+        body: "Historical LST supports heat-scenario screening—not live updraft detection.",
       },
       {
-        title: "Synthetic landing-node database",
-        body: "A simulated database of candidate landing nodes supports route-pair generation, filtering, and readiness scoring.",
-      },
-      {
-        title: "Transparent data boundary",
-        body: "The MVP does not claim access to real commercial vertiports, real-time telemetry, or real-time thermal updrafts.",
-      },
-    ],
-    note: "Synthetic nodes are generated for PoC route-pair evaluation — not a real commercial vertiport network.",
-    layoutHint:
-      "Four data cards. Optional small preview of the candidate landing-node database.",
-  },
-  {
-    id: "evidence-cards",
-    number: "10",
-    label: "10 Evidence Cards",
-    title: "Evidence behind the product framing.",
-    body: "The product framing is based on drone delivery operations, automated fleet logic, controlled-condition device specifications, and Hong Kong’s regulatory context.",
-    cards: [
-      {
-        title: "Industry deployment",
-        body: "Drone delivery has moved into multi-scenario urban operation, including commercial districts, communities, and scenic areas.",
-      },
-      {
-        title: "Automation model",
-        body: "Drone operators increasingly monitor systems rather than manually control each flight.",
-      },
-      {
-        title: "Device capability boundary",
-        body: "Drone specifications are measured under controlled conditions; real-city deployment requires local route assessment.",
-      },
-      {
-        title: "Regulatory layer",
-        body: "Hong Kong provides an official SUA regulatory framework and eSUA Drone Map, making regulatory screening part of route preparation.",
+        title: "Synthetic nodes",
+        body: "Generated candidates support PoC evaluation—not live vertiports.",
       },
     ],
     sourceNote:
-      "Meituan urban low-altitude logistics · Wing fleet operation model · DJI FlyCart 30 specifications · Hong Kong CAD SUA / eSUA Drone Map",
-    layoutHint:
-      "Four evidence cards — one claim each with a small source note. Concise signals, not a bibliography.",
+      "No real commercial vertiports, live telemetry, or real-time thermal updraft sensing.",
+  },
+  {
+    id: "mvp-scope",
+    number: "09",
+    label: "09 MVP Scope",
+    layout: "scope",
+    title: "Pre-operation assessment only",
+    body: "Evaluates candidate routes in a Hong Kong district—not flight control, dispatch, or regulatory approval.",
+    cards: [
+      {
+        title: "Included",
+        body: "3D sandbox · node database · zone screening · scenario testing · route comparison",
+      },
+      {
+        title: "Excluded",
+        body: "Live flight control · real-time updraft detection · CFD · enterprise dispatch · real vertiports",
+      },
+    ],
   },
   {
     id: "product-preview",
-    number: "11",
-    label: "11 Product Preview",
-    title: "Compare corridors before pilot operation.",
-    body: "AeroRoute 3D turns spatial constraints into route-level decisions. Teams explore candidate corridors in a 3D sandbox, screen restricted zones and building clearance, apply thermal susceptibility scenarios, and compare baseline, safety-first, and balanced routes with an explainable readiness recommendation.",
+    number: "10",
+    label: "10 Product Preview",
+    layout: "preview",
+    title: "Compare corridors before pilot operation",
+    body: "Explore nodes, screen constraints, compare routes, and output a route-readiness recommendation.",
     cards: [
       {
-        title: "3D route-readiness sandbox",
-        body: "Explore candidate corridors inside dense urban geometry before field testing.",
+        title: "3D sandbox",
+        body: "View urban geometry and route alternatives.",
       },
       {
-        title: "Restricted-zone screening",
-        body: "Check regulatory constraints as part of route preparation.",
-      },
-      {
-        title: "Thermal susceptibility scenario",
-        body: "Activate extreme heat scenarios using a historical LST proxy — not real-time updraft detection.",
+        title: "Node explorer",
+        body: "Filter nodes by readiness and suitability.",
       },
       {
         title: "Route comparison",
-        body: "Compare baseline, safety-first, and balanced corridors with operational trade-offs explained.",
+        body: "Compare baseline, safer, and balanced corridors.",
       },
       {
-        title: "Readiness recommendation",
-        body: "Summarize whether a candidate corridor is ready for pilot operation, adjustment, or further validation.",
+        title: "Decision output",
+        body: "Approve, reroute, pause, adjust node, or request validation.",
       },
     ],
-    note: "Portfolio preview of the MVP — pre-operation route assessment, not real-time flight control.",
-    layoutHint:
-      "Product preview section after the intro story. Lead with 3D sandbox visual or screenshot placeholder; optional interactive embed later.",
+    sourceNote: "Product preview — not live drone dispatch.",
   },
 ];
+
+const slidesZh: AeroRouteSlide[] = [
+  {
+    id: "hero",
+    number: "00",
+    label: "00 开篇",
+    layout: "hero",
+    title: "AeroRoute 3D",
+    body: "面向高密度城市无人机配送的航线可运营性评估沙盘。",
+    tags: ["高密度城市配送", "航线可运营性", "三维低空沙盘", "开线前评估"],
+    sourceNote: "开线前航线评估——非实时飞控。",
+  },
+  {
+    id: "industry-shift",
+    number: "01",
+    label: "01 行业变化",
+    layout: "context",
+    title: "从能飞到能运营",
+    body: "关键问题变成航线能否在城市里开通、运行与调整——而不只是单次飞行是否成功。",
+    cards: [
+      { title: "系统运营", body: "飞行器、站点、调度与监控构成完整系统。" },
+      { title: "航线开通", body: "每条走廊开线前都要做本地可行性判断。" },
+      { title: "运营可靠性", body: "这条航线能否稳定、可解释地重复运行？" },
+    ],
+  },
+  {
+    id: "route-launch-challenges",
+    number: "02",
+    label: "02 开线挑战",
+    layout: "problem",
+    title: "可开通的航线不是最短路",
+    body: "候选走廊上线前，必须通过空间、监管、设备、天气与运营五类检查。",
+    cards: [
+      { title: "三维城市空间", body: "建筑、净空与禁飞区共同塑造可飞走廊。" },
+      { title: "参数≠可运营", body: "实验室指标不能直接代表真实城市运营。" },
+      { title: "天气策略", body: "极端天气对应继续、绕行、暂停或现场验证。" },
+    ],
+  },
+  {
+    id: "target-users",
+    number: "03",
+    label: "03 目标用户",
+    layout: "personas",
+    title: "城市开线与运营策略团队",
+    body: "决定开通、绕行、暂停、调整起降点或现场验证——不是飞手个人。",
+    cards: [
+      { title: "开线负责人", body: "这条走廊能否进入试点运营？" },
+      { title: "运营策略 PM", body: "比较基础、安全优先与平衡航线。" },
+      { title: "方案顾问", body: "向合作方与内部解释可行性。" },
+    ],
+  },
+  {
+    id: "workflow-pain",
+    number: "04",
+    label: "04 流程痛点",
+    layout: "pains",
+    title: "痛点是决策割裂",
+    body: "地图、规则、天气与现场经验需要汇成一条清晰的航线级判断。",
+    cards: [
+      { title: "信息割裂", body: "建筑、禁飞区、节点与天气分开核对。" },
+      { title: "对比困难", body: "候选走廊缺少统一的比较逻辑。" },
+      { title: "动作不清", body: "需要开通、绕行、暂停、调整或验证建议。" },
+    ],
+  },
+  {
+    id: "product-opportunity",
+    number: "05",
+    label: "05 产品机会",
+    layout: "opportunity",
+    title: "开线前的航线可运营性",
+    body: "在正式执行、监控与企业调度之前，增加一层开线前评估。",
+    cards: [
+      { title: "上线前", body: "在正式运营前验证可行性。" },
+      { title: "踏勘前", body: "优先安排值得现场核查的走廊。" },
+      { title: "风险升级前", body: "为极端情景准备替代走廊。" },
+    ],
+  },
+  {
+    id: "candidate-landing-node-database",
+    number: "06",
+    label: "06 候选起降点库",
+    layout: "data",
+    title: "从单次点位设定，到可复用的候选起降点数据库",
+    body: "MVP 将候选起降点整理为可筛选、可评分、可组合的数据层，使航线评估可以从单条路线扩展到多组 O-D 组合。",
+    cards: [
+      {
+        title: "结构化节点",
+        body: "每个节点包含类型、高度、面积、净空、可达性和 readiness 等字段。",
+      },
+      {
+        title: "批量评估",
+        body: "节点之间可以组合生成多组 O-D 航线，用于候选航线筛查。",
+      },
+      {
+        title: "PoC 边界",
+        body: "模拟节点用于验证产品逻辑，不代表真实商业起降点数据。",
+      },
+    ],
+    sourceNote: "候选起降点数据库用于 PoC 航线组合评估，不代表真实商业部署数据。",
+  },
+  {
+    id: "route-readiness-workflow",
+    number: "07",
+    label: "07 评估流程",
+    layout: "opportunity",
+    title: "从候选节点到运营建议",
+    body: "选点、情景测试与航线对比合为一条决策流程。",
+    cards: [
+      { title: "1. 选择节点", body: "从候选起降点库选择起终点。" },
+      { title: "2. 生成航线", body: "对比基础、安全优先与平衡走廊。" },
+      { title: "3. 输出建议", body: "建议开通、绕行、暂停、调整或现场验证。" },
+    ],
+  },
+  {
+    id: "data-strategy",
+    number: "08",
+    label: "08 数据策略",
+    layout: "data",
+    title: "真实约束 · 模拟输入",
+    body: "空间证据层与 PoC 模拟输入分离——不声称拥有企业级运营数据。",
+    cards: [
+      { title: "真实图层", body: "三维建筑、禁飞区与底图划定硬约束。" },
+      { title: "热感性代理", body: "历史 LST 支持高温情景筛查——非实时热气流检测。" },
+      { title: "合成节点", body: "生成候选点支持 PoC——非真实 vertiport。" },
+    ],
+    sourceNote: "无真实商业 vertiport、实时遥测或实时热气流感知。",
+  },
+  {
+    id: "mvp-scope",
+    number: "09",
+    label: "09 MVP 范围",
+    layout: "scope",
+    title: "仅做开线前评估",
+    body: "评估香港样本区候选航线——不替代飞控、调度或监管审批系统。",
+    cards: [
+      {
+        title: "纳入",
+        body: "3D 沙盘 · 起降点库 · 禁飞筛查 · 情景测试 · 航线对比",
+      },
+      {
+        title: "不纳入",
+        body: "实时飞控 · 实时热气流探测 · CFD · 企业调度 · 真实 vertiport",
+      },
+    ],
+  },
+  {
+    id: "product-preview",
+    number: "10",
+    label: "10 产品预览",
+    layout: "preview",
+    title: "试点运营前的走廊比较",
+    body: "探索节点、筛查约束、对比航线并输出可运营性建议。",
+    cards: [
+      { title: "3D 沙盘", body: "查看城市空间与航线方案。" },
+      { title: "节点浏览", body: "按 readiness 与适配度筛选候选点。" },
+      { title: "航线对比", body: "比较基础、安全优先与平衡走廊。" },
+      { title: "运营建议", body: "开通、绕行、暂停、调整或建议验证。" },
+    ],
+    sourceNote: "产品预览——非实时无人机调度。",
+  },
+];
+
+export const aeroRouteSlidesByLang: Record<Lang, AeroRouteSlide[]> = {
+  en: slidesEn,
+  zh: slidesZh,
+};
+
+export function getAeroRouteSlides(lang: Lang): AeroRouteSlide[] {
+  return aeroRouteSlidesByLang[lang];
+}
+
+/** Default export for EN deck generation scripts */
+export const aeroRouteSlides: AeroRouteSlide[] = slidesEn;

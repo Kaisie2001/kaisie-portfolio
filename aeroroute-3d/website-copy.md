@@ -1,16 +1,44 @@
-# AeroRoute 3D Website Copy
+# AeroRoute 3D — Slide Context Markdown
 
-## Content Purpose
-
-This file is the full editorial source for the AeroRoute 3D portfolio case study intro.
-
-The final website should not become a long article page. It should become a slide-like storytelling section, where each screen works like a concise pitch-deck slide.
-
-This Markdown keeps the full thinking behind each slide: visible copy, design intent, layout notes, Chinese explanation, source notes, and wording boundaries.
+> Purpose: This file is the full content source for the slide-like intro section of the AeroRoute 3D portfolio project.  
+> It should be used as `aeroroute-3d/website-copy.md` or as the source for generating `slide-content.ts`.
 
 ---
 
-# 00 Hero Section
+## Content Direction
+
+The visible intro should read like a concise product PRD / product discovery narrative, not a personal research-transfer story.
+
+The goal is to help an interviewer quickly understand:
+
+1. The demand is not a pseudo-demand.
+2. Dense-city drone route launch has real operational complexity.
+3. The product serves route launch and operations strategy teams.
+4. The product supports pre-operation route-readiness decisions.
+5. Candidate Landing Node Database is a reusable, filterable data layer for route-pair evaluation.
+6. The MVP does not claim real-time flight control, real commercial vertiport access, or real-time thermal updraft detection.
+
+Do **not** foreground the personal research-transfer narrative in the visible intro. Thermal susceptibility should appear as one product data layer, not as the origin story of the whole project.
+
+---
+
+## Recommended Visible Slide Structure
+
+1. 00 Hero
+2. 01 Industry Shift
+3. 02 Three Route-launch Challenges
+4. 03 Target Users & Decisions
+5. 04 Current Workflow Pain
+6. 05 Product Opportunity
+7. 06 Candidate Landing Node Database
+8. 07 Route-readiness Workflow
+9. 08 Data Strategy & Boundaries
+10. 09 MVP Scope
+11. 10 Product Preview
+
+---
+
+# 00 Hero
 
 ## Display Title
 
@@ -22,346 +50,305 @@ A 3D route-readiness sandbox for dense-city drone delivery.
 
 ## Visible Copy
 
-Before a drone corridor goes live, AeroRoute 3D helps route launch teams evaluate whether it is operationally feasible under dense urban geometry, regulatory constraints, and extreme heat scenarios.
+Before a drone corridor goes live, AeroRoute 3D helps route launch teams evaluate whether it is operationally feasible under 3D urban constraints, candidate landing-node conditions, and extreme-weather scenarios.
 
 ## Tags
 
 - Dense-city Drone Delivery
 - Route Readiness
 - 3D Airspace Sandbox
-- Extreme Heat Scenario
+- Pre-operation Assessment
 
-## Design Intent
+## Small Note
 
-This opening screen should let viewers understand the project within five seconds. It should not explain the entire system. It should establish the product category, target context, and decision value.
+Pre-operation route assessment — not real-time flight control.
 
-The key message is:
+## Why This Slide Exists
 
-AeroRoute 3D is not a drone-control interface. It is a pre-operation route assessment product.
+This slide defines the product category and prevents misunderstanding. The viewer should immediately know this is not a drone-control interface or a general map demo. It is a pre-operation assessment tool for judging whether a candidate route is ready before pilot operation.
 
-## Layout Notes
+## Layout Intent
 
-Use a large project title, one concise subtitle, one short paragraph, and four compact tags.
+Use a large project title, short subtitle, one concise paragraph, and four tags. Keep this slide visually spacious. It should feel like a project opening, not a dashboard.
 
-The main visual should eventually show a 3D sandbox or a placeholder for it: buildings, candidate landing nodes, restricted zones, and multiple route alternatives.
+## PRD Mapping
 
-## Chinese Explanation
+Maps to:
 
-这一屏的目的不是解释所有技术细节，而是让面试官立刻知道：这个项目不是普通无人机路径规划 demo，而是一个面向无人机配送开线前评估的 3D 决策沙盘。
+- Product definition
+- One-line positioning
+- MVP boundary: pre-operation route assessment, not real-time flight control
 
-它的核心价值是帮助团队判断：一条候选无人机航线在真实城市环境中是否具备可运营性。
+## Do Not Say
 
-## What Not to Overclaim
-
-Do not say:
-- real-time drone control
-- live dispatch
-- real-time thermal updraft detection
-- guaranteed safe route
-
-Use:
-- route-readiness
-- pre-operation assessment
-- candidate corridor
-- scenario-based evaluation
+- Live drone dispatch
+- Real-time flight control
+- Real-time thermal updraft detection
+- Guaranteed safe route
 
 ---
 
-# 01 Context | Why this matters now
+# Bilingual Terminology / 中文术语表
+
+This section defines the preferred Chinese terms for AeroRoute 3D.  
+Use these terms when generating Chinese UI copy, bilingual labels, subtitles, or portfolio explanations.
+
+| English Term | Preferred Chinese Term | Notes |
+|---|---|---|
+| AeroRoute 3D | AeroRoute 3D | 产品名不翻译 |
+| dense-city drone delivery | 高密度城市无人机配送 | 不写“稠密城市” |
+| route readiness | 航线可运营性 | 比“路线准备度”自然 |
+| route-readiness sandbox | 航线可运营性评估沙盘 | 产品核心定位 |
+| pre-operation route assessment | 开线前航线评估 | 比“运营前评估”更贴近业务 |
+| route launch | 航线开通 / 开线 | 面向业务动作 |
+| route launch team | 航线开通团队 / 城市开线团队 | 根据语境选择 |
+| route launch and operations strategy team | 城市开线与运营策略团队 | 目标用户 |
+| candidate corridor | 候选航线 | 不建议直译为“候选走廊” |
+| drone corridor | 无人机航线 / 低空航线 | 视语境选择 |
+| 3D urban constraints | 三维城市空间约束 | 用于问题描述 |
+| 3D airspace sandbox | 三维低空沙盘 | 界面模块 |
+| restricted zone | 禁飞 / 限制飞行区 | 不只写“限制区” |
+| route screening | 航线筛查 | 业务流程 |
+| route-level decision | 航线级决策 | 产品价值 |
+| candidate landing node | 候选起降点 | 核心数据对象 |
+| Candidate Landing Node Database | 候选起降点数据库 | 不翻译成“着陆节点” |
+| node readiness level | 节点可用等级 / 节点 readiness 等级 | UI 中可保留 readiness |
+| landing suitability score | 起降适配评分 | 比“着陆适宜性”自然 |
+| building clearance | 建筑净空 / 建筑安全间距 | 根据上下文选择 |
+| thermal susceptibility proxy | 热易感性代理指标 | 必须保留“代理”含义 |
+| extreme heat scenario | 极端高温情景 | 不写“极热场景” |
+| scenario-based evaluation | 情景化评估 | 产品表达 |
+| baseline route | 基础航线 / baseline 航线 | UI 中可中英混用 |
+| safety-first route | 安全优先航线 | 路线策略 |
+| balanced route | 平衡航线 | 路线策略 |
+| route comparison | 航线对比 | 功能模块 |
+| decision output | 运营建议输出 | 比“决策输出”更业务化 |
+| approve | 建议开通 / 可进入测试 | 根据语境选择 |
+| reroute | 建议绕行 | 运营动作 |
+| suspend | 暂停运行 / 暂不建议运行 | 不写“悬停” |
+| adjust node | 调整起降点 | 运营动作 |
+| request field validation | 建议现场验证 | 业务动作 |
+| live dispatch | 实时调度 | 明确不是 MVP 范围 |
+| real-time flight control | 实时飞控 | 明确不是 MVP 范围 |
+| real-time thermal updraft detection | 实时热气流检测 | 明确不要声称 |
+| real commercial vertiport data | 真实商业起降点数据 | 明确不要声称 |
+| synthetic for PoC | PoC 模拟数据 | 不写成真实数据 |
+
+---
+
+# 01 Industry Shift
 
 ## Display Title
 
-Drone delivery is moving from flight demos to urban operations.
+Drone delivery is moving from flight capability to route operations.
 
 ## Visible Copy
 
-Delivery drones are no longer only experimental flying machines. They are becoming part of urban logistics systems, connecting commercial districts, communities, scenic areas, and local service nodes.
+The challenge is no longer only whether a drone can fly, but whether routes can be launched, monitored, adjusted, and repeated in complex urban environments.
 
-## Evidence Cards
+## Cards
 
-### Urban deployment
+### System operation
 
-Drone delivery is already being tested and deployed across commercial, community, and tourism scenarios.
+Drone delivery depends on aircraft, stations, dispatch systems, and monitoring.
 
-### Automated operation
+### Route launch
 
-Modern drone delivery systems rely on automated route selection, fleet monitoring, and exception handling, rather than manual control of every flight.
+Each new corridor needs local feasibility checks before pilot operation.
 
-### Controlled-condition limits
+### Operational reliability
 
-Drone specifications are usually measured under controlled conditions. Real-city deployment still requires route-level assessment.
+The key question becomes: can this route run repeatedly and explainably?
 
-## Design Intent
+## Why This Slide Exists
 
-This section establishes industry relevance without turning into a market-size report.
+This slide proves the project is responding to a real industry shift. Drone delivery is not only about single-flight feasibility. Once services move into urban contexts, the business problem becomes route launch, operations, monitoring, exception handling, and repeatability.
 
-The message should be:
+## Layout Intent
 
-The problem is no longer whether drones can fly. The problem is whether drone routes can operate safely and repeatedly in complex cities.
+Use one strong claim and three compact evidence-style cards. Do not use large market-size numbers unless they are clearly sourced and directly relevant.
 
-## Layout Notes
+## PRD Mapping
 
-Use three small evidence cards.
+Maps to:
 
-Avoid adding too many numbers. This project should feel grounded, not like a consulting market report.
-
-## Chinese Explanation
-
-这一节的重点是说明：无人机配送已经从“技术展示”进入“城市运营”阶段。
-
-所以真正的问题不是“无人机会不会飞”，而是“某一条航线能不能在城市里稳定运营”。这就自然引出 AeroRoute 3D 的产品价值。
+- Section 2.1: Urban drone delivery is entering multi-route, multi-scenario, system-operation stage
+- References to Meituan / Wing-style automated operation logic
 
 ## Source / Evidence Notes
 
-Use these source directions later if needed:
-- Meituan drone delivery / urban low-altitude logistics
-- Wing automated drone delivery operation
-- DJI FlyCart 30 specifications and controlled-condition notes
+Potential evidence directions:
 
-## What Not to Overclaim
+- Meituan urban low-altitude logistics solution
+- Wing drone delivery operation model
+- DJI delivery drone / FlyCart ecosystem as an example of device capability entering logistics use cases
 
-Do not write unsupported market-size claims unless the source is clearly cited.
+## Do Not Say
 
-Do not say every city is ready for drone delivery.
-
----
-
-# 02 Problem | The route is not just a line
-
-## Display Title
-
-A drone route is not just a line between two points.
-
-## Visible Copy
-
-In dense cities, route feasibility is shaped by buildings, restricted zones, candidate landing nodes, weather sensitivity, and operational trade-offs. A short route on a 2D map may become risky once placed inside a 3D urban environment.
-
-## Key Constraint Cards
-
-### Building obstruction
-
-High-rise geometry turns a 2D path into a 3D clearance problem.
-
-### Regulatory constraint
-
-Restricted flying zones must be checked before route launch.
-
-### Weather sensitivity
-
-Extreme heat scenarios may activate additional route risk.
-
-### Operational trade-off
-
-A safer route may require detour; a shorter route may carry higher risk.
-
-## Design Intent
-
-This section should reframe drone routing from a shortest-path problem into an operational-readiness problem.
-
-The key sentence is:
-
-A short route is not always an operable route.
-
-## Layout Notes
-
-Use four constraint cards. Each card should be short and visually balanced.
-
-This slide can later pair with a simple visual: a flat 2D line becoming a constrained 3D corridor.
-
-## Chinese Explanation
-
-这一节要把问题说清楚：在香港、深圳这类高密度城市，无人机航线不是二维地图上两点之间的一条线。
-
-它受到建筑高度、禁飞区、候选起降点、天气风险和运营效率共同影响。
-
-所以你的产品不是在解决“怎么画最短线”，而是在解决“这条线是否真的能开通”。
-
-## What Not to Overclaim
-
-Do not say current drone companies ignore 3D constraints.
-
-Say:
-Existing systems may focus on execution and monitoring, while this project focuses on pre-operation route-readiness assessment.
+- All cities are ready for drone delivery
+- Drone delivery is already fully mainstream everywhere
+- The product replaces existing dispatch systems
 
 ---
 
-# 03 Research Insight | Where my angle comes from
+# 02 Three Route-launch Challenges
 
 ## Display Title
 
-From urban heat exposure research to drone route risk screening.
+A launchable route is not just the shortest path.
 
 ## Visible Copy
 
-My previous research focused on route-level thermal exposure in Hong Kong, using long-term Landsat LST anomaly, spatial networks, and built-environment indicators. This project transfers that spatial-risk thinking into a new mobility context: drone corridor assessment.
+In dense cities, candidate corridors must pass spatial, regulatory, device, weather, and operational checks before they can go live.
 
-## Method Transfer Cards
+## Cards
 
-### From exposure surface
+### 3D urban space
 
-Long-term thermal anomaly can be transformed into a spatial risk layer.
+Buildings, height, clearance, and restricted zones shape flyable corridors.
 
-### From route analysis
+### Spec ≠ readiness
 
-Route-level indicators can reveal risk differences between alternative corridors.
+Controlled-condition drone specs cannot directly represent real-city operation.
 
-### From urban diagnosis
+### Weather strategy
 
-Built environment data can explain why some corridors are more exposed or constrained.
+Extreme weather creates route-level actions: continue, reroute, pause, or validate.
 
-## Important Boundary
+## Why This Slide Exists
 
-This project does not claim real-time thermal updraft detection.
+This is the core pain-point framing. It compresses the PRD’s three pain points into one slide: high-density urban geometry, device parameter limitations, and weather as a route strategy problem rather than a simple stop/go decision.
 
-Historical LST anomaly is used as a thermal susceptibility proxy for scenario-based route assessment.
+## Layout Intent
 
-## Design Intent
+Use three cards only. This slide should be crisp and business-oriented. It should not become a technical explanation of algorithms.
 
-This section links the project to my existing research background without overstating the causal relationship between surface heat and drone flight instability.
+## PRD Mapping
 
-The message should be:
+Maps to:
 
-I am transferring a spatial-risk modeling method, not claiming my dissertation directly proves drone crash risk.
+- Pain Point 1: high-density cities turn route planning from 2D path into 3D airspace problem
+- Pain Point 2: ideal device parameters do not equal real-city operational readiness
+- Pain Point 3: extreme weather is a route strategy problem, not only stop/fly
 
-## Layout Notes
+## What This Should Make Clear
 
-Use one main paragraph, three method-transfer cards, and one highlighted boundary note.
+AeroRoute 3D is not solving a generic shortest-path problem. It helps assess whether a route is launchable under real urban constraints.
 
-The boundary note should be visually distinct, because it increases credibility.
+## Do Not Say
 
-## Chinese Explanation
-
-这一节非常重要，因为它说明你的独特性来自哪里。
-
-你不是说“我的论文证明了无人机会被热气流影响”，而是说：我的论文让我建立了一套把城市热环境转化为空间风险图层的方法。这个项目把这种方法迁移到无人机航线评估中。
-
-这会让你的技术迁移能力非常清楚。
-
-## What Not to Overclaim
-
-Do not say:
-- LST directly measures thermal updrafts.
-- My thesis proves drone instability.
-- The system detects real-time hot air columns.
-
-Use:
-- thermal susceptibility proxy
-- scenario-based heat risk activation
-- spatial risk screening
+- Drone companies do not consider safety
+- Current platforms ignore regulations
+- Weather automatically makes a route impossible
 
 ---
 
-# 04 Target User | Who this is for
+# 03 Target Users & Decisions
 
 ## Display Title
 
-Designed for route launch and operations strategy teams.
+Built for route launch and operations strategy teams.
 
 ## Visible Copy
 
-The users are not individual drone pilots. They are the teams responsible for deciding whether a candidate route should be launched, adjusted, suspended, or sent for field validation.
+The users are not individual pilots. They are the teams deciding whether a corridor should launch, reroute, pause, adjust nodes, or enter field validation.
 
-## User Cards
+## Cards
 
 ### Route Launch Manager
 
-Goal: Decide whether a new delivery corridor is ready for pilot operation.
-
-Needs: Route feasibility, clearance risks, restricted-zone conflicts, launch recommendation.
+Decides whether a corridor is ready for pilot operation.
 
 ### Operations Strategy PM
 
-Goal: Compare route strategies under different operating scenarios.
-
-Needs: Baseline route, safety route, balanced route, and risk explanation.
+Compares baseline, safer, and balanced route options.
 
 ### Solution Consultant
 
-Goal: Explain route feasibility to city partners, business teams, or internal stakeholders.
+Explains route feasibility to partners and internal stakeholders.
 
-Needs: 3D sandbox, route-readiness report, and visual evidence.
+## Why This Slide Exists
 
-## Design Intent
+This slide answers the product question: who is this for? The target user should not be described as only a traditional route planner. The product is better framed for route launch, low-altitude operations, product strategy, and solution teams inside companies such as drone delivery platforms, UAV companies, or low-altitude logistics operators.
 
-This section makes the product feel like a real internal tool for a technology company, not a generic B2B dashboard.
+## Layout Intent
 
-The target user should not be too narrow, such as only “route planner”. It should match companies like Meituan Drone, DJI Delivery, Wing, Zipline, or similar low-altitude logistics teams.
+Use three persona cards. Keep them operational and role-based, not emotional consumer personas.
 
-## Layout Notes
+## PRD Mapping
 
-Use three persona cards. Keep them concise.
+Maps to:
 
-Avoid making the personas too fictional or too emotional. These are operational/product roles, not consumer personas.
+- Target user: Route Launch & Operations Strategy Team
+- Potential company contexts: Meituan Drone, DJI Delivery / FlyCart solution team, Wing / Zipline-style operations teams, city low-altitude economy pilot teams
 
-## Chinese Explanation
+## Key Business Decisions
 
-你之前担心“航线规划员”听起来太传统、太窄。这里改成 route launch and operations strategy teams，会更贴近美团无人机、大疆行业解决方案、Wing 这类公司。
+The product helps teams decide whether to:
 
-这个对象不是飞手，而是负责判断一条航线是否能开、怎么开、什么时候要绕行或暂停的团队。
+- Launch a candidate corridor
+- Use a safer or balanced route
+- Pause under extreme scenarios
+- Replace or adjust candidate landing nodes
+- Send a route for field validation
+- Export a route-readiness report
 
-## What Not to Overclaim
+## Do Not Say
 
-Do not imply this product replaces flight control engineers or pilots.
-
-It supports pre-operation decision-making.
+- This replaces pilots
+- This replaces flight-control engineers
+- This directly operates live aircraft
 
 ---
 
-# 05 User Pain Points | What they struggle with
+# 04 Current Workflow Pain
 
 ## Display Title
 
-Early route screening is fragmented.
+The pain is decision fragmentation.
 
 ## Visible Copy
 
-Teams need to check buildings, restricted zones, landing nodes, and weather-related risks across different tools. This makes early-stage route screening slow, fragmented, and difficult to explain.
+Teams may have maps, regulations, weather signals, and site knowledge, but they still need one workflow that turns scattered constraints into a route-level decision.
 
-## Pain Point Cards
+## Cards
 
-### Fragmented screening
+### Fragmented checks
 
-Buildings, restricted zones, landing nodes, and weather risks are often checked separately.
+Buildings, zones, nodes, and weather are reviewed separately.
 
-### 2D blind spots
+### Weak comparison
 
-A short route may fail once building clearance and altitude constraints are considered.
+Alternative corridors are hard to compare with one consistent logic.
 
-### Coarse weather decisions
+### Unclear next step
 
-A city-level heat warning does not explain which candidate route should be adjusted or avoided.
+Teams need approve, reroute, pause, adjust, or validate recommendations.
 
-## Design Intent
+## Why This Slide Exists
 
-This section should translate the technical problem into a real workflow pain.
+This slide translates the technical problem into a workflow problem. The issue is not necessarily that teams have no tools. The issue is that early route screening may be fragmented across multiple layers, teams, and formats, making it difficult to produce one explainable route-level decision.
 
-The core idea is:
+## Layout Intent
 
-The pain is not only data availability. The pain is decision fragmentation.
+Use three pain cards. The slide should feel like product discovery, not academic literature review.
 
-## Layout Notes
+## PRD Mapping
 
-Use three pain cards with minimal copy.
+Maps to:
 
-These cards should feel like a product discovery summary, not a literature review.
+- Business action chain: choose nodes → generate baseline route → choose scenario → generate risk-aware routes → output operational recommendation
+- Product need: one explainable route-readiness workflow
 
-## Chinese Explanation
+## Do Not Say
 
-这一节是把问题落到业务动作上。
-
-真实团队不是不知道天气、建筑、禁飞区这些东西，而是这些信息往往分散在不同工具里，很难形成一个清晰的“这条航线能不能开”的判断。
-
-所以你的产品价值是把分散信息转化为 route-level decision。
-
-## What Not to Overclaim
-
-Do not say companies have no tools.
-
-Say the early route-screening workflow can be fragmented, especially before a route reaches full operational deployment.
+- Companies have no tools
+- This product replaces all route planning systems
+- The product guarantees regulatory approval
 
 ---
 
-# 06 Product Opportunity | The gap
+# 05 Product Opportunity
 
 ## Display Title
 
@@ -369,423 +356,359 @@ Route readiness before route launch.
 
 ## Visible Copy
 
-Existing drone systems focus heavily on flight execution, automation, and fleet monitoring. Before a route reaches that stage, teams still need a structured way to compare candidate corridors, explain risks, and decide whether a route is ready for pilot operation.
+AeroRoute 3D creates a pre-operation assessment layer before routes enter live execution, fleet monitoring, or enterprise dispatch.
 
-## Opportunity Cards
+## Cards
 
 ### Before execution
 
-Evaluate route feasibility before live operation.
+Check feasibility before live operation.
 
 ### Before field validation
 
-Prioritize which candidate routes deserve on-site checking.
+Prioritize which corridors deserve site visits.
 
-### Before operational risk
+### Before risk escalation
 
-Prepare alternate corridors for extreme heat scenarios.
+Prepare fallback routes for extreme scenarios.
 
-### Before stakeholder review
+## Why This Slide Exists
 
-Turn spatial constraints into explainable route decisions.
+This slide defines the product opportunity. The product is not the flight-execution system itself. It is a planning and decision-support layer before live operation.
 
-## Design Intent
+## Layout Intent
 
-This is the product opportunity slide.
+Use the repeated “Before...” rhythm to create a clean product-opportunity slide. Keep it focused and concise.
 
-It should clearly position AeroRoute 3D as a pre-operation assessment layer, not a flight execution system.
+## PRD Mapping
 
-## Layout Notes
+Maps to:
 
-Use four “Before...” cards to create a clean rhythm.
+- MVP positioning: pre-operation route assessment
+- Operation decision output: Approve / Reroute / Suspend / Adjust node / Request field validation / Export report
 
-The slide should feel like a transition from problem to product.
+## What This Should Make Clear
 
-## Chinese Explanation
+AeroRoute 3D sits before enterprise dispatch and live flight control. It supports route-readiness decisions and early-stage route screening.
 
-这一节是你的产品机会点。
+## Do Not Say
 
-现有无人机系统很多都强调飞行执行、自动化调度、机队监控。但在正式上线之前，团队仍然需要一个工具去比较候选航线、解释风险、判断是否值得进入测试运营。
-
-这就是你的切口。
-
-## What Not to Overclaim
-
-Do not say existing drone systems lack safety or route planning.
-
-Say this project focuses on the earlier stage: route readiness before route launch.
+- This replaces dispatch systems
+- This controls drones
+- This guarantees operational safety
 
 ---
 
-# 07 Design Question
+# 06 Candidate Landing Node Database
 
 ## Display Title
 
-How might we help drone delivery teams evaluate route readiness before launch?
+From landing points to a reusable node database.
 
 ## Visible Copy
 
-AeroRoute 3D turns 3D urban constraints and thermal susceptibility into explainable route decisions, helping teams compare baseline, safety-first, and balanced corridors before field testing or pilot operation.
+The MVP structures candidate landing points as a filterable database, so route evaluation can scale from one corridor to multiple origin–destination pairs.
 
-## Core Design Question
+## Cards
 
-How might we help drone delivery teams evaluate route readiness before launch, by turning 3D urban constraints and thermal susceptibility into explainable route decisions?
+### Structured nodes
 
-## Design Intent
+Each node stores type, altitude, area, clearance, access, and readiness fields.
 
-This slide should act as a conceptual hinge. Everything before it explains why the project matters. Everything after it explains how the product responds.
+### Batch evaluation
 
-## Layout Notes
+Node pairs can be combined to screen multiple candidate corridors.
 
-Use large typography for the design question.
+### PoC boundary
 
-Keep the page visually clean. This slide can be more spacious than others.
+Synthetic nodes are used to test the product logic, not to claim real vertiport access.
 
-## Chinese Explanation
+## Small Note
 
-这一屏是整个前期研究部分的收束。
+Synthetic candidate nodes support PoC route-pair evaluation.
 
-它把前面的行业背景、痛点、目标用户和产品机会压缩成一个设计问题。后面就可以进入产品方案、数据策略和技术实现。
+## Why This Slide Exists
 
-## What Not to Overclaim
+This slide explains a core product layer: Candidate Landing Node Database turns landing points into structured, filterable, and scalable inputs for screening, scoring, and route-pair evaluation—beyond a single demo corridor.
 
-Do not include too many details on this slide.
+## Layout Intent
 
-It should feel like a clear design challenge, not a feature list.
+This slide should feel more concrete than earlier problem slides. It can include a small visual preview of fields or an abstract table/card showing node attributes.
+
+## PRD Mapping
+
+Maps to:
+
+- Core update: Candidate Landing Node Database as reusable node layer for O-D evaluation
+- Database usage: O-D pair generation, node suitability scoring, batch route evaluation
+- Data boundary: `synthetic_for_PoC`, not real commercial landing points
+
+## Field Concepts to Preserve
+
+Do not show all fields on the slide, but the product logic should preserve:
+
+- node_id
+- district
+- node_type
+- recommended_altitude_m
+- available_area_m2
+- clearance_radius_m
+- no_fly_conflict_status
+- building_clearance_score
+- thermal_susceptibility_score
+- ground_access_score
+- landing_suitability_score
+- readiness_level
+- data_status
+
+## Do Not Say
+
+- Real vertiport network
+- Verified commercial landing points
+- Operational deployment database
 
 ---
 
-# 08 Scope | What I chose to focus on
+# 07 Route-readiness Workflow
 
 ## Display Title
 
-Pre-operation assessment, not real-time flight control.
+From candidate nodes to operational recommendation.
 
 ## Visible Copy
 
-The MVP focuses on evaluating candidate routes within a selected Hong Kong district using 3D buildings, restricted-zone data, a synthetic candidate landing-node database, and historical thermal susceptibility layers.
+The product turns route setup, scenario testing, and route comparison into one decision workflow.
 
-## Included
+## Cards
 
-- 3D route-readiness sandbox
-- Candidate landing-node database
-- Restricted-zone screening
-- Thermal susceptibility scenario
-- Baseline / safety / balanced route comparison
-- Route readiness recommendation
+### 1. Select nodes
 
-## Excluded
+Choose origin and destination from the candidate-node database.
 
-- Real-time flight control
+### 2. Generate routes
+
+Compare baseline, safety-first, and balanced corridors.
+
+### 3. Decide action
+
+Approve, reroute, pause, adjust node, or request field validation.
+
+## Why This Slide Exists
+
+This slide explains the business action clearly. It prevents the project from being perceived as only a 3D visual demo. The viewer should understand what a user actually does inside the product.
+
+## Layout Intent
+
+Use a simple three-step workflow. If the UI supports it, show this as a horizontal process or stepped diagram rather than three equal text blocks.
+
+## PRD Mapping
+
+Maps to:
+
+- Core business action: select candidate nodes → generate baseline route → choose scenario → generate risk-aware route → output recommendation
+- User flow: selected AOI → load node database → select O/D → generate baseline → activate scenario layer → compare route options → output suggestion
+
+## Optional Expanded Workflow for Later Sections
+
+For a technical/product preview section, the workflow can expand to:
+
+1. Select AOI
+2. Load Candidate Landing Node Database
+3. Choose origin / destination
+4. Generate baseline route
+5. Activate scenario layer
+6. Generate safety and balanced routes
+7. Compare risk and detour
+8. Output recommendation
+
+## Do Not Say
+
+- The workflow directly dispatches drones
+- The recommendation is legally binding
+- The system replaces field validation
+
+---
+
+# 08 Data Strategy & Boundaries
+
+## Display Title
+
+Real constraints, synthetic operating inputs.
+
+## Visible Copy
+
+AeroRoute 3D separates evidence-based spatial constraints from simulated PoC inputs, so the concept stays useful without pretending to have enterprise data.
+
+## Cards
+
+### Real constraints
+
+3D buildings, restricted zones, and base maps define hard spatial limits.
+
+### Thermal proxy
+
+Historical LST supports heat-scenario screening, not real-time updraft detection.
+
+### Synthetic nodes
+
+Generated landing candidates support PoC evaluation, not live operation.
+
+## Small Note
+
+No real commercial vertiports, live telemetry, or real-time thermal updraft sensing.
+
+## Why This Slide Exists
+
+This slide protects project credibility. It shows that the product uses real or evidence-based spatial constraints where possible, but does not pretend to have enterprise data, real commercial vertiports, live drone telemetry, or real-time thermal sensing.
+
+## Layout Intent
+
+Use three cards plus a small boundary note. This slide should feel honest and professional, not defensive.
+
+## PRD Mapping
+
+Maps to:
+
+- Data boundary: real buildings / restricted zones / thermal susceptibility vs synthetic candidate nodes
+- Defensive statement: LST anomaly is not real-time thermal flow observation
+- MVP limitation: no enterprise telemetry, no live API dispatch
+
+## Do Not Say
+
 - Real-time thermal updraft detection
-- Multi-drone traffic control
-- Enterprise API dispatch
-- Full CFD wind simulation
-- Real commercial vertiport network
-
-## Design Intent
-
-This slide protects the credibility of the project.
-
-It shows that the product is ambitious but scoped. It also prevents viewers from expecting enterprise-grade live drone dispatch.
-
-## Layout Notes
-
-Use a two-column Included / Excluded layout.
-
-This slide should feel honest and professional.
-
-## Chinese Explanation
-
-这一节一定要放，因为它会让你的项目更可信。
-
-你不是假装自己做出了企业级实时无人机调度系统，而是明确说明 MVP 聚焦开线前评估。你清楚地区分了真实数据、模拟数据和未来能力。
-
-## What Not to Overclaim
-
-Do not hide the limitations.
-
-The clear boundary is part of the product maturity.
+- Real enterprise vertiports
+- Live operational telemetry
+- Accurate battery-loss prediction
 
 ---
 
-# 09 Data Strategy
+# 09 MVP Scope
 
 ## Display Title
 
-Real constraints. Synthetic nodes. Clear boundaries.
+Pre-operation assessment only.
 
 ## Visible Copy
 
-The project separates real spatial constraints from simulated operating inputs. Buildings, restricted zones, and thermal susceptibility are used as spatial evidence. Candidate landing nodes are generated as a synthetic database to support route-pair evaluation where public commercial vertiport data is not yet available.
+The MVP focuses on evaluating candidate routes in a selected Hong Kong district. It does not replace flight control, dispatch, or regulatory approval systems.
 
-## Data Cards
+## Cards
 
-### Real spatial constraints
+### Included
 
-3D buildings, restricted zones, and base map layers define where routes cannot or should not pass.
+3D sandbox · node database · zone screening · scenario testing · route comparison.
 
-### Thermal susceptibility proxy
+### Excluded
 
-Historical LST anomaly is used to identify areas that may become more sensitive under extreme heat scenarios.
+Live flight control · real-time updraft detection · CFD · enterprise dispatch · real vertiports.
 
-### Synthetic landing-node database
+## Why This Slide Exists
 
-A simulated database of candidate landing nodes supports route-pair generation, filtering, and readiness scoring.
+This slide keeps the project scoped. The portfolio project should look ambitious but not unrealistic. Clear MVP boundaries are part of the product maturity.
 
-### Transparent data boundary
+## Layout Intent
 
-The MVP does not claim access to real commercial vertiports, real-time telemetry, or real-time thermal updrafts.
+Use a two-column Included / Excluded layout. This slide can be visually clean and structured.
 
-## Design Intent
+## PRD Mapping
 
-This slide explains data credibility.
+Maps to:
 
-It should answer the likely interview challenge:
+- MVP scope: 2km × 2km high-density district, real buildings, restricted zones, thermal susceptibility, simulated node database, route comparison, readiness score
+- MVP non-goals: real-time flight control, real-time updraft detection, CFD, multi-drone conflict, enterprise API dispatch, real order dispatch
+- Roadmap: real weather API, enterprise nodes, telemetry, battery health data, compliance reporting
 
-If Hong Kong does not have public commercial drone landing-node data, how do you create meaningful route pairs?
+## Do Not Say
 
-The answer is:
-
-Use synthetic candidate landing nodes for PoC evaluation, while using real spatial constraints where available.
-
-## Layout Notes
-
-Use four data cards.
-
-This slide can later show a small preview of the candidate landing-node database.
-
-## Chinese Explanation
-
-这一节是回应“你的起降点是不是虚构”的关键。
-
-你的起降点确实是 synthetic，但它不是随便画几个点，而是作为 PoC 的候选节点数据库，用来支持路线组合评估。真实的是建筑、禁飞区、热易感性这些空间约束。模拟的是运营输入。
-
-## What Not to Overclaim
-
-Do not call synthetic nodes real vertiports.
-
-Use:
-- synthetic candidate landing-node database
-- generated for PoC route-pair evaluation
-- not real commercial vertiport network
+- Full enterprise platform
+- Operationally deployable system
+- Complete regulatory approval solution
 
 ---
 
-# 10 Evidence Cards
+# 10 Product Preview
 
 ## Display Title
 
-Evidence behind the product framing.
+Compare corridors before pilot operation.
 
 ## Visible Copy
 
-The product framing is based on drone delivery operations, automated fleet logic, controlled-condition device specifications, and Hong Kong’s regulatory context.
+The product helps teams explore candidate nodes, screen constraints, compare route options, and output a route-readiness recommendation.
 
-## Evidence Cards
+## Cards
 
-### Industry deployment
+### 3D sandbox
 
-Drone delivery has moved into multi-scenario urban operation, including commercial districts, communities, and scenic areas.
+View dense urban geometry and route alternatives.
 
-Source direction: Meituan urban low-altitude logistics solution.
+### Node explorer
 
-### Automation model
+Filter candidate landing nodes by readiness and suitability.
 
-Drone operators increasingly monitor systems rather than manually control each flight.
+### Route comparison
 
-Source direction: Wing technology and fleet operation model.
+Compare baseline, safer, and balanced corridors.
 
-### Device capability boundary
+### Decision output
 
-Drone specifications are measured under controlled conditions; real-city deployment requires local route assessment.
+Approve, reroute, pause, adjust node, or request validation.
 
-Source direction: DJI FlyCart 30 specifications.
+## Small Note
 
-### Regulatory layer
+Product preview — not live drone dispatch.
 
-Hong Kong provides an official SUA regulatory framework and eSUA Drone Map, making regulatory screening part of route preparation.
+## Why This Slide Exists
 
-Source direction: Hong Kong CAD SUA / eSUA.
+This slide transitions from problem framing into the actual product system. It should prepare the viewer for the next website section: architecture, data pipeline, route scoring, or UI prototype.
 
-## Design Intent
+## Layout Intent
 
-This slide should not become a bibliography page. It should show that the project is grounded in evidence.
+Use four product-module cards. If the visual is crowded, reduce visible card copy and rely on icons or labels.
 
-## Layout Notes
+## PRD Mapping
 
-Use four evidence cards.
+Maps to:
 
-Each card should have one claim and one source note.
+- Core feature modules: 3D Route Sandbox, Candidate Node Explorer, Scenario Setup Panel, Risk Layer Manager, Route Comparison Panel, Risk Explanation Panel, Operation Decision Output
+- Route evaluation outputs: distance, detour, thermal susceptibility exposure, building clearance risk, restricted-zone conflict, node suitability, route-readiness score
 
-## Chinese Explanation
+## Do Not Say
 
-这一节不是为了堆资料，而是证明你的项目不是凭空想象。
-
-你只需要展示四类证据：行业部署、自动化运营模式、设备参数边界、香港监管环境。
-
-## What Not to Overclaim
-
-Do not overquote reports.
-
-Keep evidence as concise source-backed signals.
+- Real-time command center
+- Live dispatch console
+- Enterprise-grade flight system
 
 ---
 
-# 11 Recommended Page Flow
+# Notes for Generating `slide-content.ts`
 
-## Display Title
+The final rendered deck should be shorter than this Markdown. This file is the complete editorial source. When converting to `slide-content.ts`:
 
-Recommended page flow.
-
-## Visible Copy
-
-The intro should work like a short product story before entering system architecture and technical implementation.
-
-## Page Flow
-
-1. Hero
-2. Context
-3. Problem
-4. Research Transfer
-5. Target User
-6. User Pain Points
-7. Product Opportunity
-8. Design Question
-9. Scope
-10. Data Strategy
-11. Evidence Cards
-12. Product Preview
-13. Technical Implementation
-14. Reflection / Limitations
-
-## Design Intent
-
-This section is for internal planning. It does not need to be shown as a slide on the website unless useful.
-
-## Chinese Explanation
-
-你的网站前半部分应该像一个 pitch deck，而不是长论文。
-
-先让人理解为什么这个问题存在，再告诉他你为谁做，最后再进入技术实现。
+- Use only Display Title, Visible Copy, Cards, Tags, and Small Note.
+- Do not render “Why This Slide Exists” or “PRD Mapping” in the UI.
+- Preserve credibility notes as `sourceNote` only when needed.
+- Keep each slide visually light.
+- Do not include personal research-transfer narrative in visible slides.
 
 ---
 
-# 12 Final Website Copy
+# Notes for Page Layout
 
-## Hero
+The final page should feel like a project case-study deck inside the existing portfolio, not a standalone landing page.
 
-AeroRoute 3D
+Preferred rhythm:
 
-A 3D route-readiness sandbox for dense-city drone delivery.
+- Hero: large title + concise subtitle + tags
+- Industry Shift: one claim + three compact cards
+- Challenges: one claim + three challenge cards
+- Target Users: three persona cards + decision framing
+- Workflow Pain: one workflow problem + three pain cards
+- Opportunity: pre-operation layer + before-cards
+- Candidate Nodes: concrete database layer + small field preview
+- Workflow: three-step decision flow
+- Data Strategy: real vs synthetic vs boundary
+- Scope: included / excluded
+- Product Preview: product module cards
 
-Before a drone corridor goes live, AeroRoute 3D helps route launch teams evaluate whether it is operationally feasible under dense urban geometry, regulatory constraints, and extreme heat scenarios.
-
-## Context
-
-Drone delivery is no longer only a flight demo. It is becoming an urban operations problem.
-
-Delivery drones now operate across commercial districts, communities, and scenic areas. As routes scale, the key question shifts from “Can the drone fly?” to “Can this route operate safely, repeatedly, and explainably in a real city?”
-
-## Problem
-
-A drone route is not just a line between two points.
-
-In dense cities, route feasibility is shaped by buildings, restricted zones, candidate landing nodes, weather sensitivity, and operational trade-offs. A short route on a 2D map may become risky once placed inside a 3D urban environment.
-
-## User
-
-Designed for route launch and operations strategy teams.
-
-The users are not individual drone pilots. They are the teams deciding whether a route should be launched, adjusted, suspended, or sent for field validation.
-
-## Pain Points
-
-Route screening is fragmented.
-
-Buildings, restricted zones, landing nodes, and weather risks are often checked separately.
-
-2D maps hide 3D risk.
-
-A short route may fail once building clearance and altitude constraints are considered.
-
-Weather decisions are too coarse.
-
-A general heat warning does not explain which candidate route should be adjusted or avoided.
-
-## Opportunity
-
-Route readiness before route launch.
-
-AeroRoute 3D turns spatial constraints into route-level decisions. It compares baseline, safety-first, and balanced routes, then explains the operational trade-off behind each recommendation.
-
-## Design Question
-
-How might we help drone delivery teams evaluate route readiness before launch, by turning 3D urban constraints and thermal susceptibility into explainable route decisions?
-
-## Scope
-
-This is not a real-time flight-control system.
-
-The MVP focuses on pre-operation route assessment. It does not claim real-time thermal updraft detection, multi-drone traffic control, or enterprise API dispatch.
-
-## Data Strategy
-
-Real constraints. Synthetic nodes. Clear boundaries.
-
-The MVP uses real spatial constraints where available: 3D buildings, restricted zones, and historical thermal susceptibility layers. Because public commercial landing-node data is not yet available in Hong Kong, candidate landing nodes are generated as a synthetic database for route-pair evaluation.
-
----
-
-# 13 Layout Principles
-
-## Display Title
-
-Minimal, but not empty.
-
-## Principles
-
-- Use full-screen slide sections instead of a long scrolling article.
-- Each slide should contain one core idea.
-- Use short paragraphs and compact cards.
-- Keep source notes small but visible.
-- Use generous spacing.
-- Use one accent color.
-- Avoid decorative clutter.
-- Make the structure feel like a product case study, not a research paper.
-
-## Chinese Explanation
-
-你的风格是简约，但不能信息缺失。
-
-所以每一屏应该只有一个核心观点，但这个观点要有业务含义、数据边界或产品判断。
-
----
-
-# 14 Content to Avoid
-
-## Avoid
-
-- Large market-size paragraphs without clear relevance.
-- Unsupported battery-saving percentages.
-- Claims about crash-rate reduction.
-- Real-time thermal updraft detection.
-- Real-time drone control.
-- Full CFD simulation claims.
-- Real commercial vertiport network claims.
-- Overly technical algorithm explanation in the intro section.
-- Too many academic citations on the first screens.
-
-## Use Instead
-
-- Route readiness
-- Pre-operation assessment
-- Candidate corridor
-- Thermal susceptibility proxy
-- Scenario-based evaluation
-- Explainable route decision
-- Synthetic candidate landing-node database
-
----
-
-End of Markdown.
+Avoid rendering every explanatory note. Keep the UI concise, but keep this Markdown complete for future editing.
