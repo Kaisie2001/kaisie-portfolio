@@ -1,0 +1,1 @@
+node_id,district,node_type,lat,lon,recommended_altitude_m,available_area_m2,clearance_radius_m,source_class,usage_role,no_fly_conflict_status,building_clearance_score,thermal_susceptibility_score,ground_access_score,landing_suitability_score,readiness_level,data_status,generation_method
