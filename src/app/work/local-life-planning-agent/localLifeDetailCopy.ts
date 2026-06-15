@@ -6,8 +6,8 @@ type DemoStep = {
 };
 
 export const LOCAL_LIFE_DEMO_TITLE: Record<Lang, string> = {
-  en: "Demo Walkthrough",
-  zh: "Demo 流程",
+  en: "What to try in the demo",
+  zh: "Demo 中可以体验什么",
 };
 
 export const LOCAL_LIFE_INTERACTIVE_DEMO_TITLE: Record<Lang, string> = {
@@ -28,50 +28,51 @@ export const LOCAL_LIFE_INTERACTIVE_DEMO_CTA: Record<Lang, string> = {
 export const LOCAL_LIFE_DEMO_STEPS: Record<Lang, DemoStep[]> = {
   en: [
     {
-      title: "Goal input",
-      description: "User enters a local-life request",
+      title: "Choose a planning scenario",
+      description:
+        "Start from a local-life goal such as a friend gathering, family outing, casual date, or work session.",
     },
     {
-      title: "Intent summary",
+      title: "Review the generated route",
       description:
-        "System extracts time, group, budget, food preference, and mobility constraints",
+        "See how the agent turns the goal into a sequence of activity, food, and optional follow-up stops.",
     },
     {
-      title: "Main plan",
+      title: "Open POI details",
       description:
-        "Activity, food, and optional second stop are arranged as a route timeline",
+        "Click recommended places on the map or cards to understand why each stop was selected.",
     },
     {
-      title: "Fallbacks",
+      title: "Compare fallback plans",
       description:
-        "Alternatives appear for booking failure, queue risk, or route conflict",
+        "Switch to alternatives when booking fails, queues rise, or the route becomes less efficient.",
     },
     {
-      title: "Execute",
+      title: "Simulate execution",
       description:
-        "User confirms booking, ordering, ticketing, and sharing simulation",
+        "Preview reservation, ordering, ticketing, and sharing actions inside the plan flow.",
     },
   ],
   zh: [
     {
-      title: "输入目标",
-      description: "用户输入一句本地生活需求",
+      title: "选择规划场景",
+      description: "从朋友聚会、家庭亲子、轻松约会或工作学习等本地生活目标开始。",
     },
     {
-      title: "意图摘要",
-      description: "系统提取时间、人群、预算、饮食偏好和通勤约束",
+      title: "查看生成路线",
+      description: "观察 Agent 如何将目标转化为活动、餐饮和可选后续地点的顺序方案。",
     },
     {
-      title: "主方案",
-      description: "将活动、餐饮和可选第二站组合成路线时间轴",
+      title: "打开 POI 详情",
+      description: "点击地图点位或推荐卡片，查看每个地点为什么被选中。",
     },
     {
-      title: "备选方案",
-      description: "当订位失败、排队过久或路线冲突时提供替代选择",
+      title: "对比备选方案",
+      description: "当订位失败、排队过久或路线效率下降时，切换查看替代方案。",
     },
     {
-      title: "确认执行",
-      description: "模拟订位、下单、购票和分享动作",
+      title: "模拟执行动作",
+      description: "在方案内预览订位、下单、购票和分享等执行流程。",
     },
   ],
 };
