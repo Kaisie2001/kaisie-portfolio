@@ -1,22 +1,27 @@
 import type { Lang } from "@/lib/portfolioCopy";
 
 export const LOCAL_LIFE_PROJECT_TITLE: Record<Lang, string> = {
-  en: "Local-life Planning Agent",
-  zh: "本地生活规划 Agent",
+  en: "Meituan Local-life Planning Agent",
+  zh: "美团本地生活规划 Agent",
 };
 
 export const LOCAL_LIFE_PROJECT_SUBTITLE: Record<Lang, string> = {
-  en: "A Meituan-inspired goal-to-execution agent that turns a natural-language local-life goal into route-based plans with POI matching, fallback handling, and booking simulation.",
-  zh: "美团风格的目标驱动 Agent：将自然语言本地生活需求转化为含 POI 匹配、异常回退与订位/下单模拟的可执行路线方案。",
+  en: "One local-life sentence in—a route, POI lineup, and booking-ready half-day plan out.",
+  zh: "一句话说明想要什么，输出路线、点位组合和可直接预订的半日安排。",
 };
 
 export const LOCAL_LIFE_PROJECT_META = {
-  title: "Local-life Planning Agent",
+  title: "Meituan Local-life Planning Agent",
   description:
-    "A Meituan-inspired AI agent prototype for short local-life activity planning—from intent parsing and POI matching to route assembly and execution simulation.",
+    "Meituan-inspired hackathon prototype: turn one sentence into a Saturday route—photogenic spots, dinner, fallbacks, and simulated booking.",
 } as const;
 
 export const LOCAL_LIFE_PROJECT_EYEBROW: Record<Lang, string> = {
-  en: "Product case · AI Agent",
-  zh: "产品案例 · AI Agent",
+  en: "Hackathon prototype · Meituan local-life",
+  zh: "黑客松原型 · 美团本地生活",
+};
+
+export const LOCAL_LIFE_EXAMPLE_GOAL: Record<Lang, string> = {
+  en: "Plan a Saturday afternoon with friends: photogenic, not too expensive, dinner included.",
+  zh: "周六下午和朋友出门，想拍照、别太贵，还要吃晚饭。",
 };

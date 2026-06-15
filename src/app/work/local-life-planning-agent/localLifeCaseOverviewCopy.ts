@@ -1,102 +1,100 @@
 import type { Lang } from "@/lib/portfolioCopy";
-import {
-  LOCAL_LIFE_PROJECT_SUBTITLE,
-  LOCAL_LIFE_PROJECT_TITLE,
-} from "./localLifeProjectCopy";
 
-export type LocalLifeCaseOverviewTabId = "snapshot" | "problem" | "flow";
+export type LocalLifeCaseOverviewTabId = "snapshot" | "productFlow" | "agentLogic";
 
-type FlowCard = {
-  title: string;
-  description: string;
-};
-
-type CaseOverviewTab = {
+export type LocalLifeCaseOverviewTab = {
   id: LocalLifeCaseOverviewTabId;
   tabLabel: string;
   eyebrow: string;
-  title: string | string[];
-  oneLiner: string;
-  keywords?: string[];
-  flowCards?: FlowCard[];
+  title: string;
+  subtitle: string;
+  items: readonly [string, string, string, string];
 };
 
-export const LOCAL_LIFE_CASE_OVERVIEW_TABS: Record<Lang, CaseOverviewTab[]> = {
+export const LOCAL_LIFE_CASE_OVERVIEW_LABEL: Record<Lang, string> = {
+  en: "Case Overview",
+  zh: "案例概览",
+};
+
+export const LOCAL_LIFE_CASE_OVERVIEW_TABS: Record<
+  Lang,
+  LocalLifeCaseOverviewTab[]
+> = {
   en: [
     {
       id: "snapshot",
       tabLabel: "Snapshot",
-      eyebrow: "Project Overview",
-      title: LOCAL_LIFE_PROJECT_TITLE.en,
-      oneLiner: LOCAL_LIFE_PROJECT_SUBTITLE.en,
-      keywords: ["AI Agent", "POI Matching", "Route Planning", "Execution Flow"],
+      eyebrow: "Snapshot",
+      title: "From search to executable local plans",
+      subtitle:
+        "A Meituan-inspired planning agent that converts one local-life goal into a route-based plan with POI choices, fallback options, and booking-ready actions.",
+      items: [
+        "Scenario · Short local-life planning",
+        "Input · One natural-language goal",
+        "Output · Main plan + fallback plans",
+        "Execution · Booking / ordering / sharing simulation",
+      ],
     },
     {
-      id: "problem",
-      tabLabel: "Problem & Goal",
-      eyebrow: "Problem & Product Goal",
-      title: ["From recommendation lists", "to executable plans"],
-      oneLiner:
-        "Local-life platforms surface separate restaurant and activity lists, but users need one plan—where to go, in what order, within a time window, with booking or ordering ready to execute.",
-      keywords: ["Recommendation gap", "Time window", "Goal-to-execution"],
+      id: "productFlow",
+      tabLabel: "Product Flow",
+      eyebrow: "Product Flow",
+      title: "How the product experience works",
+      subtitle:
+        "The interface turns a vague request into a structured plan users can review, adjust, and execute.",
+      items: [
+        "Goal input",
+        "Intent summary",
+        "Route timeline",
+        "Confirm & execute",
+      ],
     },
     {
-      id: "flow",
-      tabLabel: "User Flow",
-      eyebrow: "User Flow",
-      title: "Input to confirm and execute",
-      oneLiner:
-        "The user states a goal, clarifies constraints, reviews a main plan and fallbacks, then confirms execution actions.",
-      flowCards: [
-        { title: "Input", description: "Natural-language goal and context" },
-        {
-          title: "Clarification",
-          description: "Budget, time, group, and preference constraints",
-        },
-        { title: "Main Plan", description: "Route-based itinerary with POIs" },
-        {
-          title: "Fallback Plans",
-          description: "Alternatives when booking or timing fails",
-        },
-        {
-          title: "Confirm & Execute",
-          description: "Book, order, share, or adjust the plan",
-        },
+      id: "agentLogic",
+      tabLabel: "Agent Logic",
+      eyebrow: "Agent Logic",
+      title: "How the agent builds the plan",
+      subtitle:
+        "The agent uses a tool chain to parse constraints, score POIs, assemble a route, and prepare fallback actions.",
+      items: [
+        "Parse intent",
+        "Score POIs",
+        "Assemble route",
+        "Simulate execution",
       ],
     },
   ],
   zh: [
     {
       id: "snapshot",
-      tabLabel: "项目概览",
+      tabLabel: "概览",
       eyebrow: "项目概览",
-      title: LOCAL_LIFE_PROJECT_TITLE.zh,
-      oneLiner: LOCAL_LIFE_PROJECT_SUBTITLE.zh,
-      keywords: ["AI Agent", "POI 匹配", "路线规划", "执行流程"],
-    },
-    {
-      id: "problem",
-      tabLabel: "问题与目标",
-      eyebrow: "问题与产品目标",
-      title: "从推荐列表到可执行方案",
-      oneLiner:
-        "本地生活平台通常分别推荐餐厅与活动，但用户需要的是完整计划：去哪、顺序如何、是否落在时间窗内，以及订位/下单能否立即执行。",
-      keywords: ["推荐缺口", "时间窗口", "目标到执行"],
-    },
-    {
-      id: "flow",
-      tabLabel: "用户流程",
-      eyebrow: "用户流程",
-      title: "从输入到确认执行",
-      oneLiner:
-        "用户输入目标、澄清约束、查看主方案与备选，再确认订位/下单等执行动作。",
-      flowCards: [
-        { title: "输入", description: "自然语言目标与场景上下文" },
-        { title: "澄清", description: "预算、时间、人数与偏好约束" },
-        { title: "主方案", description: "含 POI 的路线化行程" },
-        { title: "备选方案", description: "订位失败或超时的替代选项" },
-        { title: "确认执行", description: "订位、下单、分享或调整方案" },
+      title: "从搜索推荐到可执行方案",
+      subtitle:
+        "一个美团本地生活规划 Agent，将一句模糊目标转化为路线、POI 组合、备选方案和可执行动作。",
+      items: [
+        "场景 · 短时本地生活规划",
+        "输入 · 一句自然语言目标",
+        "输出 · 主方案 + 备选方案",
+        "执行 · 订位 / 下单 / 分享模拟",
       ],
+    },
+    {
+      id: "productFlow",
+      tabLabel: "产品流程",
+      eyebrow: "产品流程",
+      title: "产品体验如何运转",
+      subtitle: "界面将模糊需求转化为用户可以查看、调整并确认执行的结构化方案。",
+      items: ["输入目标", "意图摘要", "路线时间轴", "确认并执行"],
+    },
+    {
+      id: "agentLogic",
+      tabLabel: "Agent 逻辑",
+      eyebrow: "Agent 逻辑",
+      title: "Agent 如何生成方案",
+      subtitle:
+        "Agent 通过工具链解析约束、匹配 POI、组合路线，并准备执行与备选动作。",
+      items: ["解析意图", "POI 打分", "组合路线", "模拟执行"],
     },
   ],
 };
