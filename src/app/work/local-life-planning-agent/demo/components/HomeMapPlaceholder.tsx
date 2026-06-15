@@ -1,6 +1,5 @@
-type RoutePreviewPlaceholderProps = {
+type HomeMapPlaceholderProps = {
   className?: string;
-  variant?: "home" | "hero";
 };
 
 type HomePoiMarker = {
@@ -31,7 +30,7 @@ function markerCoords(marker: HomePoiMarker) {
   };
 }
 
-export function RoutePreviewPlaceholder({ className = "" }: RoutePreviewPlaceholderProps) {
+export function HomeMapPlaceholder({ className = "" }: HomeMapPlaceholderProps) {
   return (
     <div
       data-testid="home-map-background"

@@ -1,4 +1,5 @@
 @import "tailwindcss/theme" layer(theme);
+@import "leaflet/dist/leaflet.css";
 
 @theme {
   --color-meituan-yellow: #ffd100;
@@ -22,4 +23,85 @@
     linear-gradient(rgba(31, 35, 41, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(31, 35, 41, 0.06) 1px, transparent 1px);
   background-size: 34px 34px;
+}
+
+/* Home map only — soft backdrop behind the input sheet. Does not affect planner map. */
+.home-map-soft-theme .leaflet-tile-pane {
+  filter: grayscale(0.24) saturate(0.54) brightness(1.1) contrast(0.9);
+}
+
+.home-map-soft-theme .leaflet-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.34) 0%, rgba(255, 255, 255, 0.1) 42%, rgba(255, 250, 244, 0.26) 100%),
+    radial-gradient(ellipse 90% 70% at 50% 38%, rgba(255, 255, 255, 0.16), transparent 68%);
+}
+
+.home-map-soft-theme .leaflet-control-zoom a {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: rgba(15, 23, 42, 0.45) !important;
+}
+
+.home-map-marker-label {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Planner / result map only — soft tiles with readable routes and markers. */
+.planner-map-soft-theme .leaflet-tile-pane {
+  filter: grayscale(0.18) saturate(0.6) brightness(1.06) contrast(0.92);
+}
+
+.planner-map-soft-theme .leaflet-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 248, 0.22) 0%, rgba(255, 255, 255, 0.06) 48%, rgba(255, 251, 246, 0.18) 100%),
+    radial-gradient(ellipse 88% 62% at 50% 36%, rgba(255, 255, 255, 0.1), transparent 70%);
+}
+
+.planner-map-soft-theme .leaflet-control-zoom a,
+.planner-map-soft-theme .leaflet-control-attribution {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  background: rgba(255, 255, 255, 0.84) !important;
+  color: rgba(15, 23, 42, 0.42) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.planner-map-route-badge {
+  background: transparent !important;
+  border: none !important;
+}
+
+.planner-map-route-badge span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 9999px;
+  background: #3d4450;
+  color: #e8c84a;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.14);
+}
+
+.planner-map-route-badge.is-selected span {
+  background: #2f3640;
+  color: #f0d060;
+  width: 19px;
+  height: 19px;
+  font-size: 10px;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.18);
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useReducer, useState } from "react";
+import dynamic from "next/dynamic";
 import { BottomPlanSheet } from "./components/BottomPlanSheet";
 import { PlanningModal } from "./components/PlanningModal";
 import { ExecutionSheet } from "./components/ExecutionSheet";
@@ -14,7 +15,6 @@ import { RouteTimeline } from "./components/RouteTimeline";
 import { TripPersonaCard } from "./components/TripPersonaCard";
 import { ClarifyModal } from "./components/ClarifyModal";
 import { TravelSettingsSheet } from "./components/TravelSettingsSheet";
-import { RoutePreviewPlaceholder } from "./components/RoutePreviewPlaceholder";
 import { defaultInputs } from "./lib/parseIntent";
 import { runAgent, runAgentFromParseResult } from "./lib/runAgent";
 import { applyParseOverrides } from "./lib/parsers/applyOverrides";
@@ -62,6 +62,16 @@ function pageFlowReducer(state: AppFlowState, action: PageFlowAction): AppFlowSt
 
 const STEP_COUNT = 6;
 const PLANNING_STEP_MS = 500;
+const LeafletPlannerMap = dynamic(
+  () => import("./components/LeafletPlannerMap").then((mod) => mod.LeafletPlannerMap),
+  { ssr: false },
+);
+const HomeMapBackground = dynamic(() => import("./components/HomeMapBackground"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full bg-[#f3f4f0]" data-testid="home-map-fallback" aria-hidden="true" />
+  ),
+});
 
 function ScreenBackButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
@@ -327,7 +337,7 @@ export function LocalLifeDemoApp({ mode }: LocalLifeDemoAppProps) {
         {screen === "input" ? (
           <div data-testid="home-screen" className="relative h-full min-h-0 w-full overflow-hidden">
             <div className="absolute inset-0 z-0 h-full w-full">
-              <RoutePreviewPlaceholder variant="home" className="h-full w-full" />
+              <HomeMapBackground className="h-full w-full" />
             </div>
 
             <HomeHeader className="absolute inset-x-0 top-0 z-20" onResetDemo={resetDemoState} />
@@ -356,11 +366,19 @@ export function LocalLifeDemoApp({ mode }: LocalLifeDemoAppProps) {
 
         {screen === "result" || screen === "execute" ? (
           <div data-testid="result-screen" className="relative h-full overflow-hidden bg-white">
-            <div className="absolute inset-0 z-0 pb-16">
-              <RoutePreviewPlaceholder variant="hero" className="h-full w-full" />
+            <div className="absolute inset-0 z-0 pb-16 [&_.leaflet-bottom]:!z-[1] [&_.leaflet-control-attribution]:!z-[1] [&_.leaflet-pane]:!z-[1] [&_.leaflet-top]:!z-[1]">
+              <LeafletPlannerMap
+                variant="hero"
+                className="h-full w-full"
+                pois={mapPois}
+                selectedPoiId={selectedPoiId}
+                onSelectPoi={handleSelectPoi}
+                mapPresentation={mapPresentation}
+                selectedPlanType={selectedPlanType}
+              />
             </div>
 
-            <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-[9999] flex h-[45%] max-h-[48%] min-h-[220px] flex-col overflow-hidden">
+            <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-[9999] flex h-[45%] max-h-[48%] min-h-[280px] flex-col overflow-hidden">
               <BottomPlanSheet
                 routePlan={result.routePlan}
                 rankedPois={result.rankedPois}
@@ -416,7 +434,13 @@ export function LocalLifeDemoApp({ mode }: LocalLifeDemoAppProps) {
         {screen === "details" ? (
           <div className="h-full space-y-3 overflow-y-auto px-3 pb-5 pt-3">
             <ScreenBackButton label="返回主方案" onClick={() => dispatchFlow({ type: "OPEN_RESULT" })} />
-            <RoutePreviewPlaceholder variant="hero" className="h-40 w-full rounded-xl" />
+            <LeafletPlannerMap
+              pois={mapPois}
+              selectedPoiId={selectedPoiId}
+              onSelectPoi={handleSelectPoi}
+              mapPresentation={mapPresentation}
+              selectedPlanType={selectedPlanType}
+            />
             <RouteTimeline
               routePlan={result.routePlan}
               parseResult={result.parseResult}
