@@ -172,8 +172,8 @@ export function WorkSection({
                   <h3
                     className={
                       slide
-                        ? "font-display text-lg font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:text-xl lg:text-[1.35rem]"
-                        : "font-display text-[1.0625rem] font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:text-lg"
+                        ? "min-h-[4.75rem] font-display text-lg font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:min-h-[5.25rem] sm:text-xl lg:min-h-[5.75rem] lg:text-[1.35rem]"
+                        : "min-h-[3.25rem] font-display text-[1.0625rem] font-medium leading-snug tracking-[-0.02em] text-stone-900 transition group-hover:text-stone-800 sm:min-h-[3.5rem] sm:text-lg"
                     }
                   >
                     {item.title}
@@ -199,8 +199,8 @@ export function WorkSection({
                       <span
                         className={
                           slide
-                            ? "inline-flex rounded-full border border-amber-200/90 bg-amber-50/95 px-2.5 py-1 text-[10px] font-medium text-amber-950 sm:text-[11px]"
-                            : "inline-flex rounded-full border border-amber-200/90 bg-amber-50/95 px-2 py-0.5 text-[9px] font-medium text-amber-950 sm:px-2.5 sm:py-1 sm:text-[10px]"
+                            ? "inline-flex rounded-full border border-emerald-200/90 bg-emerald-50/95 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-emerald-900 sm:text-[11px]"
+                            : "inline-flex rounded-full border border-emerald-200/90 bg-emerald-50/95 px-2 py-0.5 text-[9px] font-semibold tracking-wide text-emerald-900 sm:px-2.5 sm:py-1 sm:text-[10px]"
                         }
                       >
                         {item.status}

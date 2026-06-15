@@ -25,10 +25,12 @@ export const portfolioCopy = {
       additionalTitle: "Additional Work",
       featured: [
         {
-          title: "Heat-aware Route Experience",
-          description: "Route decision-making under environmental constraints.",
-          keywords: ["GIS", "Route Analysis", "User Scenario", "Trade-off"],
+          title: "Local-life Planning Agent",
+          description:
+            "Goal-to-execution agent for local plans, POI matching, route assembly, and booking/order simulation.",
+          keywords: ["AI Agent", "POI Matching", "Route Planning", "Execution Flow"],
           completed: true,
+          href: "/work/local-life-planning-agent",
         },
         {
           title: "Robotaxi Rain-aware Pickup Recommendation",
@@ -195,10 +197,12 @@ export const portfolioCopy = {
       additionalTitle: "其他工作",
       featured: [
         {
-          title: "热感知路线体验",
-          description: "环境约束下的路线体验与决策分析。",
-          keywords: ["GIS", "路线分析", "用户场景", "权衡判断"],
+          title: "本地生活规划 Agent",
+          description:
+            "面向本地出行与消费的目标驱动 Agent，完成 POI 匹配、路线方案组合与订位/下单执行模拟。",
+          keywords: ["AI Agent", "POI 匹配", "路线规划", "执行流程"],
           completed: true,
+          href: "/work/local-life-planning-agent",
         },
         {
           title: "Robotaxi 雨天感知上车点推荐",

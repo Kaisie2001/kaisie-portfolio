@@ -3,14 +3,14 @@ import Link from "next/link";
 const projects = [
   {
     code: "P1",
-    name: "Heat-aware Route Experience",
+    name: "Local-life Planning Agent",
     capabilityEn:
-      "Mapped environmental stress into route experience decisions—synthesized spatial layers, rider comfort trade-offs, and product requirements for data-driven iteration on real-world networks.",
+      "Designed a goal-to-execution AI agent for local plans—parsed natural-language intent, matched POIs, assembled route-based itineraries, and simulated booking/order execution with fallback logic.",
     capabilityZh:
-      "将环境压力映射到路线体验决策，梳理空间图层与舒适度取舍，沉淀产品需求并支持真实网络上的数据驱动迭代。",
-    href: "/work/heat-aware-route-experience",
-    badge: null as string | null,
-    badgeZh: null as string | null,
+      "设计目标驱动的本地生活规划 Agent，将自然语言需求解析为可执行约束，完成 POI 匹配、路线方案组合，并模拟订位/下单与异常回退。",
+    href: "/work/local-life-planning-agent",
+    badge: "Completed · Prototype",
+    badgeZh: "已完成 · 原型",
   },
   {
     code: "P2",
