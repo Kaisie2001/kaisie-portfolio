@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LocalLifeInteractiveDemoPreviewSection } from "./LocalLifeInteractiveDemoPreviewSection";
 import { LocalLifePlanningCaseOverview } from "./LocalLifePlanningCaseOverview";
 import { LocalLifePlanningDetailSections } from "./LocalLifePlanningDetailSections";
 import { LocalLifePlanningPageHero } from "./LocalLifePlanningPageHero";
@@ -17,6 +18,8 @@ export default function LocalLifePlanningAgentPage() {
         <LocalLifePlanningPageHero />
 
         <LocalLifePlanningCaseOverview />
+
+        <LocalLifeInteractiveDemoPreviewSection />
 
         <LocalLifePlanningDetailSections />
 

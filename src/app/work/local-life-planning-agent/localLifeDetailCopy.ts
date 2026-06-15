@@ -10,6 +10,21 @@ export const LOCAL_LIFE_DEMO_TITLE: Record<Lang, string> = {
   zh: "Demo 流程",
 };
 
+export const LOCAL_LIFE_INTERACTIVE_DEMO_TITLE: Record<Lang, string> = {
+  en: "Interactive Demo Preview",
+  zh: "交互 Demo 预览",
+};
+
+export const LOCAL_LIFE_INTERACTIVE_DEMO_COPY: Record<Lang, string> = {
+  en: "Try the planning flow directly — enter a goal, review the generated route, and explore fallback plans. Open the full prototype for execution simulation.",
+  zh: "可直接体验规划流程：输入目标、查看生成路线并浏览备选方案。打开完整原型可体验执行模拟。",
+};
+
+export const LOCAL_LIFE_INTERACTIVE_DEMO_CTA: Record<Lang, string> = {
+  en: "Open full prototype",
+  zh: "打开完整原型",
+};
+
 export const LOCAL_LIFE_DEMO_STEPS: Record<Lang, DemoStep[]> = {
   en: [
     {
