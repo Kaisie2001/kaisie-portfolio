@@ -3,20 +3,20 @@ export type Lang = "en" | "zh";
 export const portfolioCopy = {
   en: {
     home: {
-      title: "Autonomous Mobility Product & AI-powered Operations",
-      subtitle: "Route · Mission · Fleet · Product Iteration",
+      title: "Designing intuitive experiences for intelligent products.",
+      subtitle: "Product Thinking × UX × Interaction Design",
       oneLiner:
-        "I turn real-world mobility scenarios into product opportunities through user journey analysis, spatial data, and AI-assisted workflows.",
+        "I bridge product thinking and interaction design to turn complex systems into intuitive, human-centered experiences — from early concepts to interactive prototypes.",
       capabilityTags: [
-        "Route Experience",
-        "Product Operations",
-        "Data-driven Iteration",
-        "AI Workflow Automation",
+        "Product Thinking",
+        "UX & Interaction",
+        "AI Experiences",
+        "Rapid Prototyping",
       ],
       focusLine:
-        "Focused on robotaxi, map/navigation, drone operations, and mobility platforms.",
+        "Exploring AI, mobility, digital products, and human-machine interaction.",
       splashMono:
-        "Autonomous mobility product · AI-powered operations",
+        "Product Thinking × UX × Interaction Design",
     },
     work: {
       featuredTitle: "Featured Work",
@@ -176,19 +176,19 @@ export const portfolioCopy = {
   },
   zh: {
     home: {
-      title: "智能移动产品策略与 AI 运营提效",
-      subtitle: "路线 · 任务 · 车队 · 产品迭代",
+      title: "为智能产品打造直观易用的体验。",
+      subtitle: "产品思维 × 用户体验 × 交互设计",
       oneLiner:
-        "我关注真实移动场景中的用户旅程、空间数据与运营反馈，并用 AI 工具支持产品优化与效率提升。",
+        "我将产品思维与交互设计结合，从早期概念到交互原型，把复杂系统转化为直观、以人为本的体验。",
       capabilityTags: [
-        "路线体验",
-        "产品运营",
-        "数据驱动迭代",
-        "AI 工作流自动化",
+        "产品思维",
+        "用户体验与交互",
+        "AI 体验",
+        "快速原型",
       ],
       focusLine:
-        "关注 Robotaxi、地图导航、无人机运营与出行平台。",
-      splashMono: "智能移动产品策略与 AI 运营提效",
+        "探索人工智能、出行、数字产品与人机交互。",
+      splashMono: "产品思维 × 用户体验 × 交互设计",
     },
     work: {
       featuredTitle: "精选作品",
