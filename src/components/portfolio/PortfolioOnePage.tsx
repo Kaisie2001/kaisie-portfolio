@@ -14,7 +14,6 @@ import { portfolioCopy } from "@/lib/portfolioCopy";
 export function PortfolioOnePage() {
   const { lang } = useLanguage();
   const c = portfolioCopy[lang].home;
-  const w = portfolioCopy[lang].work;
 
   const sections = useMemo(
     () => [
@@ -42,15 +41,7 @@ export function PortfolioOnePage() {
         id: "work" as const,
         label: lang === "en" ? "Work" : "作品",
         content: (
-          <WorkSection
-            lang={lang}
-            density="slide"
-            featuredTitle={w.featuredTitle}
-            featuredLead={w.slideIntro}
-            additionalTitle={w.additionalTitle}
-            featured={w.featured}
-            additional={w.additional}
-          />
+          <WorkSection lang={lang} />
         ),
       },
       {
@@ -59,7 +50,7 @@ export function PortfolioOnePage() {
         content: <AboutSection lang={lang} density="slide" />,
       },
     ],
-    [c, lang, w],
+    [c, lang],
   );
 
   return (

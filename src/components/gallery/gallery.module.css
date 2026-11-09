@@ -1,0 +1,174 @@
+.lab {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f7f6f3;
+  color: #242421;
+  padding: 30px clamp(24px, 5vw, 80px) 20px;
+}
+.header { position: relative; z-index: 1; flex-shrink: 0; }
+.eyebrow { font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .18em; color: #797971; }
+.headingRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-top: 9px; }
+.headingRow h1 { font-family: var(--font-newsreader), Georgia, serif; font-weight: 400; font-size: clamp(34px, 3.5vw, 54px); line-height: 1; letter-spacing: -.035em; }
+.period { color: #ed5c37; }
+.headingRow p { font-size: 11px; line-height: 1.6; color: #77776f; }
+/* Clipping belongs outside the 3D context, never on an intermediate 3D layer. */
+.viewport { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.scene { position: absolute; inset: 0; perspective: var(--gallery-perspective, 1350px); perspective-origin: 50% 48%; }
+.orbitLayer { position: absolute; width: 0; height: 0; left: 50%; top: 48%; transform: scale(var(--gallery-scale, .65)); transform-style: preserve-3d; }
+.orbitItem { position: absolute; width: 224px; height: 296px; left: -112px; top: -148px; transform: translate3d(var(--x), var(--y), var(--z)); transform-style: preserve-3d; }
+.focusTransform { width: 100%; height: 100%; transform: translate3d(0, 0, 0) scale(1); transform-style: preserve-3d; }
+.cardFlipLayer { width: 100%; height: 100%; transform: rotateZ(var(--roll)) rotateY(var(--yaw)); transform-style: preserve-3d; }
+.card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+/* Material effects live on leaf faces only: the shared 3D ancestors stay intact. */
+.face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; display: flex; flex-direction: column;
+  padding: 16px; border-radius: 3px; overflow: hidden;
+  color: var(--ink); border: 1px solid rgb(255 255 255 / .62);
+  background: linear-gradient(145deg, rgb(255 255 255 / .61), rgb(var(--tint) / .46) 52%, rgb(244 243 238 / .66));
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / .64), inset -1px -1px 0 rgb(var(--shade) / .09), 0 5px 16px rgb(43 48 43 / .045);
+}
+/* A self-contained haze and grain: no backdrop-filter required on a blank background. */
+.face::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: linear-gradient(120deg, rgb(255 255 255 / .25), transparent 45%, rgb(255 255 255 / .12)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23818279' opacity='.09' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E");
+}
+.front { transform: translateZ(.1px); }
+.cardMeta, .cardFoot { position: relative; z-index: 3; display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .07em; }
+.cardFoot { margin-top: auto; font-size: 9px; letter-spacing: .005em; }
+.art { flex: 1; position: relative; min-height: 0; margin: 13px -5px; }
+.art i { position: absolute; display: block; filter: blur(16px); }
+.fluidOne { width: 145px; height: 165px; left: 17px; top: 15px; background: radial-gradient(ellipse at 35% 30%, rgb(var(--shade) / .45), rgb(var(--shade) / .12) 65%, transparent 85%); border-radius: 64% 36% 43% 57% / 39% 43% 57% 61%; transform: rotate(-24deg); }
+.fluidTwo { width: 122px; height: 138px; right: -2px; top: 67px; background: radial-gradient(ellipse at 45% 50%, rgb(var(--accent) / .56), rgb(var(--accent) / .14) 62%, transparent 85%); border-radius: 37% 63% 61% 39% / 61% 38% 62% 39%; transform: rotate(24deg); }
+.fluidThree { width: 82px; height: 141px; left: 29px; top: 55px; background: rgb(255 255 255 / .66); border-radius: 70% 30% 60% 40%; transform: rotate(34deg); }
+.materialIndex { position: absolute; bottom: 4px; left: 7px; font-family: var(--font-newsreader), Georgia, serif; font-size: 44px; font-weight: 400; line-height: 1; letter-spacing: -.04em; color: var(--ink); }
+.signal { --tint: 220 190 181; --shade: 169 119 105; --accent: 230 204 171; --ink: #65514b; }
+.type { --tint: 197 209 191; --shade: 125 148 123; --accent: 214 218 181; --ink: #4e5a4c; }
+.terrain { --tint: 192 206 217; --shade: 119 143 165; --accent: 190 186 210; --ink: #4c5966; }
+.form { --tint: 218 208 193; --shade: 163 143 119; --accent: 221 198 183; --ink: #60564c; }
+.grid { --tint: 181 190 175; --shade: 105 120 98; --accent: 181 184 156; --ink: #4d5749; }
+.type .fluidOne { transform: rotate(31deg); top: 35px; left: -6px; }
+.type .fluidTwo { top: 25px; right: -9px; transform: rotate(-19deg); }
+.terrain .fluidOne { width: 175px; height: 116px; left: -5px; top: 30px; transform: rotate(-32deg); }
+.terrain .fluidTwo { top: 95px; right: -18px; transform: rotate(-17deg); }
+.form .fluidOne { width: 102px; height: 185px; left: 18px; top: 5px; transform: rotate(32deg); }
+.form .fluidTwo { width: 96px; height: 144px; top: 52px; right: 0; }
+.grid .fluidOne { width: 162px; height: 151px; top: 32px; left: 1px; transform: rotate(42deg); }
+.grid .fluidTwo { width: 97px; height: 111px; top: 6px; right: -11px; }
+.back { transform: rotateY(180deg) translateZ(.1px); background: linear-gradient(155deg, rgb(255 255 255 / .7), rgb(var(--tint) / .61)); }
+.back::after { content: ''; position: absolute; inset: 34px 15px; background: radial-gradient(ellipse at 65% 40%, rgb(var(--shade) / .18), transparent 67%); pointer-events: none; }
+.backLabel, .backFoot { position: relative; z-index: 3; font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .1em; }
+.backNumber { position: relative; z-index: 3; font-family: Georgia, serif; font-size: 108px; line-height: 1.9; letter-spacing: -.08em; }
+.backMark { position: absolute; right: 20px; bottom: 42px; font-size: 24px; font-weight: 200; }
+.backFoot { margin-top: auto; }
+.legend { display: flex; justify-content: space-between; gap: 14px; flex-shrink: 0; border-top: 1px solid #dfdfd6; padding-top: 13px; font-family: var(--font-geist-mono), monospace; color: #7a7a72; font-size: 8px; letter-spacing: .09em; }
+.legend span:first-child { display: flex; align-items: center; gap: 7px; }
+.legend i { width: 5px; height: 5px; border-radius: 50%; background: #ed5c37; }
+.legend b { font-weight: 400; margin: 0 8px; color: #b2b2a7; }
+
+@media (max-height: 760px) and (min-width: 901px) { .lab { padding-top: 19px; padding-bottom: 12px; } .headingRow h1 { font-size: 38px; }  }
+@media (max-width: 900px) {  .headingRow p { font-size: 10px; } }
+@media (max-width: 600px) { .lab { padding: 20px 14px 16px; } .headingRow { align-items: flex-start; flex-direction: column; gap: 9px; } .headingRow h1 { font-size: 36px; } .headingRow p { font-size: 10px; }  .legend { font-size: 7px; flex-wrap: wrap; } .legend span:last-child { display: none; } }
+
+/* Phase 3 debug UI is outside the preserve-3d tree. */
+.motionControls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 8px 0 14px; flex-shrink: 0; }
+.motionControls button { font-family: var(--font-geist-mono), monospace; font-size: 9px; color: #696b61; padding: 5px 10px; border: 1px solid #d8dad0; border-radius: 20px; background: transparent; cursor: pointer; }
+.motionControls button[aria-pressed="true"] { background: #e4e7dd; color: #41463c; border-color: #bac2b0; }
+.motionControls button:focus-visible { outline: 2px solid #6d7a63; outline-offset: 3px; }
+.motionControls button:disabled { cursor: default; color: #888c80; }
+.motionControls span { font-size: 10px; color: #696b61; }
+
+/* Gesture ownership is local: vertical scroll and pinch zoom stay native. */
+.viewport { touch-action: pan-y pinch-zoom; cursor: default; user-select: none; -webkit-user-select: none; }
+.orbitItem[data-hovered="true"] .front { border-color: rgb(255 255 255 / .95); box-shadow: inset 1px 1px 0 rgb(255 255 255 / .85), inset -1px -1px 0 rgb(var(--shade) / .12), 0 5px 16px rgb(43 48 43 / .06); }
+.dragHint { flex-shrink: 0; text-align: center; font-family: var(--font-geist-mono), monospace; font-size: 9px; color: #7a7d72; padding-top: 4px; }
+/* Auto ambient focus: atmosphere behind the scene; nonselected leaf faces
+   carry the fog treatment, so preserve-3d ancestors never flatten. */
+.lab { position: relative; isolation: isolate; }
+.focusBackdrop, .ambientVeil { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .42s ease; }
+.focusBackdrop { z-index: -1; background: radial-gradient(ellipse at 48% 47%, #f9f9f5 0%, #e9ece5 75%); }
+.ambientVeil { z-index: -1; background: radial-gradient(ellipse at 49% 45%, transparent 15%, #fffdf7bb 80%); }
+.lab[data-ambient-theme] .focusBackdrop, .lab[data-ambient-theme] .ambientVeil { opacity: 1; }
+.lab[data-ambient-theme="dark"] .focusBackdrop { background: radial-gradient(ellipse at 48% 44%, #303835 0%, #131917 75%); }
+.lab[data-ambient-theme="dark"] .ambientVeil { background: radial-gradient(ellipse at 48% 44%, transparent 13%, #0a100edb 88%); }
+.lab[data-ambient-theme] { background: transparent; }
+.lab[data-ambient-theme="dark"] { color: #e4e8df; }
+.lab[data-ambient-theme="dark"] .eyebrow, .lab[data-ambient-theme="dark"] .headingRow p, .lab[data-ambient-theme="dark"] .dragHint, .lab[data-ambient-theme="dark"] .legend { color: #a4afa5; }
+.face { transition: opacity .42s ease, filter .42s ease; }
+/* Opaque mist on each nonselected face suppresses its pigment and typography. */
+.face::after { content: ''; position: absolute; inset: 0; z-index: 5; pointer-events: none; background: #f7f8f2; opacity: 0; transition: opacity .42s ease, background-color .42s ease; }
+.orbitItem[data-ambient-state="subdued"] .face { opacity: .22; filter: blur(5px) saturate(.18) contrast(.55); }
+.orbitItem[data-ambient-state="subdued"] .face::after { opacity: .94; }
+.lab[data-ambient-theme="dark"] .orbitItem[data-ambient-state="subdued"] .face { opacity: .18; filter: blur(6px) saturate(.12) brightness(.35); }
+.lab[data-ambient-theme="dark"] .orbitItem[data-ambient-state="subdued"] .face::after { background: #141b17; opacity: .94; }
+.orbitItem[data-ambient-state="selected"] .face { opacity: 1; filter: none; }
+.orbitItem[data-ambient-state="selected"] .face::after { opacity: 0; }
+/* The interactive viewport always remains enabled, including during focus. */
+.projectPreview { position: absolute; z-index: 3; pointer-events: none; right: clamp(24px, 4vw, 64px); top: 40%; width: clamp(205px, 21vw, 300px); color: #636b60; opacity: 0; transform: translateY(7px); transition: opacity .38s ease, transform .38s ease; }
+.projectPreview[data-active="true"] { opacity: 1; transform: translateY(0); }
+.projectPreview h2 { font-family: var(--font-geist-sans), 'PingFang SC', sans-serif; font-size: clamp(23px, 2.5vw, 35px); font-weight: 400; line-height: 1.3; letter-spacing: -.045em; margin-bottom: 14px; white-space: nowrap; }
+.projectPreview p { font-family: var(--font-geist-sans), sans-serif; font-size: clamp(10px, .95vw, 12px); font-weight: 400; line-height: 1.9; letter-spacing: .005em; }
+.lab[data-ambient-theme="dark"] .projectPreview { color: #cbd5c7; }
+.viewport:focus-visible { outline: 1px solid #98a18e; outline-offset: -2px; }
+@media (max-width: 1100px) { .projectPreview { top: auto; bottom: 105px; right: 24px; width: 230px; } .projectPreview h2 { font-size: 24px; margin-bottom: 8px; } }
+@media (max-width: 600px) { .projectPreview { right: 20px; bottom: 116px; width: calc(100% - 40px); text-align: center; } .projectPreview h2 { font-size: 23px; } }
+@media (prefers-reduced-motion: reduce) { .focusBackdrop, .ambientVeil, .face, .face::after, .projectPreview { transition: none; } }
+
+/* Opt-in development telemetry sits outside the CSS 3D tree. Closing the
+   disclosure restores the unadorned experiment; never shipped on official pages. */
+.motionDebug { position: absolute; z-index: 8; left: clamp(24px, 5vw, 80px); bottom: 92px; max-width: min(340px, 85vw); font: 9px/1.65 var(--font-geist-mono), monospace; color: #626b60; }
+.motionDebug summary { cursor: pointer; padding: 4px 8px; }
+.motionDebug[open] { padding: 8px; background: #f7f6f3ed; border: 1px solid #d9ded5; border-radius: 4px; }
+.motionDebug output { display: block; white-space: pre-wrap; }
+
+/* Portfolio composition: no experiment chrome; framing uses the actual stage. */
+.workRoot { width: 100%; flex: 1; min-width: 0; padding: 16px 0 8px; }
+.workHeader { position: relative; z-index: 1; flex-shrink: 0; padding: 0 clamp(12px, 3vw, 40px); }
+.workHeader h2 { font-family: var(--font-newsreader), Georgia, serif; font-size: clamp(28px, 3vw, 43px); font-weight: 400; line-height: 1.1; letter-spacing: -.035em; }
+.workSpatial { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.workSpatial .viewport { min-height: 0; }
+.workSpatial .dragHint { padding: 5px 16px 0; line-height: 1.5; }
+.workPreview { top: 36%; bottom: auto; right: 12px; width: clamp(190px, 20vw, 275px); }
+.workPreview h3 { font-family: var(--font-newsreader), Georgia, 'PingFang SC', serif; font-size: clamp(21px, 2.25vw, 31px); font-weight: 400; line-height: 1.18; letter-spacing: -.025em; margin-bottom: 14px; overflow-wrap: anywhere; }
+.workPreview p { line-height: 1.65; text-wrap: pretty; }
+.workPreview[data-active="true"] { pointer-events: none; }
+.projectLink { display: inline-block; margin-top: 16px; font-size: 12px; line-height: 1.5; text-decoration: underline; text-underline-offset: 5px; padding: 8px 0; }
+.projectLink:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+/* Accessible alternative is also revealed when keyboard users tab to a link. */
+.workList { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.workListItem { min-width: 0; }
+.workListItem h3 { font-family: var(--font-newsreader), Georgia, serif; font-weight: 400; font-size: 23px; line-height: 1.2; margin: 14px 0 8px; overflow-wrap: anywhere; }
+.workListItem p { font-size: 12px; line-height: 1.65; color: #62685f; }
+.listMaterial { width: 168px; height: 222px; position: relative; }
+.workRoot:has(.workList:focus-within) .workSpatial { display: none; }
+.workList:focus-within { position: relative; clip-path: none; width: 100%; height: auto; flex: 1; min-height: 0; display: flex; gap: 24px; overflow-x: auto; overflow-y: hidden; padding: 16px 24px; scroll-snap-type: x mandatory; touch-action: pan-x; }
+.workList:focus-within .workListItem { flex: 0 0 min(300px, 85%); scroll-snap-align: center; }
+@media (max-width: 760px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .workSpatial { display: none; }
+  .workRoot { padding-top: 10px; }
+  .workList { position: relative; clip-path: none; width: 100%; height: auto; flex: 1; min-height: 0; display: flex; gap: 24px; overflow-x: auto; overflow-y: hidden; padding: 16px 16px 10px; scroll-snap-type: x mandatory; touch-action: pan-x; align-items: flex-start; }
+  .workListItem { flex: 0 0 min(300px, 85%); scroll-snap-align: center; }
+  .listMaterial { height: clamp(100px, 25dvh, 222px); width: auto; aspect-ratio: 3 / 4; }
+  .workListItem h3 { font-size: 21px; margin: 10px 0 6px; }
+  .workListItem p { font-size: 11px; }
+  .workList .projectLink { margin-top: 8px; }
+}
+@media (max-height: 650px) {
+  .workListItem h3 { font-size: 18px; }
+  .workList:focus-within .listMaterial { height: 110px; width: 83px; }
+}
+
+/* Native links share the exact same preserve-3d surface as static cards. */
+.cardLink { display: block; color: inherit; text-decoration: none; cursor: pointer; -webkit-user-drag: none; }
+.cardLink .face { cursor: pointer; }
+.cardLink:focus-visible { outline: 2px solid #797f70; outline-offset: 5px; }
+/* Empty 3D wrapper planes must not intercept a visible face behind them.
+   Hit testing belongs to the two leaf faces; their events bubble to the link. */
+.workSpatial .orbitItem,
+.workSpatial .focusTransform,
+.workSpatial .cardFlipLayer,
+.workSpatial .card { pointer-events: none; }
+.workSpatial .face { pointer-events: auto; }

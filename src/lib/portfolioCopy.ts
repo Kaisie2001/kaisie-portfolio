@@ -19,6 +19,19 @@ export const portfolioCopy = {
         "Product Thinking × UX × Interaction Design",
     },
     work: {
+      gallery: {
+        hint: "Hover edges to explore · Move near a central card to select",
+        accessibleLabel: "Selected projects. Left and right arrows browse; Escape exits focus.",
+        viewProject: "View Project", cardFront: "PROJECT", cardBack: "SELECTED WORK",
+        listLabel: "Browse all projects", status: "Project overview",
+        captions: [
+          { descriptor: "AI agent · Product & interaction", note: "From everyday intentions to actionable plans." },
+          { descriptor: "Mobility · UX prototype", note: "A more considered pickup, even in the rain." },
+          { descriptor: "Operations · Workflow design", note: "Bringing clarity to complex missions." },
+          { descriptor: "Circular commerce · AI & trust", note: "A second life for outdoor equipment." },
+          { descriptor: "Circular interiors · Material passport", note: "Making a material’s next chapter visible." },
+        ],
+      },
       featuredTitle: "Featured Work",
       slideIntro:
         "Case studies across mapping, autonomous mobility, and operations — composed as a single editorial spread.",
@@ -191,6 +204,19 @@ export const portfolioCopy = {
       splashMono: "产品思维 × 用户体验 × 交互设计",
     },
     work: {
+      gallery: {
+        hint: "停留两侧浏览 · 移近中央卡片即可选中",
+        accessibleLabel: "精选作品。左右方向键浏览，Escape 退出聚焦。",
+        viewProject: "查看项目", cardFront: "作品", cardBack: "精选作品",
+        listLabel: "浏览全部作品", status: "项目概览",
+        captions: [
+          { descriptor: "AI Agent · 产品与交互", note: "让日常出行意图成为可执行的计划。" },
+          { descriptor: "智能出行 · 体验原型", note: "在雨天，也能找到更从容的上车点。" },
+          { descriptor: "运营协同 · 流程设计", note: "让复杂任务拥有清晰的行动路径。" },
+          { descriptor: "循环消费 · AI 与信任", note: "让户外装备开启下一段旅程。" },
+          { descriptor: "循环空间 · 材料护照", note: "让材料的下一种可能被看见。" },
+        ],
+      },
       featuredTitle: "精选作品",
       slideIntro:
         "围绕地图与路线、自动驾驶出行与运营流程的案例整理，以一整面编辑式版式呈现。",
