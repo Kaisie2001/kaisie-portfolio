@@ -140,3 +140,15 @@ body::before {
   }
 }
 
+
+/* Cassy Phase 6 unified dark homepage — legacy project routes stay unchanged. */
+html:has(#cassy-unified-experience),
+body:has(#cassy-unified-experience) {
+  --background: #050505;
+  --foreground: #f5f3ef;
+  background-color: #050505 !important;
+  color-scheme: dark;
+}
+body:has(#cassy-unified-experience)::before { opacity: 0; }
+body:has(#cassy-unified-experience) > header,
+body:has(#cassy-unified-experience) > footer { display: none !important; }

@@ -1,0 +1,10 @@
+.source { opacity: 1; }
+.layer { display: none; position: absolute; inset: 0; pointer-events: none; font: inherit; letter-spacing: inherit; color: inherit; }
+.slot { position: absolute; top: 0; display: block; font: inherit; letter-spacing: inherit; color: inherit; }
+.ink { display: inline-block; font: inherit; letter-spacing: inherit; color: inherit; transform-origin: 50% 55%; transform: var(--kinetic-transform, none); }
+:global([data-kinetic-ready=true]) > .source { opacity: 0; }
+:global([data-kinetic-ready=true]) > .layer { display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .source { opacity: 1 !important; }
+  .layer { display: none !important; }
+}

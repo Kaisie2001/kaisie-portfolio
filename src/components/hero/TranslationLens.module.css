@@ -1,0 +1,28 @@
+@property --lens-reveal { syntax: '<number>'; inherits: true; initial-value: 0; }
+.root {
+  position: relative; isolation: isolate; --lens-x: 92px; --lens-y: 92px;
+  --lens-diameter: 184px; --lens-reveal: 0;
+  --lens-radius: calc(var(--lens-diameter) / 2 * var(--lens-reveal));
+}
+.root[data-lens-open=true] { --lens-reveal: 1; }
+.english {
+  display: block; position: relative; z-index: 2;
+  mask-image: radial-gradient(circle at var(--lens-x) var(--lens-y), transparent max(0px, calc(var(--lens-radius) - .5px)), #000 var(--lens-radius));
+  -webkit-mask-image: radial-gradient(circle at var(--lens-x) var(--lens-y), transparent max(0px, calc(var(--lens-radius) - .5px)), #000 var(--lens-radius));
+}
+/* Locally scoped for Next's CSS Modules purity check; same row geometry. */
+.english > span { position: relative; }
+.chinese {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  clip-path: circle(var(--lens-radius) at var(--lens-x) var(--lens-y));
+}
+.chineseLine {
+  display: block; position: absolute; left: 0; width: max-content; margin: 0;
+  white-space: nowrap; font-family: MiSans, sans-serif; font-weight: 700;
+  font-size: .5em; letter-spacing: .015em; color: #f5f3ef;
+}
+.red { color: #f23838; }
+.focusControls { position: absolute; inset: 0; pointer-events: none; }
+.focusControl { position: absolute; left: 0; width: 100%; height: 25%; opacity: 0; pointer-events: none; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media(prefers-reduced-motion:reduce) { .root { transition: none; } }

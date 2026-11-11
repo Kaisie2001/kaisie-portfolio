@@ -1,0 +1,10 @@
+.experience { position: fixed; inset: 0; z-index: 90; overflow: hidden; isolation: isolate; background: #050505; color: #f5f3ef; font-family: MiSans, Arial, sans-serif; }
+.panel { position: absolute; inset: 0; display: flex; flex-direction: column; background: #050505; opacity: 0; transform: translateY(24px); visibility: hidden; pointer-events: none; transition: opacity 780ms cubic-bezier(.22,1,.36,1), transform 780ms cubic-bezier(.22,1,.36,1), visibility 0s 780ms; }
+.panel[data-screen=hero] { transform: translateY(-20px); }
+.panel[data-active=true] { opacity: 1; transform: translateY(0); visibility: visible; pointer-events: auto; transition-delay: 0s; }
+.experience[data-transitioning=true] .panel { pointer-events: none; }
+.panel > section { overscroll-behavior: contain; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+:global(html):has(.experience), :global(body):has(.experience) { background: #050505 !important; color-scheme: dark; }
+:global(body):has(.experience) > :global(header), :global(body):has(.experience) > :global(footer) { display: none; }
+@media(prefers-reduced-motion:reduce) { .panel { transition-duration: 180ms, 180ms, 0s; transition-delay: 0s, 0s, 180ms; transform: none; } .panel[data-active=true] { transition-delay: 0s; } }

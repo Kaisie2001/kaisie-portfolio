@@ -1,0 +1,7 @@
+.canvas {
+  position: absolute;
+  left: -1%; top: -10%; width: 102%; height: 115%;
+  z-index: -2; pointer-events: none;
+  mask-image: radial-gradient(ellipse 54% 51% at 51% 49%, #000 42%, #000c 70%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 54% 51% at 51% 49%, #000 42%, #000c 70%, transparent 100%);
+}

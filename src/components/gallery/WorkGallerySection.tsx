@@ -7,6 +7,7 @@ import { GalleryStage } from './GalleryStage';
 import { ProjectCard } from './ProjectCard';
 import { workGalleryProjects } from './workGalleryProjects';
 import styles from './gallery.module.css';
+import type { GalleryFixture } from './galleryFixtures';
 
 const fallbackQuery='(max-width: 760px), (pointer: coarse), (prefers-reduced-motion: reduce)';
 const subscribe=(notify:()=>void)=>{
@@ -17,20 +18,20 @@ const readFallback=()=>window.matchMedia(fallbackQuery).matches;
 const serverFallback=()=>true;
 
 /** Portfolio shell only: the lab's controller, framing and perspective tree are reused. */
-export function WorkGallerySection({lang}:{lang:Lang}) {
+export function WorkGallerySection({lang, active=true, dark=false, projects: suppliedProjects, heading}:{lang:Lang; active?:boolean; dark?:boolean; projects?:readonly GalleryFixture[]; heading?:string}) {
   const root=useRef<HTMLElement>(null);
   const [ambientIndex,setAmbientIndex]=useState<number|null>(null);
   const fallback=useSyncExternalStore(subscribe,readFallback,serverFallback);
   const onAmbientChange=useCallback((index:number|null)=>setAmbientIndex(index),[]);
-  const work=portfolioCopy[lang].work,c=work.gallery,projects=workGalleryProjects(lang);
+  const work=portfolioCopy[lang].work,c=work.gallery,projects=suppliedProjects??workGalleryProjects(lang);
   const selected=ambientIndex===null?null:projects[ambientIndex];
-  useGalleryMotion(root,{orbitEnabled:true,flipEnabled:true,paused:fallback,reducedMotion:fallback,
+  useGalleryMotion(root,{orbitEnabled:true,flipEnabled:true,paused:fallback||!active,reducedMotion:fallback,
     debugEnabled:false,onAmbientChange});
-  return <section ref={root} id="work" className={`${styles.lab} ${styles.workRoot}`}
+  return <section ref={root} id="work" className={`${styles.lab} ${styles.workRoot} ${dark?styles.darkGallery:''}`} data-dark-gallery={dark||undefined} data-gallery-active={active}
     data-ambient-theme={fallback?undefined:selected?.theme} aria-labelledby="work-gallery-title">
     <div className={styles.focusBackdrop} aria-hidden="true" />
     <div className={styles.ambientVeil} aria-hidden="true" />
-    <header className={styles.workHeader}><h2 id="work-gallery-title">{work.featuredTitle}</h2></header>
+    <header className={styles.workHeader}><h2 id="work-gallery-title">{heading??work.featuredTitle}</h2></header>
     <div className={styles.workSpatial}>
       <GalleryStage projects={projects} ambientIndex={ambientIndex} label={c.accessibleLabel}
         hintId="work-gallery-hint" linkCards cardLabels={{front:c.cardFront,back:c.cardBack}}>

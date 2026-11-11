@@ -1,0 +1,63 @@
+.root {
+  position: relative; display: block; width: 100%; height: 100%;
+  padding: 0; margin: 0; border: 0; border-radius: 0; appearance: none;
+  background: transparent; color: inherit; font: inherit; text-align: inherit;
+  cursor: pointer; outline: none; isolation: isolate; -webkit-tap-highlight-color: transparent;
+}
+.surface { position: absolute; inset: 0; display: block; transform: scale(1); transition: transform 400ms ease; }
+.halo {
+  position: absolute; inset: -12% -2% 2%; z-index: -1; pointer-events: none;
+  display: block; opacity: .08; transform: scale(.94);
+  background: radial-gradient(ellipse at 51% 43%, #77777775 0%, #41414155 24%, #1a1a1a33 43%, transparent 68%);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+@media(hover:hover) {
+  .root:hover .surface { transform: scale(1.02); transition-duration: 300ms; }
+  .root:hover .halo { opacity: .5; transform: scale(1.02); transition-duration: 300ms; }
+  .root:hover .outerGlow { opacity: .22; transition-duration: 300ms; }
+  .root:hover .innerGlow { opacity: .6; transition-duration: 300ms; }
+  .root:hover .original { filter: brightness(1.06); transition-duration: 300ms; }
+}
+.outerGlow, .innerGlow { opacity: 0; transition: opacity 400ms ease; pointer-events: none; }
+.outerGlow .stroke { stroke-width: 30; }
+.innerGlow .stroke { stroke-width: 17; }
+.original { filter: brightness(1); transition: filter 400ms ease; }
+.root:focus-visible .outerGlow { opacity: .22; transition-duration: 300ms; }
+.root:focus-visible .innerGlow { opacity: .6; transition-duration: 300ms; }
+.root:focus-visible .original { filter: brightness(1.06); }
+.root:focus-visible .surface { transform: scale(1.02); }
+.root:focus-visible .halo { opacity: .55; transform: scale(1.02); }
+.root[data-state=EXPANDING] .halo, .root[data-state=REVEALED] .halo { opacity: .88; transform: scale(1.06); transition-duration: 950ms; }
+.root[data-state=COLLAPSING] .halo { opacity: .16; transform: scale(.96); transition-duration: 850ms; }
+.root[data-photo-error=true] { cursor: default; }
+.inkLayer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 1; transform: scale(1); filter: blur(0); pointer-events: none; }
+.drawing { display: block; width: 260px; max-width: 70%; height: auto; overflow: visible; }
+.stroke {
+  fill: none; stroke: #F2F0EC; stroke-width: 8.5;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1000 1000; stroke-dashoffset: 1000;
+  animation: ink-outline 4.3s linear infinite;
+  transition: stroke 300ms ease;
+}
+.detail { animation-name: ink-detail; }
+.root[data-ink-running=false] .stroke { animation: none; }
+.root[data-paused=true] .stroke { animation-play-state: paused; }
+.photoLayer {
+  position: absolute; inset: 0; display: block; opacity: 0; transform: scale(.86); filter: blur(8px);
+  clip-path: ellipse(19% 24% at 50% 44%); pointer-events: none;
+}
+.photo {
+  display: block; width: 100%; height: 100%; object-fit: contain; object-position: center;
+  -webkit-mask-image: url('/images/hero/portrait-mask.svg'); mask-image: url('/images/hero/portrait-mask.svg');
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+/* Phase 1 geometry and timing are preserved; expansion freezes the current dash phase. */
+@keyframes ink-outline { 0% { stroke-dashoffset: 1000; } 59.3%, 74.4% { stroke-dashoffset: 0; } 96.5%, 100% { stroke-dashoffset: -1000; } }
+@keyframes ink-detail { 0%, 38% { stroke-dashoffset: 1000; } 59.3%, 74.4% { stroke-dashoffset: 0; } 96.5%, 100% { stroke-dashoffset: -1000; } }
+@media(max-width:700px) { .drawing { width: 200px; max-width: 80%; } }
+@media(prefers-reduced-motion:reduce) {
+  .stroke { animation: none; stroke-dashoffset: 0; transition: none; }
+  .surface, .halo, .outerGlow, .innerGlow, .original { transition: none !important; }
+  .root:hover .surface, .root:focus-visible .surface { transform: none; }
+}

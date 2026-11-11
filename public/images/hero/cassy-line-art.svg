@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="263.0 145.0 721.0 971.0" role="img" aria-labelledby="title description">
+  <title id="title">Cassy — short bob, continuous side-profile line art</title>
+  <desc id="description">Based only on the supplied side-profile drawing. No hat, eyes, fill, filters or embedded image. One continuous outer contour and three auxiliary curves. Draw in ascending data-draw-order; each path has normalized length 1000.</desc>
+  <g fill="none" stroke="#F2F0EC" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Start at the crown. Follow the front profile, neck, shoulder and flowing loop;
+         return via the short nape and rear bob contour. No invisible connecting strokes. -->
+    <path id="main-outline" data-draw-order="1" pathLength="1000" d="
+      M 569 220
+      C 588 204 611 193 637 193
+      C 689 187 751 219 796 265
+      C 829 299 850 345 849 387
+      C 849 424 831 454 798 472
+      C 792 475 788 478 788 486
+      C 788 502 804 516 812 526
+      C 821 540 799 545 783 554
+      C 776 559 782 570 775 576
+      C 767 580 770 587 769 592
+      C 768 598 756 597 753 603
+      C 750 619 745 635 730 641
+      C 709 652 671 641 634 631
+      C 625 649 621 669 626 685
+      C 632 713 660 730 691 739
+      C 729 751 779 750 820 757
+      C 861 764 896 782 921 815
+      C 946 849 943 883 918 912
+      C 900 934 875 947 852 954
+      C 811 963 765 967 732 972
+      C 689 979 646 993 624 1018
+      C 612 1031 617 1047 634 1060
+      C 660 1075 705 1067 733 1059
+      C 784 1044 824 1011 845 977
+      C 862 950 858 924 844 906
+      C 823 880 787 876 753 881
+      C 700 887 635 917 577 939
+      C 527 958 487 971 446 966
+      C 402 962 360 938 338 910
+      C 310 877 303 840 315 811
+      C 330 773 354 749 394 731
+      C 414 722 444 717 457 711
+      C 489 698 511 665 512 628
+      C 502 628 489 615 481 599
+      C 455 611 425 603 403 579
+      C 420 581 437 573 445 562
+      C 449 554 433 540 427 520
+      C 410 501 395 466 390 443
+      C 384 419 393 382 408 354
+      C 435 293 474 249 524 232
+      C 546 228 556 231 569 220"/>
+    <!-- Ear and the inside of the jaw end at the existing neck junction. -->
+    <path id="ear-jaw" data-draw-order="2" pathLength="1000" d="
+      M 549 569
+      C 530 547 518 524 521 498
+      C 523 470 546 435 573 434
+      C 593 432 607 451 607 466
+      C 610 488 598 505 578 504
+      C 562 502 554 516 553 531
+      C 552 545 555 557 558 565
+      C 574 590 604 617 634 631"/>
+    <!-- Two restrained fringe curves, with no added eye or other facial features. -->
+    <path id="fringe-outer" data-draw-order="3" pathLength="1000" d="
+      M 727 316
+      C 751 335 778 370 792 402
+      C 804 429 800 450 791 472"/>
+    <path id="fringe-inner" data-draw-order="4" pathLength="1000" d="
+      M 757 352
+      C 765 381 757 413 739 439
+      C 718 469 680 484 646 482"/>
+  </g>
+</svg>
