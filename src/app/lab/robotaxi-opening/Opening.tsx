@@ -222,16 +222,16 @@ export default function Opening({condensationOnly=false,flowOnly=false,initialMa
     manualWipe.current((event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height);
   };
   return <div ref={scrollHost} className={styles.portalScroll} onScroll={event=>setSceneActive(event.currentTarget.scrollTop<innerHeight*.85)}>
-  <section ref={host} className={`${styles.window} ${styles.openingStage}`} onPointerDown={event=>{exit.onPointerDown(event);wipePointer(event);}} onPointerMove={event=>{exit.onPointerMove(event);wipePointer(event);}} onClick={exit.onBackgroundClick} onPointerLeave={()=>manualWipe.current(0,0,true)} onPointerCancel={()=>{exit.onPointerCancel();manualWipe.current(0,0,true);}} aria-label="Rain-aware Robotaxi project opening" data-opening-stage data-exit-state={exit.state} data-ready={ready}>
+  <section ref={host} className={`${styles.window} ${styles.openingStage}`} onPointerDown={event=>{exit.onPointerDown(event);wipePointer(event);}} onPointerMove={event=>{exit.onPointerMove(event);wipePointer(event);}} onClick={exit.onBackgroundClick} onPointerLeave={()=>manualWipe.current(0,0,true)} onPointerCancel={()=>{exit.onPointerCancel();manualWipe.current(0,0,true);}} aria-label="Robotaxi adaptive mobility experience design opening" data-opening-stage data-exit-state={exit.state} data-ready={ready}>
     <link rel="stylesheet" href="/fonts/hero/misans.css" precedence="default" />
     <div className={styles.street} />
     {!condensationOnly&&!flowOnly&&<div className={styles.depth} aria-hidden="true" />}
     <div className={styles.shade} aria-hidden="true" />
     {!condensationOnly&&!flowOnly&&<div className={styles.copy} data-opening-copy>
-      <p className={styles.label}>CASE STUDY <span>/</span> ROBOTAXI</p>
-      <h1>WHERE SHOULD<br/>I WAIT?</h1>
-      <p className={styles.subtitle}>Rain-aware Robotaxi Pickup</p>
-      <p className={styles.intro}>Helping passengers make clearer pickup<br className={styles.desktopBreak}/> decisions in the rain.</p>
+      <p className={styles.label}>ROBOTAXI · EXPERIENCE DESIGN</p>
+      <h1><span>Can autonomous mobility</span><span>be truly adaptive?</span></h1>
+      <p className={styles.subtitle} lang="zh-CN">当驾驶实现自动化，出行服务还能否灵活回应人的情境化需求？</p>
+      <p className={styles.intro}>Exploring the tension between standardized autonomous operations and human needs through a rainy-day pickup experience.</p>
     </div>}
     <canvas ref={canvas} className={styles.glass} aria-hidden="true" />
     <canvas ref={opticalGate} className={styles.opticalGate} aria-hidden="true"/>
