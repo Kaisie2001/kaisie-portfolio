@@ -32,10 +32,7 @@ export function UnifiedExperience() {
   const [current, setCurrent] = useState<0 | 1>(0), [switching, setSwitching] = useState(false);
   const [galleryMounted, setGalleryMounted] = useState(false), [lang, setLang] = useState<Lang>('en');
   const onLanguageChange = useCallback((next: Lang) => { setLang(next); setSiteLang(next); }, [setSiteLang]);
-  const projects = useMemo(() => workGalleryProjects(lang).map(project => project.id === 'terrain'
-    // This route exists in the current project. RePeak/TraceWall have no detail
-    // pages, so their original non-link cards remain honest, visible previews.
-    ? { ...project, preview: { ...project.preview, href: '/work/drone-mission-planning-workflow' } } : project), [lang]);
+  const projects = useMemo(() => workGalleryProjects(lang), [lang]);
 
   const scheduleCompletion = useCallback(() => {
     const transition = pending.current;

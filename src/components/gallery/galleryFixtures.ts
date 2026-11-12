@@ -1,6 +1,9 @@
+import type { GalleryRelease } from './projectAvailability';
+
 /** Static fixtures only. Position, focus and local rotation have separate owners. */
 export type GalleryFixture = {
   id: string;
+  release?: GalleryRelease;
   number: string;
   name: string;
   kind: 'signal' | 'type' | 'terrain' | 'form' | 'grid';

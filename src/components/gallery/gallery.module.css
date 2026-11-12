@@ -219,3 +219,25 @@
   .darkGallery .workListItem h3 { font-size: 21px; }
 }
 @media (max-width: 700px) { .darkGallery { padding: 24px 24px 30px; } }
+
+/* Release variants live on leaf faces; never flatten Orbit's 3D wrappers. */
+.rainGlass,.rainScene,.rainReflection { position:absolute;inset:0;pointer-events:none; }
+.rainGlass { overflow:hidden;border-radius:inherit;background:#080e12; }
+.rainScene { background:linear-gradient(180deg,rgba(6,12,17,.32),rgba(5,10,15,.09) 52%,rgba(3,7,11,.6)),url('/robotaxi-opening/street.png') 72% center/cover;filter:saturate(.55) brightness(.68);transition:filter .5s ease; }
+.rainGlass canvas { position:absolute;inset:0;width:100%;height:100%;opacity:.83; }
+.rainReflection { background:radial-gradient(ellipse at var(--glass-x,25%) var(--glass-y,15%),rgba(200,223,233,.12),transparent 55%),linear-gradient(112deg,rgba(215,235,246,.08),transparent 34%,rgba(173,202,215,.025) 69%,transparent);transition:opacity .4s; }
+.card[data-card-type='featured'] .face { --ink:#e6edf0;border-color:rgba(190,217,230,.29);background:rgba(8,17,23,.45);box-shadow:inset 1px 1px rgba(222,239,248,.25),inset -1px -1px rgba(94,125,145,.16); }
+.card[data-card-type='featured'] .front::before { opacity:.18; }
+.card[data-card-type='featured'] .cardMeta,.card[data-card-type='featured'] .cardFoot { color:#e4e9eb;text-shadow:0 1px 6px rgba(0,0,0,.7); }
+.card[data-card-type='featured'] .back { background:linear-gradient(150deg,rgba(4,13,20,.62),rgba(6,14,20,.5)),url('/robotaxi-opening/street.png') 72% center/cover;color:#e4e9eb; }
+.orbitItem[data-hovered='true'] .card[data-card-type='featured'] .rainScene,
+.orbitItem[data-ambient-state='selected'] .card[data-card-type='featured'] .rainScene { filter:saturate(.65) brightness(.88); }
+.card[data-card-type='featured']:hover .rainReflection { opacity:1; }
+.card[data-card-type='coming-soon'] .face { cursor:default;color:rgba(234,240,245,.64);border-color:rgba(222,235,244,.34);background:linear-gradient(125deg,rgba(236,244,250,.09),rgba(225,239,250,.012) 36%,rgba(238,246,252,.025) 72%,rgba(235,245,253,.08));box-shadow:inset 1px 1px rgba(244,250,255,.2),inset -1px -1px rgba(225,241,252,.1); }
+.card[data-card-type='coming-soon'] .face::before { opacity:.2;background:linear-gradient(110deg,rgba(236,246,255,.12),transparent 20%,transparent 82%,rgba(228,242,253,.08)); }
+.card[data-card-type='coming-soon'] .face::after { display:none; }
+.card[data-card-type='coming-soon'] .cardMeta,.card[data-card-type='coming-soon'] .cardFoot,.card[data-card-type='coming-soon'] .backFoot { color:rgba(233,241,247,.55); }
+.comingLabel { position:absolute;left:5px;top:48%;font-family:MiSans,sans-serif;font-size:9px;letter-spacing:.18em;color:rgba(239,246,252,.76); }
+.orbitItem[data-hovered='true'] .card[data-card-type='coming-soon'] .front,
+.orbitItem[data-ambient-state='selected'] .card[data-card-type='coming-soon'] .front { border-color:rgba(237,247,255,.48);box-shadow:inset 1px 1px rgba(244,250,255,.25),inset -1px -1px rgba(225,241,252,.12); }
+@media (prefers-reduced-motion:reduce) { .rainScene,.rainReflection { transition:none; } }
