@@ -1,0 +1,17 @@
+.experiment { position:fixed;inset:0;z-index:90;isolation:isolate;background:#050505;font-family:MiSans,Arial,sans-serif; }
+.overlay { position:fixed;inset:0;z-index:110;isolation:isolate;overflow:hidden;color:#d8d9d6;touch-action:pan-y; }
+.veil { position:absolute;inset:0;background:#050505;pointer-events:none; }
+.modules { position:absolute;inset:0;pointer-events:none; }
+.module { position:absolute;transform-origin:0 0;opacity:0;box-sizing:border-box;border:1px solid rgb(235 238 235 / .45);background:linear-gradient(115deg,rgb(232 236 234 / .065),rgb(232 236 234 / .01)); }
+.module:nth-child(2) { border-color:rgb(232 236 234 / .32);background:linear-gradient(135deg,rgb(235 239 236 / .09),transparent 75%); }
+.skip,.replay { position:absolute;z-index:2;border:0;background:none;color:#a7aaa8;font:400 10px/1.5 MiSans,Arial,sans-serif;letter-spacing:.04em;padding:12px;cursor:pointer; }
+.skip { top:28px;right:4.45vw; }
+.replay { position:fixed;z-index:105;bottom:8px;right:12px;font-size:9px;opacity:.6; }
+.skip:hover,.replay:hover { color:#f5f3ef;opacity:1; }
+.skip:focus-visible,.replay:focus-visible { outline:1px solid #a7aaa8;outline-offset:3px; }
+/* Fail open even without hydration. There is no replacement page underneath. */
+.overlay[data-state='pending'] { animation:failOpen 1ms 4.5s forwards; }
+@keyframes failOpen { to { opacity:0;visibility:hidden;pointer-events:none; } }
+@media (max-width:700px) { .skip { top:20px;right:16px; } .replay { bottom:max(8px,env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion:reduce) { .overlay { animation:failOpen 1ms forwards; } }
+.experiment:has([data-experience-screen='gallery']) .replay { display:none; }

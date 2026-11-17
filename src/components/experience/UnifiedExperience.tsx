@@ -24,7 +24,7 @@ function atScrollBoundary(target: EventTarget | null, root: HTMLElement, delta: 
   return true;
 }
 
-export function UnifiedExperience() {
+export function UnifiedExperience({ introPending = false, deferHeroIntro = false }: { introPending?: boolean; deferHeroIntro?: boolean } = {}) {
   const root = useRef<HTMLDivElement>(null);
   const { setLang: setSiteLang } = useLanguage();
   const screen = useRef<0 | 1>(0), lockedUntil = useRef(0), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -33,6 +33,13 @@ export function UnifiedExperience() {
   const [galleryMounted, setGalleryMounted] = useState(false), [lang, setLang] = useState<Lang>('en');
   const onLanguageChange = useCallback((next: Lang) => { setLang(next); setSiteLang(next); }, [setSiteLang]);
   const projects = useMemo(() => workGalleryProjects(lang), [lang]);
+
+  useEffect(() => {
+    const host = root.current;
+    if (!host || !introPending) return;
+    host.inert = true;
+    return () => { host.inert = false; };
+  }, [introPending]);
 
   const scheduleCompletion = useCallback(() => {
     const transition = pending.current;
@@ -58,7 +65,7 @@ export function UnifiedExperience() {
 
   useEffect(() => {
     const host = root.current;
-    if (!host) return;
+    if (!host || introPending) return;
     if ((location.hash === '#gallery' || location.hash === '#work')) navigate(1, true);
     // React development Strict Effects may cancel the first timer during its
     // cleanup/setup check. Resume that same transition instead of getting stuck.
@@ -106,11 +113,11 @@ export function UnifiedExperience() {
       window.removeEventListener('keydown', key); window.removeEventListener('hashchange', hash);
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [navigate, scheduleCompletion]);
+  }, [navigate, scheduleCompletion, introPending]);
 
   return <div ref={root} id="cassy-unified-experience" className={styles.experience} data-experience-screen={current ? 'gallery' : 'hero'} data-transitioning={switching}>
     <div className={styles.panel} data-screen="hero" data-active={current === 0} aria-hidden={current !== 0} inert={current !== 0 || switching}>
-      <HeroSection active={current === 0 && !switching} onLanguageChange={onLanguageChange} />
+      <HeroSection active={current === 0 && !switching && !deferHeroIntro} deferIntro={deferHeroIntro} onLanguageChange={onLanguageChange} />
     </div>
     <div className={styles.panel} data-screen="gallery" data-active={current === 1} aria-hidden={current !== 1} inert={current !== 1 || switching}>
       {galleryMounted && <WorkGallerySection lang={lang} active={current === 1 && !switching} dark projects={projects} heading={lang === 'zh' ? '精选作品' : 'Selected Works'} />}

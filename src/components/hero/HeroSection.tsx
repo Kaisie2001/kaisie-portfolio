@@ -12,11 +12,13 @@ const languageKey = 'portfolio-lang';
 const letterCount = lines.reduce((sum, text) => sum + text.length, 0);
 // Standalone lab page: no dependency on the host project's optional components/providers.
 // Retain the site's language preference key for later integration.
-export function HeroSection({ active = true, onLanguageChange }: { active?: boolean; onLanguageChange?: (lang: 'en' | 'zh') => void } = {}) {
+export function HeroSection({ active = true, deferIntro = false, onLanguageChange }: { active?: boolean; deferIntro?: boolean; onLanguageChange?: (lang: 'en' | 'zh') => void } = {}) {
   const [lang, setLanguage] = useState<'en' | 'zh'>('en');
   const [revealed, setRevealed] = useState(letterCount);
   const complete = revealed >= letterCount;
   useEffect(() => {
+    // An opaque experimental intro holds the existing animation without marking it read.
+    if (deferIntro) return;
     try {
       const saved = localStorage.getItem(languageKey);
       if (saved === 'en' || saved === 'zh') setLanguage(saved);
@@ -53,7 +55,7 @@ export function HeroSection({ active = true, onLanguageChange }: { active?: bool
       if (timer !== undefined) clearTimeout(timer);
       media.removeEventListener('change', change);
     };
-  }, [active]);
+  }, [active, deferIntro]);
   useEffect(() => { onLanguageChange?.(lang); }, [lang, onLanguageChange]);
   const setLang = (next: 'en' | 'zh') => {
     setLanguage(next);

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { UnifiedExperience } from "@/components/experience/UnifiedExperience";
+import { OpticalExperience } from "@/components/optical/OpticalExperience";
 
 export const metadata: Metadata = {
   title: "Cassy Wu — Product, UX & Interaction Design",
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#050505" };
 
 export default function HomePage() {
-  return <UnifiedExperience />;
+  return <OpticalExperience />;
 }

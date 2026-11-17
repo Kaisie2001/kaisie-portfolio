@@ -1,0 +1,21 @@
+.experiment { position:fixed;inset:0;z-index:90;isolation:isolate;background:#050505;font-family:MiSans,Arial,sans-serif; }
+.overlay { --caption:0;position:fixed;inset:0;z-index:110;isolation:isolate;overflow:hidden;color:#e5e5e1;touch-action:pan-y;font-family:MiSans,Arial,sans-serif; }
+.curtain,.scene { position:absolute;inset:0;width:100%;height:100%;pointer-events:none; }
+.curtain { display:block; }
+.scene { opacity:0; }
+.scene svg { display:block;width:100%;height:100%; }
+.editorial { position:absolute;inset:0;pointer-events:none;opacity:var(--caption);color:#a9afb3; }
+.byline { position:absolute;top:37px;left:4.45vw;display:flex;gap:28px;font-size:9px;font-weight:400;letter-spacing:.17em;line-height:1.5; }
+.byline span:last-child { opacity:.6; }
+.caption { position:absolute;bottom:42px;left:4.45vw;font-size:10px;font-weight:400;letter-spacing:.13em; }
+.specification { position:absolute;right:4.45vw;bottom:42px;opacity:.65;font-size:10px;letter-spacing:.05em; }
+.skip,.replay { border:0;background:none;font:400 10px/1.5 MiSans,Arial,sans-serif;letter-spacing:.04em;padding:12px;cursor:pointer; }
+.skip { position:absolute;top:25px;right:calc(4.45vw - 12px);color:#8d969d;opacity:.8; }
+.replay { position:fixed;z-index:105;bottom:8px;right:12px;color:#a2adb2;font-size:9px;opacity:.55; }
+.skip:hover,.replay:hover { color:#edf0f1;opacity:1; }
+.skip:focus-visible,.replay:focus-visible { outline:1px solid currentColor;outline-offset:3px; }
+.experiment:has([data-experience-screen='gallery']) .replay { display:none; }
+.overlay[data-state='pending'] { animation:failOpen 1ms 6.5s forwards; }
+@keyframes failOpen { to { opacity:0;visibility:hidden;pointer-events:none; } }
+@media(max-width:700px) { .byline { left:24px;top:27px;gap:17px;font-size:8px; }.caption { left:24px;bottom:34px;font-size:9px; }.specification { right:24px;bottom:34px;font-size:9px; }.skip { top:15px;right:12px; }.replay { bottom:max(8px,env(safe-area-inset-bottom)); } }
+@media(prefers-reduced-motion:reduce) { .scene,.editorial { display:none; }.overlay[data-state='pending'] { animation:failOpen 180ms 100ms forwards; } }
